@@ -1,0 +1,90 @@
+name: my_app
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  audioplayers: ^6.4.0
+  cupertino_icons: ^1.0.8
+  http: ^0.13.5
+  shared_preferences: ^2.0.15
+  path_provider: ^2.0.11
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    # アプリの基本アセット
+    - assets/
+    - assets/lamp_left.png
+    - assets/lamp_right.png
+    - assets/radio.png
+    - assets/teacup.png
+    - assets/room_background.png
+    - assets/shelf_background.png
+    - assets/shelf_board.png
+    - assets/up_arrow.png
+    - assets/down_arrow.png
+    - assets/wooden-frame-background.jpg
+    - assets/button-frame.png
+    - assets/profile_placeholder.png
+    - assets/blackboard.png
+
+    # データファイル
+    - assets/data/books.json
+    - assets/data/categories.json
+
+    # 本のカバー画像
+    - assets/bookcovers/
+
+    # プリインストールされた絵本のページ画像
+    - assets/books/book1/
+    - assets/books/book2/
+    - assets/books/book3/
+    - assets/books/book4/
+    - assets/books/book5/
+    - assets/books/book6/
+    - assets/books/book7/
+    - assets/books/book8/
+    - assets/books/book9/
+    - assets/books/book10/
+    - assets/books/book11/
+    - assets/books/book12/
+    - assets/books/book13/
+    - assets/books/book14/
+    - assets/books/book15/
+
+    # 音声ファイル
+    - assets/audio/
+    - assets/audio/sample.mp3
+    - assets/audio/page-flip.mp3
+
+    # Book 1
+    - assets/audio/book1_part1.mp3
+    - assets/audio/book1_part2.mp3
+    - assets/audio/book1_part3.mp3
+    - assets/audio/book1_part4.mp3
+    # Book 2
+    - assets/audio/book2_part1.mp3
+    - assets/audio/book2_part2.mp3
+    - assets/audio/book2_part3.mp3
+    - assets/audio/book2_part4.mp3
+    # Book 3
+    - assets/audio/book3_part1.mp3
+    - assets/audio/book3_part2.mp3
+    - assets/audio/book3_part3.mp3
+    - assets/audio/book3_part4.mp3
+    
+    # 絵本ページ画像
+    - assets/books/book1/
