@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:turn_page_transition/turn_page_transition.dart';
 import '../models/book_models.dart';
 import '../repositories/book_repository.dart';
-import 'review_screen.dart'; // レビュー画面をインポート
+import 'review_screen.dart';
 
 // BookScreenに渡すパラメータ
 class BookScreenArguments {
@@ -29,12 +30,17 @@ class BookScreen extends StatefulWidget {
   _BookScreenState createState() => _BookScreenState();
 }
 
-class _BookScreenState extends State<BookScreen> with WidgetsBindingObserver {
+class _BookScreenState extends State<BookScreen>
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   // レポジトリ
   final BookRepository _bookRepository = BookRepository();
 
   // ページコントローラー
   late PageController _pageController;
+
+  // アニメーションコントローラー
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   // 音楽プレーヤー
   final AudioPlayer _audioPlayer = AudioPlayer();
@@ -51,6 +57,14 @@ class _BookScreenState extends State<BookScreen> with WidgetsBindingObserver {
   int _currentPage = 0;
   String? _currentAudioPath;
   AudioTrack? _currentTrack;
+
+  // アニメーション関連の状態
+  bool _isPageTurning = false;
+  int _targetPage = 0;
+  final Duration _pageTurnDuration = const Duration(milliseconds: 600);
+
+  // ページめくりの方向
+  TurnDirection _turnDirection = TurnDirection.rightToLeft;
 
   // 最後のページの検出用
   bool _isLastPage = false;
@@ -72,21 +86,42 @@ class _BookScreenState extends State<BookScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     _pageController = PageController(viewportFraction: 1.0, keepPage: true);
 
+    // アニメーションコントローラーの初期化
+    _animationController = AnimationController(
+      vsync: this,
+      duration: _pageTurnDuration,
+    );
+
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+
     // 初期化を非同期で安全に行う
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      debugPrint('初期化: アプリの初期化を開始します');
+
+      // デフォルトでサウンドを有効にする
+      _soundEnabled = true;
+
       await _loadBookData();
+
+      debugPrint('初期化: 本データのロードが完了しました');
 
       // BGMプレーヤーを初期設定
       await _setupPlayer();
-
-      // 音楽設定を非同期で初期化
-      await _setupAudio();
 
       // 事前に画像パスを解決しておく
       await _precacheImages();
 
       // ユーザーのお気に入り状態を取得
-      _loadUserPreferences();
+      await _loadUserPreferences();
+
+      // 音楽設定を非同期で初期化
+      // 少し遅延させることで準備が確実に完了するようにする
+      await Future.delayed(const Duration(milliseconds: 300));
+      await _setupAudio();
+
+      debugPrint('初期化: アプリの初期化が完了しました');
     });
   }
 
@@ -107,6 +142,7 @@ class _BookScreenState extends State<BookScreen> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _pageController.dispose();
+    _animationController.dispose();
 
     // 音声を停止して解放
     try {
@@ -280,6 +316,8 @@ class _BookScreenState extends State<BookScreen> with WidgetsBindingObserver {
   // プレーヤーの初期設定
   Future<void> _setupPlayer() async {
     try {
+      debugPrint('初期化: オーディオプレーヤーをセットアップします');
+
       // BGMプレーヤーの設定
       await _audioPlayer.setPlayerMode(PlayerMode.mediaPlayer);
       await _audioPlayer.setVolume(_volume);
@@ -302,73 +340,75 @@ class _BookScreenState extends State<BookScreen> with WidgetsBindingObserver {
         ),
       );
 
-      debugPrint('Audio player setup completed');
+      debugPrint('初期化: オーディオプレーヤーのセットアップ完了');
     } catch (e) {
-      debugPrint('Error setting up audio player: $e');
+      debugPrint('エラー: オーディオプレーヤーのセットアップ失敗: $e');
     }
   }
 
-  // 音楽の初期設定
+  // 音楽の初期設定 - よりシンプルに
   Future<void> _setupAudio() async {
-    if (_book?.audio == null) return;
+    if (_book?.audio == null) {
+      debugPrint('注意: この本にはオーディオデータがありません');
+      return;
+    }
 
     try {
-      // ボリューム設定
-      await _audioPlayer.setVolume(_volume);
-
       // 初期ページに対応するトラックを取得
       _currentTrack = _book!.audio!.getTrackForPage(_currentPage + 1);
+      if (_currentTrack == null) {
+        debugPrint('注意: 現在のページに対応するトラックが見つかりません');
+        return;
+      }
 
-      if (_currentTrack != null) {
-        // ローカルパスを取得
-        final localPath = await _bookRepository.getAssetPath(
-          _currentTrack!.assetPath,
-        );
-        _currentAudioPath = localPath;
+      // ローカルパスを取得
+      final localPath = await _bookRepository.getAssetPath(
+        _currentTrack!.assetPath,
+      );
+      _currentAudioPath = localPath;
+      debugPrint('オーディオトラックパス: $localPath');
 
-        debugPrint(
-          'Initial audio: $_currentAudioPath for page: ${_currentPage + 1}',
-        );
-
-        // プレーヤーの初期化
-        try {
-          final isLocalFile =
-              !localPath.startsWith('assets/') && !localPath.startsWith('http');
-
-          if (isLocalFile) {
-            // ローカルファイルの場合
-            await _audioPlayer.setSourceDeviceFile(localPath);
-          } else {
-            // アセットの場合 - assets/ の重複を解消
-            final String normalizedPath =
-                localPath.startsWith('assets/')
-                    ? localPath.substring(7) // 'assets/'の部分を削除
-                    : localPath;
-
-            debugPrint('Loading audio asset: $normalizedPath');
-            await _audioPlayer.setSourceAsset(normalizedPath);
-          }
-
-          debugPrint('Audio source set successfully');
-        } catch (e) {
-          debugPrint('Error setting audio source: $e');
-          // フォールバック - 基本的なオーディオファイルを試す
-          try {
-            await _audioPlayer.setSourceAsset('audio/sample.mp3');
-            _currentAudioPath = 'audio/sample.mp3';
-            debugPrint('Fallback to sample audio file');
-          } catch (fallbackError) {
-            debugPrint('Error setting fallback audio source: $fallbackError');
-          }
+      // ソースタイプに基づいて適切な方法でオーディオをセット
+      try {
+        if (localPath.startsWith('assets/')) {
+          // アセットパスを適切に処理
+          final normalizedPath = localPath.substring(7); // 'assets/'の部分を削除
+          debugPrint('アセットからオーディオをセット: $normalizedPath');
+          await _audioPlayer.setSourceAsset(normalizedPath);
+        } else if (!localPath.startsWith('http')) {
+          // ローカルファイルパス
+          debugPrint('ローカルファイルからオーディオをセット: $localPath');
+          await _audioPlayer.setSourceDeviceFile(localPath);
+        } else {
+          // URL（実装していない）
+          debugPrint('URLからのオーディオは現在サポートされていません');
+          throw Exception('Unsupported audio source type');
         }
 
-        // 自動再生（soundEnabled が true の場合）
+        // 自動再生
         if (_soundEnabled) {
+          await Future.delayed(const Duration(milliseconds: 300));
           await _playBackgroundMusic();
+        }
+      } catch (e) {
+        debugPrint('オーディオソース設定エラー: $e');
+
+        // フォールバック - サンプルオーディオファイル
+        try {
+          debugPrint('フォールバックオーディオを試みます');
+          await _audioPlayer.setSourceAsset('audio/sample.mp3');
+          _currentAudioPath = 'audio/sample.mp3';
+
+          if (_soundEnabled) {
+            await Future.delayed(const Duration(milliseconds: 300));
+            await _playBackgroundMusic();
+          }
+        } catch (fallbackError) {
+          debugPrint('フォールバックオーディオ設定エラー: $fallbackError');
         }
       }
     } catch (e) {
-      debugPrint('Error setting up audio: $e');
+      debugPrint('オーディオセットアップエラー: $e');
     }
   }
 
@@ -404,28 +444,19 @@ class _BookScreenState extends State<BookScreen> with WidgetsBindingObserver {
         _currentAudioPath = localPath;
 
         // 新しいトラックをセット
-        final isLocalFile =
-            !localPath.startsWith('assets/') && !localPath.startsWith('http');
-
-        if (isLocalFile) {
-          // ローカルファイルの場合
-          await _audioPlayer.setSourceDeviceFile(localPath);
-        } else {
-          // アセットの場合 - assets/ の重複を解消
-          final String normalizedPath =
-              localPath.startsWith('assets/')
-                  ? localPath.substring(7) // 'assets/'の部分を削除
-                  : localPath;
-
-          debugPrint('Changing audio to asset: $normalizedPath');
+        if (localPath.startsWith('assets/')) {
+          // アセットパスを適切に処理
+          final normalizedPath = localPath.substring(7); // 'assets/'の部分を削除
+          debugPrint('次のアセットに変更: $normalizedPath');
           await _audioPlayer.setSourceAsset(normalizedPath);
+        } else if (!localPath.startsWith('http')) {
+          // ローカルファイルパス
+          debugPrint('次のローカルファイルに変更: $localPath');
+          await _audioPlayer.setSourceDeviceFile(localPath);
         }
 
         _currentTrack = newTrack;
-
-        debugPrint(
-          'Changing audio to: ${newTrack.assetPath} for page: $actualPageNumber',
-        );
+        debugPrint('トラック変更: ${newTrack.assetPath} (ページ: $actualPageNumber)');
 
         // 再生中だった場合は再開
         if (wasPlaying) {
@@ -435,41 +466,56 @@ class _BookScreenState extends State<BookScreen> with WidgetsBindingObserver {
           });
         }
       } catch (e) {
-        debugPrint('Error changing audio source: $e');
+        debugPrint('トラック変更エラー: $e');
       } finally {
         _isChangingTrack = false;
       }
     }
   }
 
-  // BGM再生
+  // BGM再生 - シンプルに
   Future<void> _playBackgroundMusic() async {
     try {
+      debugPrint('BGM再生開始試行');
       await _audioPlayer.resume();
       setState(() {
         _bgmPlaying = true;
       });
-      debugPrint('Background music started playing');
+      debugPrint('BGM再生開始');
     } catch (e) {
-      debugPrint('Error playing background music: $e');
+      debugPrint('BGM再生エラー: $e');
+
+      // 再試行
+      try {
+        await Future.delayed(const Duration(milliseconds: 500));
+        debugPrint('BGM再生再試行');
+        await _audioPlayer.resume();
+        setState(() {
+          _bgmPlaying = true;
+        });
+      } catch (retryError) {
+        debugPrint('BGM再生再試行エラー: $retryError');
+      }
     }
   }
 
-  // BGM一時停止
+  // BGM一時停止 - シンプルに
   Future<void> _stopBackgroundMusic() async {
     try {
+      debugPrint('BGM停止試行');
       await _audioPlayer.pause();
       setState(() {
         _bgmPlaying = false;
       });
-      debugPrint('Background music paused');
+      debugPrint('BGM停止完了');
     } catch (e) {
-      debugPrint('Error stopping background music: $e');
+      debugPrint('BGM停止エラー: $e');
     }
   }
 
   // BGMのオン/オフを切り替え
   Future<void> _toggleBackgroundMusic() async {
+    debugPrint('BGM切り替え: 現在の状態=${_bgmPlaying}');
     if (_bgmPlaying) {
       await _stopBackgroundMusic();
       setState(() {
@@ -483,13 +529,72 @@ class _BookScreenState extends State<BookScreen> with WidgetsBindingObserver {
     }
   }
 
-  // 最初のページに戻る
+  // ページを前に移動する (シンプル版)
+  void _turnToPreviousPage() {
+    if (_currentPage > 0 && !_isPageTurning) {
+      setState(() {
+        _isPageTurning = true;
+        _targetPage = _currentPage - 1;
+        _turnDirection = TurnDirection.leftToRight;
+      });
+
+      // アニメーションを開始
+      _animationController.reset();
+      _animationController.forward().then((_) {
+        setState(() {
+          _currentPage = _targetPage;
+          _isPageTurning = false;
+          _pageController = PageController(initialPage: _currentPage);
+        });
+        _handlePageChanged(_currentPage);
+      });
+    }
+  }
+
+  // ページを次に移動する (シンプル版)
+  void _turnToNextPage() {
+    if (_book != null &&
+        _currentPage < _book!.pages!.length - 1 &&
+        !_isPageTurning) {
+      setState(() {
+        _isPageTurning = true;
+        _targetPage = _currentPage + 1;
+        _turnDirection = TurnDirection.rightToLeft;
+      });
+
+      // アニメーションを開始
+      _animationController.reset();
+      _animationController.forward().then((_) {
+        setState(() {
+          _currentPage = _targetPage;
+          _isPageTurning = false;
+          _pageController = PageController(initialPage: _currentPage);
+        });
+        _handlePageChanged(_currentPage);
+      });
+    }
+  }
+
+  // 最初のページに戻る (シンプル版)
   void _restartBook() {
-    _pageController.animateToPage(
-      0,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
+    if (_currentPage > 0 && !_isPageTurning) {
+      setState(() {
+        _isPageTurning = true;
+        _targetPage = 0;
+        _turnDirection = TurnDirection.leftToRight;
+      });
+
+      // アニメーションを開始
+      _animationController.reset();
+      _animationController.forward().then((_) {
+        setState(() {
+          _currentPage = 0;
+          _isPageTurning = false;
+          _pageController = PageController(initialPage: 0);
+        });
+        _handlePageChanged(0);
+      });
+    }
   }
 
   // タッチ開始時のハンドラー（垂直方向のみを監視）
@@ -512,6 +617,24 @@ class _BookScreenState extends State<BookScreen> with WidgetsBindingObserver {
       setState(() {
         _showMenu = false;
       });
+    }
+  }
+
+  // 水平方向のスワイプをハンドリングする
+  void _handleHorizontalSwipe(DragEndDetails details) {
+    if (_isPageTurning) return;
+
+    final velocity = details.velocity.pixelsPerSecond.dx;
+    // 速度閾値を設定
+    const velocityThreshold = 200.0;
+
+    // 右から左へのスワイプ（進む）
+    if (velocity < -velocityThreshold) {
+      _turnToNextPage();
+    }
+    // 左から右へのスワイプ（戻る）
+    else if (velocity > velocityThreshold) {
+      _turnToPreviousPage();
     }
   }
 
@@ -593,6 +716,39 @@ class _BookScreenState extends State<BookScreen> with WidgetsBindingObserver {
     debugPrint('Page changed to: $pageIndex');
   }
 
+  // ページコンテンツを構築
+  Widget _buildPageContent(int index) {
+    if (_book == null ||
+        _book!.pages == null ||
+        index >= _book!.pages!.length) {
+      return Container(color: Colors.black);
+    }
+
+    final page = _book!.pages![index];
+    bool isTextVisible = _textVisibility[page.pageId] ?? false;
+
+    return GestureDetector(
+      onTap: () => _toggleTextLayer(page.pageId),
+      child: Container(
+        color: Colors.black,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // ベースイメージ（イラスト）
+            _getImageWidget(page.baseImage),
+
+            // テキストレイヤー（アニメーション付きの表示/非表示）
+            AnimatedOpacity(
+              opacity: isTextVisible ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 200),
+              child: _getImageWidget(page.textImage),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading || _book == null) {
@@ -606,44 +762,84 @@ class _BookScreenState extends State<BookScreen> with WidgetsBindingObserver {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // メインのコンテンツ - ページビュー
+          // メインのコンテンツ
           GestureDetector(
             onVerticalDragStart: _handleTouchStart,
             onVerticalDragEnd: _handleVerticalSwipeEnd,
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: _book!.pages!.length,
-              onPageChanged: _handlePageChanged,
-              pageSnapping: true,
-              allowImplicitScrolling: true,
-              physics: const ClampingScrollPhysics(),
-              itemBuilder: (context, index) {
-                final page = _book!.pages![index];
-                bool isTextVisible = _textVisibility[page.pageId] ?? false;
-
-                return GestureDetector(
-                  onTap: () => _toggleTextLayer(page.pageId),
-                  child: Container(
-                    color: Colors.black,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        // ベースイメージ（イラスト）
-                        _getImageWidget(page.baseImage),
-
-                        // テキストレイヤー（アニメーション付きの表示/非表示）
-                        AnimatedOpacity(
-                          opacity: isTextVisible ? 1.0 : 0.0,
-                          duration: const Duration(milliseconds: 200),
-                          child: _getImageWidget(page.textImage),
-                        ),
-                      ],
+            onHorizontalDragEnd: _handleHorizontalSwipe,
+            child:
+                _isPageTurning
+                    ? AnimatedBuilder(
+                      animation: _animation,
+                      builder: (context, child) {
+                        return TurnPageTransition(
+                          animation: _animation,
+                          overleafColor: Colors.white,
+                          direction: _turnDirection,
+                          child: _buildPageContent(
+                            _targetPage,
+                          ), // 常にめくった先のページを表示
+                        );
+                      },
+                    )
+                    : PageView.builder(
+                      controller: _pageController,
+                      itemCount: _book!.pages!.length,
+                      onPageChanged: _handlePageChanged,
+                      pageSnapping: true,
+                      physics:
+                          const NeverScrollableScrollPhysics(), // 手動制御するため無効化
+                      itemBuilder: (context, index) => _buildPageContent(index),
                     ),
-                  ),
-                );
-              },
-            ),
           ),
+
+          // ページめくりのナビゲーションボタン
+          if (!_showMenu && !_isPageTurning)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: MediaQuery.of(context).size.height * 0.5,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // 前のページへ
+                  if (_currentPage > 0)
+                    GestureDetector(
+                      onTap: _turnToPreviousPage,
+                      child: Container(
+                        width: 40,
+                        height: 60,
+                        color: Colors.transparent,
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white.withOpacity(0.3),
+                          size: 24,
+                        ),
+                      ),
+                    )
+                  else
+                    const SizedBox(width: 40),
+
+                  // 次のページへ
+                  if (_currentPage < _book!.pages!.length - 1)
+                    GestureDetector(
+                      onTap: _turnToNextPage,
+                      child: Container(
+                        width: 40,
+                        height: 60,
+                        color: Colors.transparent,
+                        child: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white.withOpacity(0.3),
+                          size: 24,
+                        ),
+                      ),
+                    )
+                  else
+                    const SizedBox(width: 40),
+                ],
+              ),
+            ),
 
           // 上部メニュー - オーバーレイとして表示（表示/非表示の切り替えはアニメーション）
           if (_showMenu)
@@ -722,7 +918,78 @@ class _BookScreenState extends State<BookScreen> with WidgetsBindingObserver {
                 child: Column(
                   mainAxisSize: MainAxisSize.min, // 高さを最小限に抑える
                   children: [
-                    // BGMボタン - シンプル化
+                    // ナビゲーションボタン
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // 最初に戻るボタン
+                        ElevatedButton(
+                          onPressed: _currentPage > 0 ? _restartBook : null,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white.withOpacity(0.2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.first_page,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+
+                        // 前のページボタン
+                        ElevatedButton(
+                          onPressed:
+                              _currentPage > 0 ? _turnToPreviousPage : null,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white.withOpacity(0.2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.navigate_before,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+
+                        // 次のページボタン
+                        ElevatedButton(
+                          onPressed:
+                              _currentPage < _book!.pages!.length - 1
+                                  ? _turnToNextPage
+                                  : null,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white.withOpacity(0.2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.navigate_next,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // BGMボタン
                     ElevatedButton(
                       onPressed: _toggleBackgroundMusic,
                       style: ElevatedButton.styleFrom(
@@ -757,6 +1024,30 @@ class _BookScreenState extends State<BookScreen> with WidgetsBindingObserver {
           // 最後のページでレビューボタンを表示
           if (_isLastPage)
             Positioned(bottom: 20, right: 20, child: _buildReviewButton()),
+
+          // ページ番号インジケーター
+          if (!_showMenu && !_isPageTurning)
+            Positioned(
+              bottom: 10,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    '${_currentPage + 1} / ${_book!.pages!.length}',
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

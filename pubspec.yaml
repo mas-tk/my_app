@@ -15,6 +15,7 @@ dependencies:
   http: ^0.13.5
   shared_preferences: ^2.0.15
   path_provider: ^2.0.11
+  turn_page_transition: ^0.4.0  # Added for page turn animation
 
 dev_dependencies:
   flutter_test:
@@ -40,6 +41,7 @@ flutter:
     - assets/button-frame.png
     - assets/profile_placeholder.png
     - assets/blackboard.png
+    - assets/page_flip.mp3
 
     # データファイル
     - assets/data/books.json
@@ -68,7 +70,8 @@ flutter:
     # 音声ファイル
     - assets/audio/
     - assets/audio/sample.mp3
-    - assets/audio/page-flip.mp3
+    - assets/audio/page_flip.mp3  # ハイフンをアンダースコアに変更
+    - assets/page_flip.mp3        # ルートディレクトリのファイルも指定
 
     # Book 1
     - assets/audio/book1_part1.mp3
