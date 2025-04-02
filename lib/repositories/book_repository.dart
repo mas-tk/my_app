@@ -98,6 +98,13 @@ class BookRepository {
   // Get book by ID (with offline support)
   Future<Book?> getBookById(String id) async {
     try {
+      // IDの一致チェック前に、位置情報を削除（"_position_X"）
+      String baseId = id.split('_position_')[0];
+
+      // 本のデータを検索
+      //final books = await _bookService.getBooks();
+      //return books.firstWhere((book) => book.id == baseId || book.id == id)
+
       // Check if we have the book in local storage
       final localBook = await _storageManager.getBook(id);
 

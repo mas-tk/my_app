@@ -7,6 +7,7 @@ import 'package:turn_page_transition/turn_page_transition.dart';
 import '../models/book_models.dart';
 import '../repositories/book_repository.dart';
 import 'review_screen.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 
 // BookScreenに渡すパラメータ
 class BookScreenArguments {
@@ -23,8 +24,13 @@ class BookScreenArguments {
 
 class BookScreen extends StatefulWidget {
   final BookScreenArguments args;
+  final VoidCallback? onDispose; // 破棄時に呼び出すコールバックを追加
 
-  const BookScreen({Key? key, required this.args}) : super(key: key);
+  const BookScreen({
+    Key? key,
+    required this.args,
+    this.onDispose, // onDisposeパラメータの追加
+  }) : super(key: key);
 
   @override
   _BookScreenState createState() => _BookScreenState();
@@ -57,6 +63,9 @@ class _BookScreenState extends State<BookScreen>
   int _currentPage = 0;
   String? _currentAudioPath;
   AudioTrack? _currentTrack;
+
+  // 修正点①: 最終ページ用のタップカウント
+  int _lastPageTapCount = 0;
 
   // アニメーション関連の状態
   bool _isPageTurning = false;
@@ -156,6 +165,9 @@ class _BookScreenState extends State<BookScreen>
     // キャッシュをクリア
     _imagePathCache.clear();
     _imageCache.clear();
+
+    // コールバックが設定されていれば呼び出す
+    widget.onDispose?.call();
 
     super.dispose();
   }
@@ -529,6 +541,38 @@ class _BookScreenState extends State<BookScreen>
     }
   }
 
+  // 修正点②: 音量を上げるメソッド
+  Future<void> _increaseVolume() async {
+    if (_volume < 1.0) {
+      try {
+        final newVolume = (_volume + 0.1).clamp(0.0, 1.0);
+        await _audioPlayer.setVolume(newVolume);
+        setState(() {
+          _volume = newVolume;
+        });
+        debugPrint('音量を上げました: $_volume');
+      } catch (e) {
+        debugPrint('音量調整エラー: $e');
+      }
+    }
+  }
+
+  // 修正点②: 音量を下げるメソッド
+  Future<void> _decreaseVolume() async {
+    if (_volume > 0.0) {
+      try {
+        final newVolume = (_volume - 0.1).clamp(0.0, 1.0);
+        await _audioPlayer.setVolume(newVolume);
+        setState(() {
+          _volume = newVolume;
+        });
+        debugPrint('音量を下げました: $_volume');
+      } catch (e) {
+        debugPrint('音量調整エラー: $e');
+      }
+    }
+  }
+
   // ページを前に移動する (シンプル版)
   void _turnToPreviousPage() {
     if (_currentPage > 0 && !_isPageTurning) {
@@ -638,7 +682,7 @@ class _BookScreenState extends State<BookScreen>
     }
   }
 
-  // レビュー画面を開くメソッド
+  // コメント画面を開くメソッド
   void _openReviewScreen() {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -655,7 +699,7 @@ class _BookScreenState extends State<BookScreen>
     );
   }
 
-  // レビューボタンを表示するウィジェット
+  // コメントボタンを表示するウィジェット
   Widget _buildReviewButton() {
     return GestureDetector(
       onTap: _openReviewScreen,
@@ -678,7 +722,7 @@ class _BookScreenState extends State<BookScreen>
             Icon(Icons.rate_review, color: Colors.black, size: 20),
             SizedBox(width: 8),
             Text(
-              'レビューを書く',
+              'コメントを書く',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 14,
@@ -691,11 +735,24 @@ class _BookScreenState extends State<BookScreen>
     );
   }
 
-  // ページタップでテキスト表示/非表示を切り替え
+  // 修正点①: ページタップの処理 - 最終ページかそれ以外かで分岐
   void _toggleTextLayer(String pageId) {
-    setState(() {
-      _textVisibility[pageId] = !(_textVisibility[pageId] ?? false);
-    });
+    if (_isLastPage) {
+      // 新しいタップカウントを計算
+      int newTapCount = (_lastPageTapCount + 1) % 4;
+      setState(() {
+        _lastPageTapCount = newTapCount;
+        _textVisibility[pageId] = newTapCount == 1 || newTapCount == 2;
+      });
+      // タップカウントが 2 のときにバイブレーションさせる
+      if (newTapCount == 2) {
+        HapticFeedback.vibrate();
+      }
+    } else {
+      setState(() {
+        _textVisibility[pageId] = !(_textVisibility[pageId] ?? false);
+      });
+    }
   }
 
   // ページめくり時の処理
@@ -705,6 +762,19 @@ class _BookScreenState extends State<BookScreen>
 
       // 最後のページかどうかをチェック
       _isLastPage = (_book != null && pageIndex == _book!.pages!.length - 1);
+
+      // 修正点①: 最終ページに入る場合はタップカウントをリセット
+      if (_isLastPage) {
+        _lastPageTapCount = 0;
+
+        // 最終ページに入る時はテキストを初期状態（非表示）に
+        if (_book != null &&
+            _book!.pages != null &&
+            pageIndex < _book!.pages!.length) {
+          final pageId = _book!.pages![pageIndex].pageId;
+          _textVisibility[pageId] = false;
+        }
+      }
     });
 
     // ページ変更時にBGMの確認と切り替えを行う
@@ -989,27 +1059,74 @@ class _BookScreenState extends State<BookScreen>
 
                     const SizedBox(height: 16),
 
-                    // BGMボタン
-                    ElevatedButton(
-                      onPressed: _toggleBackgroundMusic,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.2),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
+                    // BGMボタンと音量調整ボタン
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // BGMオン/オフボタン
+                        ElevatedButton(
+                          onPressed: _toggleBackgroundMusic,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white.withOpacity(0.2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 12,
+                            ),
+                          ),
+                          child: Text(
+                            'BGM: ${_bgmPlaying ? 'オン' : 'オフ'}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 12,
+
+                        // 音量調整ボタン（修正点②）
+                        const SizedBox(width: 12),
+                        ElevatedButton(
+                          onPressed: _decreaseVolume,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white.withOpacity(0.2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 12,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.volume_down,
+                            color: Colors.white,
+                            size: 18,
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        'BGM: ${_bgmPlaying ? 'オン' : 'オフ'}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
+                        const SizedBox(width: 8),
+                        ElevatedButton(
+                          onPressed: _increaseVolume,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white.withOpacity(0.2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 12,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.volume_up,
+                            color: Colors.white,
+                            size: 18,
+                          ),
                         ),
-                      ),
+                      ],
                     ),
+
                     const SizedBox(height: 8),
                     // 現在の音量表示
                     Text(
@@ -1021,8 +1138,8 @@ class _BookScreenState extends State<BookScreen>
               ),
             ),
 
-          // 最後のページでレビューボタンを表示
-          if (_isLastPage)
+          // 最後のページでコメントボタンを表示（修正点①）
+          if (_isLastPage && _lastPageTapCount == 2)
             Positioned(bottom: 20, right: 20, child: _buildReviewButton()),
 
           // ページ番号インジケーター

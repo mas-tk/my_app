@@ -1,8 +1,12 @@
 // lib/screens/book_overview_screen.dart
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle, HapticFeedback;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/book_models.dart';
 import '../repositories/book_repository.dart';
+import '../services/file_storage_service.dart'; // Import the file storage service
 import 'book_screen.dart';
 
 class BookOverviewScreen extends StatefulWidget {
@@ -14,15 +18,23 @@ class BookOverviewScreen extends StatefulWidget {
 
 class _BookOverviewScreenState extends State<BookOverviewScreen>
     with SingleTickerProviderStateMixin {
+  // Constants for file names
+  static const String FAVORITE_BOOKS_FILE = 'favorite_books.json';
+  static const String FAVORITE_BOOKS_ASSET = 'assets/data/favorite_books.json';
+
+  // Add FileStorageService instance
+  final FileStorageService _fileStorageService = FileStorageService();
+
   final BookRepository _bookRepository = BookRepository();
   Book? _book;
   bool _isLoading = true;
   bool _isDownloaded = false;
   bool _isDownloading = false;
+  bool _isFavorite = false;
 
-  // 表紙拡大表示用の状態
+  // Animation properties
   bool _isZoomed = false;
-  bool _isAnimating = false; // アニメーション中かどうかのフラグを追加
+  bool _isAnimating = false;
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _opacityAnimation;
@@ -33,13 +45,11 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
   void initState() {
     super.initState();
 
-    // アニメーションコントローラーを初期化 - より長い時間で実行
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
 
-    // アニメーション終了のリスナーを追加
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed ||
           status == AnimationStatus.dismissed) {
@@ -51,7 +61,6 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
       }
     });
 
-    // スケールアニメーション - より大きく拡大
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
         tween: Tween<double>(
@@ -69,7 +78,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
       ),
     ]).animate(_animationController);
 
-    // 回転アニメーション - 本を少し傾ける効果
+    // Rotation animation
     _rotateAnimation = TweenSequence<double>([
       TweenSequenceItem(
         tween: Tween<double>(
@@ -87,7 +96,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
       ),
     ]).animate(_animationController);
 
-    // スライドアニメーション - 上から少し下へ移動
+    // Slide animation
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, -0.02),
       end: Offset.zero,
@@ -95,11 +104,23 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
       CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack),
     );
 
-    // 背景と読むボタンのフェードインアニメーション
+    // Opacity animation
     _opacityAnimation = CurvedAnimation(
       parent: _animationController,
       curve: const Interval(0.3, 1.0, curve: Curves.easeIn),
     );
+
+    // Check favorite status after initialization
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadFavoriteStatus();
+    });
+  }
+
+  // Load favorite status
+  Future<void> _loadFavoriteStatus() async {
+    if (_book != null) {
+      await _checkFavoriteStatus();
+    }
   }
 
   @override
@@ -111,22 +132,27 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _loadBookData();
+    // Load book data after route arguments are available
+    _loadBookData().then((_) {
+      if (_book != null) {
+        _checkFavoriteStatus();
+      }
+    });
   }
 
-  // 本データを読み込む
+  // Load book data
   Future<void> _loadBookData() async {
     setState(() {
       _isLoading = true;
     });
 
     try {
-      // 引数を取得
+      // Get route arguments
       final Map<String, dynamic> args =
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
       final String bookId = args['bookId'] as String;
 
-      // 本データを取得
+      // Get book data
       final book = await _bookRepository.getBookById(bookId);
 
       if (book != null) {
@@ -134,7 +160,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
           _book = book;
         });
 
-        // 本がダウンロード済みかチェック
+        // Check if book is downloaded
         final isDownloaded = await _bookRepository.isBookDownloaded(bookId);
         setState(() {
           _isDownloaded = isDownloaded;
@@ -142,7 +168,6 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
       }
     } catch (e) {
       print('Error loading book data: $e');
-      // エラーメッセージを表示
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('本データの読み込みに失敗しました: $e')));
@@ -153,7 +178,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
     }
   }
 
-  // 本をダウンロード
+  // Download book
   Future<void> _downloadBook() async {
     if (_book == null) return;
 
@@ -189,8 +214,10 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
     }
   }
 
-  // 絵本を読むボタンのハンドラー
+  // Navigate to book screen
   void _navigateToBookScreen() {
+    HapticFeedback.mediumImpact();
+
     Navigator.pushNamed(
       context,
       '/book',
@@ -202,16 +229,220 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
     );
   }
 
-  // 表紙画像をタップした時の処理 - スムーズなアニメーション
+  // Check if book is in favorites
+  Future<void> _checkFavoriteStatus() async {
+    if (_book == null) return;
+
+    try {
+      // Ensure local favorites file exists
+      await _fileStorageService.ensureLocalJsonFileExists(
+        FAVORITE_BOOKS_FILE,
+        FAVORITE_BOOKS_ASSET,
+      );
+
+      // Read favorites data from local file
+      final favoritesData = await _fileStorageService.readJsonFromFile(
+        FAVORITE_BOOKS_FILE,
+      );
+
+      if (favoritesData != null) {
+        // Check if this book is in favorites
+        final List<dynamic> favoriteBooks = favoritesData as List;
+        final isFavorite = favoriteBooks.any(
+          (favorite) => favorite['bookId'] == _book!.id,
+        );
+
+        print('Book ${_book!.id} favorite status: $isFavorite');
+
+        if (mounted) {
+          setState(() {
+            _isFavorite = isFavorite;
+          });
+        }
+
+        // Also update SharedPreferences for compatibility
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('favorite_books', jsonEncode(favoriteBooks));
+      } else {
+        // Initialize favorites data if not present
+        await _initializeFavoriteData();
+      }
+    } catch (e) {
+      print('Error checking favorite status: $e');
+    }
+  }
+
+  // Initialize favorite data from assets if needed
+  Future<void> _initializeFavoriteData() async {
+    try {
+      print('Initializing favorite data for book ${_book?.id}');
+
+      // Load favorite books from asset
+      final List<Map<String, dynamic>> favoriteBooks =
+          await _loadFavoriteBooks();
+
+      // Check if this book is a favorite
+      final isFavorite = favoriteBooks.any(
+        (favorite) => favorite['bookId'] == _book!.id,
+      );
+
+      print('Book ${_book!.id} initial favorite status: $isFavorite');
+
+      if (mounted) {
+        setState(() {
+          _isFavorite = isFavorite;
+        });
+      }
+
+      // Save to local file and SharedPreferences
+      await _saveFavoriteBooks(favoriteBooks);
+    } catch (e) {
+      print('Error initializing favorite data: $e');
+    }
+  }
+
+  // Toggle favorite status
+  Future<void> _toggleFavorite() async {
+    if (_book == null) return;
+
+    try {
+      // Toggle state immediately for responsive UI
+      setState(() {
+        _isFavorite = !_isFavorite;
+      });
+
+      if (_isFavorite) {
+        HapticFeedback.lightImpact();
+        await _addToFavorites();
+      } else {
+        await _removeFromFavorites();
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            _isFavorite
+                ? '「${_book!.title}」をお気に入りに追加しました'
+                : '「${_book!.title}」をお気に入りから削除しました',
+          ),
+          duration: const Duration(seconds: 1),
+        ),
+      );
+    } catch (e) {
+      print('Error toggling favorite: $e');
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('お気に入り操作に失敗しました: $e')));
+    }
+  }
+
+  // Load favorite books from file or asset
+  Future<List<Map<String, dynamic>>> _loadFavoriteBooks() async {
+    try {
+      // Check local file first
+      final favoritesData = await _fileStorageService.readJsonFromFile(
+        FAVORITE_BOOKS_FILE,
+      );
+
+      if (favoritesData != null) {
+        return (favoritesData as List).cast<Map<String, dynamic>>();
+      }
+
+      // Fallback to asset
+      final jsonString = await rootBundle.loadString(FAVORITE_BOOKS_ASSET);
+      final List<dynamic> jsonList = jsonDecode(jsonString);
+      return jsonList.cast<Map<String, dynamic>>();
+    } catch (e) {
+      print('Error loading favorite books: $e');
+      return [];
+    }
+  }
+
+  // Add current book to favorites
+  Future<void> _addToFavorites() async {
+    try {
+      // Get current favorites
+      final favoriteBooks = await _loadFavoriteBooks();
+
+      // Check if book already exists
+      final existingIndex = favoriteBooks.indexWhere(
+        (item) => item['bookId'] == _book!.id,
+      );
+
+      if (existingIndex >= 0) {
+        // Update existing entry
+        favoriteBooks[existingIndex] = {
+          'id': favoriteBooks[existingIndex]['id'],
+          'bookId': _book!.id,
+          'registeredAt': DateTime.now().toIso8601String(),
+        };
+      } else {
+        // Add new entry
+        final newFavorite = {
+          'id': 'fav${DateTime.now().millisecondsSinceEpoch}',
+          'bookId': _book!.id,
+          'registeredAt': DateTime.now().toIso8601String(),
+        };
+        favoriteBooks.add(newFavorite);
+      }
+
+      // Save updated list
+      await _saveFavoriteBooks(favoriteBooks);
+    } catch (e) {
+      print('Error adding to favorites: $e');
+      rethrow;
+    }
+  }
+
+  // Remove book from favorites
+  Future<void> _removeFromFavorites() async {
+    try {
+      // Get current favorites
+      final favoriteBooks = await _loadFavoriteBooks();
+
+      // Remove book
+      final newList =
+          favoriteBooks.where((item) => item['bookId'] != _book!.id).toList();
+
+      // Save updated list
+      await _saveFavoriteBooks(newList);
+    } catch (e) {
+      print('Error removing from favorites: $e');
+      rethrow;
+    }
+  }
+
+  // Save favorites to both file and SharedPreferences
+  Future<void> _saveFavoriteBooks(
+    List<Map<String, dynamic>> favoriteBooks,
+  ) async {
+    try {
+      // Save to local file
+      await _fileStorageService.writeJsonToFile(
+        FAVORITE_BOOKS_FILE,
+        favoriteBooks,
+      );
+
+      // Also update SharedPreferences for compatibility
+      final prefs = await SharedPreferences.getInstance();
+      final jsonString = jsonEncode(favoriteBooks);
+      await prefs.setString('favorite_books', jsonString);
+
+      print('Favorite books saved successfully');
+    } catch (e) {
+      print('Error saving favorite books: $e');
+      rethrow;
+    }
+  }
+
+  // The rest of the methods remain the same...
   void _toggleCoverZoom() {
-    // アニメーション中は操作をスキップ
     if (_isAnimating) return;
 
     setState(() {
-      _isAnimating = true; // アニメーション開始をマーク
+      _isAnimating = true;
 
       if (_isZoomed) {
-        // 閉じる: アニメーションが完了した後に状態を変更
         _animationController.reverse().then((_) {
           if (mounted) {
             setState(() {
@@ -220,10 +451,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
           }
         });
       } else {
-        // 開く: まず状態を変更してからアニメーション開始
         _isZoomed = true;
-
-        // ティックを待ってからアニメーション開始（チラツキ防止）
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _animationController.forward();
         });
@@ -231,7 +459,6 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
     });
   }
 
-  // 表紙画像ウィジェット - ダイナミックなアニメーション (影なし)
   Widget _buildCoverImage(String coverPath) {
     return GestureDetector(
       onTap: _toggleCoverZoom,
@@ -263,21 +490,16 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
               }
 
               final imagePath = snapshot.data ?? coverPath;
-
-              // パスに基づいて適切な ImageProvider を選択
               ImageProvider imageProvider;
+
               if (imagePath.startsWith('assets/')) {
-                // プリインストール画像の場合
                 imageProvider = AssetImage(imagePath);
               } else if (!imagePath.startsWith('http')) {
-                // ダウンロードされたローカルファイルの場合
                 imageProvider = FileImage(File(imagePath));
               } else {
-                // デフォルトはAssetImageとして扱う
                 imageProvider = AssetImage(coverPath);
               }
 
-              // 影を完全に削除するために、ClipRectを使って影がはみ出ないようにする
               return ClipRect(
                 child: Image(
                   image: imageProvider,
@@ -290,6 +512,87 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildFavoriteButton() {
+    return GestureDetector(
+      onTap: _toggleFavorite,
+      child: Container(
+        width: 70,
+        height: 70,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color:
+              _isFavorite ? Colors.amber.withOpacity(0.05) : Colors.transparent,
+          boxShadow:
+              _isFavorite
+                  ? [
+                    BoxShadow(
+                      color: Colors.amber.withOpacity(0.08),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ]
+                  : null,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset(
+            _isFavorite ? 'assets/bookmark.png' : 'assets/bookmark_off.png',
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Genre tag widget
+  Widget _buildGenreTag(String genre) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        genre,
+        style: const TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  // Star rating widget
+  Widget _buildRatingStars(double rating) {
+    final int fullStars = rating.floor();
+    final bool hasHalfStar = rating - fullStars >= 0.5;
+    final int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+    return Row(
+      children: [
+        ...List.generate(
+          fullStars,
+          (index) => const Text(
+            '★',
+            style: TextStyle(color: Color(0xFFFFD700), fontSize: 24),
+          ),
+        ),
+        if (hasHalfStar)
+          const Text(
+            '★',
+            style: TextStyle(color: Color(0xFFFFD700), fontSize: 24),
+          ),
+        ...List.generate(
+          emptyStars,
+          (index) => const Text(
+            '★',
+            style: TextStyle(color: Color(0xFF444444), fontSize: 24),
+          ),
+        ),
+      ],
     );
   }
 
@@ -324,11 +627,14 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
       );
     }
 
+    // Screen size
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // 背景
+          // Background
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -343,7 +649,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      // 本のイメージとタイトル
+                      // Book image and title
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(20),
@@ -359,13 +665,12 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                // 本のカバー画像
+                                // Book cover
                                 _buildCoverImage(_book!.coverAssetPath),
                                 const SizedBox(height: 15),
 
-                                // 本のタイトル - アニメーション時にチラつかないようにする
+                                // Book title
                                 AnimatedOpacity(
-                                  // アニメーション中またはズームモードならタイトルを非表示
                                   opacity:
                                       _isAnimating || _isZoomed ? 0.0 : 1.0,
                                   duration: const Duration(milliseconds: 150),
@@ -387,7 +692,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
 
                       const SizedBox(height: 20),
 
-                      // ジャンルタグ
+                      // Genre tags
                       if (_book!.genres != null)
                         Wrap(
                           spacing: 10,
@@ -401,14 +706,14 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
 
                       const SizedBox(height: 20),
 
-                      // 閲覧数と評価
+                      // Views and rating
                       if (_book!.views != null &&
                           _book!.rating != null &&
                           _book!.comments != null)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // 閲覧数
+                            // Views
                             Row(
                               children: [
                                 const Text(
@@ -426,10 +731,10 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
                               ],
                             ),
 
-                            // 星評価
+                            // Star rating
                             _buildRatingStars(_book!.rating!),
 
-                            // コメント数
+                            // Comments
                             Row(
                               children: [
                                 const Text(
@@ -451,7 +756,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
 
                       const SizedBox(height: 20),
 
-                      // 概要テキスト
+                      // Summary
                       if (_book!.summary != null)
                         Container(
                           width: double.infinity,
@@ -472,7 +777,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
 
                       const SizedBox(height: 30),
 
-                      // ダウンロードステータス
+                      // Download status
                       if (_isDownloaded)
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -539,19 +844,25 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
 
                       const SizedBox(height: 20),
 
-                      // 読むボタン
-                      GestureDetector(
-                        onTap: _navigateToBookScreen,
-                        child: Container(
-                          width: 240,
-                          height: 84,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('assets/button-frame.png'),
-                              fit: BoxFit.contain,
+                      // Button section
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Read button
+                          GestureDetector(
+                            onTap: _navigateToBookScreen,
+                            child: Container(
+                              width: 240,
+                              height: 84,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('assets/button-frame.png'),
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
 
                       const SizedBox(height: 20),
@@ -562,7 +873,14 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
             ),
           ),
 
-          // 拡大表示オーバーレイ - アニメーション付き
+          // Favorite button (bottom left)
+          Positioned(
+            left: screenWidth * 0.1,
+            bottom: MediaQuery.of(context).size.height * 0.05,
+            child: _buildFavoriteButton(),
+          ),
+
+          // Zoomed overlay
           if (_isZoomed)
             AnimatedBuilder(
               animation: _animationController,
@@ -570,7 +888,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
                 return Opacity(
                   opacity: _opacityAnimation.value,
                   child: GestureDetector(
-                    onTap: _toggleCoverZoom, // 背景タップで閉じる
+                    onTap: _toggleCoverZoom, // Close on tap
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.9),
@@ -588,7 +906,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // 閉じるボタン
+                          // Close button
                           Align(
                             alignment: Alignment.topRight,
                             child: Padding(
@@ -604,7 +922,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
                             ),
                           ),
 
-                          // 拡大表紙画像
+                          // Enlarged cover
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
@@ -628,9 +946,8 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
 
                                     final imagePath =
                                         snapshot.data ?? _book!.coverAssetPath;
-
-                                    // パスに基づいて適切な ImageProvider を選択
                                     ImageProvider imageProvider;
+
                                     if (imagePath.startsWith('assets/')) {
                                       imageProvider = AssetImage(imagePath);
                                     } else if (!imagePath.startsWith('http')) {
@@ -643,7 +960,6 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
                                       );
                                     }
 
-                                    // 拡大表示でも影なし
                                     return ClipRect(
                                       child: Image(
                                         image: imageProvider,
@@ -656,7 +972,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
                             ),
                           ),
 
-                          // 読むボタン - button-frame.png画像を使用
+                          // Read button
                           Padding(
                             padding: const EdgeInsets.only(
                               bottom: 40.0,
@@ -702,55 +1018,6 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
             ),
         ],
       ),
-    );
-  }
-
-  // ジャンルタグウィジェット
-  Widget _buildGenreTag(String genre) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        genre,
-        style: const TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  // 星評価ウィジェット
-  Widget _buildRatingStars(double rating) {
-    final int fullStars = rating.floor();
-    final bool hasHalfStar = rating - fullStars >= 0.5;
-    final int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-
-    return Row(
-      children: [
-        ...List.generate(
-          fullStars,
-          (index) => const Text(
-            '★',
-            style: TextStyle(color: Color(0xFFFFD700), fontSize: 24),
-          ),
-        ),
-        if (hasHalfStar)
-          const Text(
-            '★',
-            style: TextStyle(color: Color(0xFFFFD700), fontSize: 24),
-          ),
-        ...List.generate(
-          emptyStars,
-          (index) => const Text(
-            '★',
-            style: TextStyle(color: Color(0xFF444444), fontSize: 24),
-          ),
-        ),
-      ],
     );
   }
 }

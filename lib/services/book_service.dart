@@ -111,9 +111,20 @@ class BookService {
 
   // Load books from local JSON file (fallback)
   Future<List<Book>> _loadLocalBooks() async {
-    final jsonString = await rootBundle.loadString('assets/data/books.json');
-    final List<dynamic> jsonData = json.decode(jsonString);
-    return jsonData.map((json) => Book.fromJson(json)).toList();
+    try {
+      final jsonString = await rootBundle.loadString('assets/data/books.json');
+      final List<dynamic> jsonData = json.decode(jsonString);
+      print('Loaded ${jsonData.length} books from local JSON');
+
+      // 各本のIDをログに出力
+      final books = jsonData.map((json) => Book.fromJson(json)).toList();
+      print('Book IDs: ${books.map((b) => b.id).join(", ")}');
+
+      return books;
+    } catch (e) {
+      print('Error loading local books: $e');
+      return [];
+    }
   }
 
   // Load categories from local JSON file (fallback)

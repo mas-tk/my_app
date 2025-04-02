@@ -1,0 +1,64 @@
+[
+    {
+      "id": "my_favorites",
+      "title": "お気に入り",
+      "books": [
+        {
+          "id": "1_position_0",
+          "bookId": "1"
+        },
+        {
+          "id": "2_position_1",
+          "bookId": "4"
+        },
+        {
+          "id": "3_position_2",
+          "bookId": "3"
+        }
+      ]
+    },
+    {
+      "id": "my_recent",
+      "title": "最近読んだ本",
+      "books": [
+        {
+          "id": "6_position_0",
+          "bookId": "4"
+        },
+        {
+          "id": "7_position_1",
+          "bookId": "3"
+        },
+        {
+          "id": "8_position_2",
+          "bookId": "1"
+        },
+        {
+          "id": "9_position_3",
+          "bookId": "4"
+        },
+        {
+          "id": "10_position_4",
+          "bookId": "3"
+        }
+      ]
+    },
+    {
+      "id": "my_collection",
+      "title": "マイコレクション",
+      "books": [
+        {
+          "id": "11_position_0",
+          "bookId": "3"
+        },
+        {
+          "id": "12_position_2",
+          "bookId": "1"
+        },
+        {
+          "id": "13_position_4",
+          "bookId": "4"
+        }
+      ]
+    }
+  ]

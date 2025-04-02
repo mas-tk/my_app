@@ -1,0 +1,66 @@
+[
+  {
+    "id": "obj1",
+    "name": "ねこのフィギア",
+    "imagePath": "assets/objects/neko.png",
+    "description": "柔らかな手触りの可愛いテディベア。本棚のアクセントになります。",
+    "promotionalText": "お気に入りの絵本と一緒に飾れるテディベア！",
+    "isPurchased": true,
+    "purchaseDate": "2025-03-01T10:15:30.000Z",
+    "price": 0.0,
+    "currency": "JPY"
+  },
+  {
+    "id": "obj2",
+    "name": "丸いサボテン",
+    "imagePath": "assets/objects/saboten_maru.png",
+    "description": "カラフルな木製ブロック。インテリアとしても素敵です。",
+    "promotionalText": "天然木を使った安全なブロック",
+    "isPurchased": true,
+    "purchaseDate": "2025-02-15T08:30:00.000Z",
+    "price": 0.0,
+    "currency": "JPY"
+  },
+  {
+    "id": "obj3",
+    "name": "天球儀とドラゴン",
+    "imagePath": "assets/objects/tenkyugi.png",
+    "description": "小さな木製のお家。本棚に置くと素敵な雰囲気になります。",
+    "promotionalText": "本の世界を彩る小さなお家",
+    "isPurchased": true,
+    "purchaseDate": "2025-01-20T14:45:00.000Z",
+    "price": 0.0,
+    "currency": "JPY"
+  },
+  {
+    "id": "obj6",
+    "name": "本の住人",
+    "imagePath": "assets/objects/jyunin.png",
+    "description": "小さな木製のお家。本棚に置くと素敵な雰囲気になります。",
+    "promotionalText": "本の世界を彩る小さなお家",
+    "isPurchased": true,
+    "purchaseDate": "2025-01-20T14:45:00.000Z",
+    "price": 0.0,
+    "currency": "JPY"
+  },
+  {
+    "id": "obj4",
+    "name": "金のねこフィギア",
+    "imagePath": "assets/objects/neko_kin.png",
+    "description": "限定デザインの特別な人形。コレクターズアイテムとしても人気です。",
+    "promotionalText": "数量限定！特別デザインの人形",
+    "isPurchased": false,
+    "price": 500.0,
+    "currency": "JPY"
+  },
+  {
+    "id": "obj5",
+    "name": "縦長のサボテン",
+    "imagePath": "assets/objects/saboten_nagai.png",
+    "description": "光を反射して輝くクリスタルオーナメント。高級感あるアクセントになります。",
+    "promotionalText": "特別な日を彩るクリスタルの輝き",
+    "isPurchased": false,
+    "price": 800.0,
+    "currency": "JPY"
+  }
+]

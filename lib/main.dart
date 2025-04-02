@@ -10,6 +10,7 @@ import 'screens/my_page_screen.dart';
 import 'screens/recommend_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/review_screen.dart'; // レビュー画面を追加
+import 'screens/favorites_screen.dart'; // お気に入り一覧画面を追加
 
 // リポジトリのインポート
 import 'repositories/book_repository.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '絵本アプリ',
+      title: '「エホミル」大人が楽しめる絵本アプリ',
       theme: ThemeData(
         primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
       home: const MainPage(),
       routes: {
         '/bookOverview': (context) => const BookOverviewScreen(),
+        '/favorites': (context) => const FavoritesScreen(), // お気に入り一覧画面を追加
         '/review': (context) {
           final args =
               ModalRoute.of(context)!.settings.arguments
@@ -117,7 +119,18 @@ class _MainPageState extends State<MainPage> {
             builder = (context) => const BookOverviewScreen();
           } else if (settings.name == '/book') {
             final args = settings.arguments as BookScreenArguments;
-            builder = (context) => BookScreen(args: args);
+            builder =
+                (context) => BookScreen(
+                  args: args,
+                  onDispose: () {
+                    // BookScreen が破棄されたときに呼ばれるコールバック
+                    if (mounted) {
+                      setState(() {
+                        _hideBottomNavigationBar = false;
+                      });
+                    }
+                  },
+                );
 
             // タブバーを非表示にするためのコールバックを設定
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -144,18 +157,21 @@ class _MainPageState extends State<MainPage> {
             builder = (context) => _getTabScreen(index);
 
             // デフォルトルートに戻った場合、タブバーを表示するためのコールバックを設定
-            if (_hideBottomNavigationBar) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (mounted) {
-                  setState(() {
-                    _hideBottomNavigationBar = false;
-                  });
-                }
-              });
-            }
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted && _hideBottomNavigationBar) {
+                setState(() {
+                  _hideBottomNavigationBar = false;
+                });
+              }
+            });
           }
 
-          return MaterialPageRoute(builder: builder, settings: settings);
+          return MaterialPageRoute(
+            builder: builder,
+            settings: settings,
+            // 画面遷移が完了した時に呼ばれるコールバック
+            maintainState: true,
+          );
         },
       ),
     );
@@ -175,6 +191,8 @@ class _MainPageState extends State<MainPage> {
     } else {
       setState(() {
         _selectedIndex = index;
+        // タブを切り替えた時、ボトムナビゲーションバーを再表示
+        _hideBottomNavigationBar = false;
       });
     }
   }
@@ -189,7 +207,7 @@ class _MainPageState extends State<MainPage> {
         // 画面が戻ったとき、下部メニューを再表示
         if (!isFirstRouteInCurrentTab) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
+            if (mounted && _hideBottomNavigationBar) {
               setState(() {
                 _hideBottomNavigationBar = false;
               });

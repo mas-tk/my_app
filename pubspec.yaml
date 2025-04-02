@@ -41,14 +41,27 @@ flutter:
     - assets/button-frame.png
     - assets/profile_placeholder.png
     - assets/blackboard.png
+    - assets/bookmark.png
+    - assets/bookmark_off.png
     - assets/page_flip.mp3
 
     # データファイル
     - assets/data/books.json
     - assets/data/categories.json
+    - assets/data/shelf_categories.json
+    - assets/data/favorite_books.json
+    - assets/data/decoration_objects.json
 
     # 本のカバー画像
     - assets/bookcovers/
+
+    # オブジェ画像
+    - assets/objects/
+    - assets/objects/neko.png
+    - assets/objects/neko_kin.png
+    - assets/objects/saboten_maru.png
+    - assets/objects/saboten_nagai.png
+    - assets/objects/tenkyugi.png
 
     # プリインストールされた絵本のページ画像
     - assets/books/book1/
