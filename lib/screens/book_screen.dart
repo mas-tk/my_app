@@ -172,6 +172,18 @@ class _BookScreenState extends State<BookScreen>
     super.dispose();
   }
 
+  // バイブレーション関数
+  Future<void> _generateHapticFeedback() async {
+    try {
+      // 複数の異なるタイプを使用して効果を高める
+      await HapticFeedback.mediumImpact();
+      await Future.delayed(const Duration(milliseconds: 10));
+      await HapticFeedback.lightImpact();
+    } catch (e) {
+      print('Haptic feedback error: $e');
+    }
+  }
+
   // 本データを読み込む
   Future<void> _loadBookData() async {
     setState(() {
@@ -596,10 +608,13 @@ class _BookScreenState extends State<BookScreen>
   }
 
   // ページを次に移動する (シンプル版)
-  void _turnToNextPage() {
+  Future<void> _turnToNextPage() async {
     if (_book != null &&
         _currentPage < _book!.pages!.length - 1 &&
         !_isPageTurning) {
+      // ページめくり時のバイブレーション
+      await _generateHapticFeedback();
+
       setState(() {
         _isPageTurning = true;
         _targetPage = _currentPage + 1;
@@ -736,7 +751,7 @@ class _BookScreenState extends State<BookScreen>
   }
 
   // 修正点①: ページタップの処理 - 最終ページかそれ以外かで分岐
-  void _toggleTextLayer(String pageId) {
+  Future<void> _toggleTextLayer(String pageId) async {
     if (_isLastPage) {
       // 新しいタップカウントを計算
       int newTapCount = (_lastPageTapCount + 1) % 4;
@@ -746,7 +761,7 @@ class _BookScreenState extends State<BookScreen>
       });
       // タップカウントが 2 のときにバイブレーションさせる
       if (newTapCount == 2) {
-        HapticFeedback.vibrate();
+        await _generateHapticFeedback();
       }
     } else {
       setState(() {

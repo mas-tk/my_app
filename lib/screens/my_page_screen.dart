@@ -5,10 +5,10 @@ import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle, HapticFeedback;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../repositories/book_repository.dart';
-import '../repositories/object_repository.dart'; // 追加: オブジェクトリポジトリ
+import '../repositories/object_repository.dart';
 import '../models/book_models.dart' as app_models;
-import '../models/object_models.dart'; // 追加: オブジェクトモデル
-import '../models/shelf_models.dart'; // 更新: 棚モデル
+import '../models/object_models.dart';
+import '../models/shelf_models.dart';
 import '../services/file_storage_service.dart';
 import 'favorites_screen.dart';
 
@@ -336,7 +336,7 @@ class _MyPageScreenState extends State<MyPageScreen>
 
   // デフォルトデータをロード（JSONファイルがない場合のフォールバック）
   Future<void> _loadDefaultData() async {
-    // デフォルトお気に入りデータ
+    // Default favorite data
     favoriteBooksForAddDialog = [
       FavoriteBookReference(
         id: 'fav1',
@@ -606,7 +606,25 @@ class _MyPageScreenState extends State<MyPageScreen>
     ];
   }
 
-  void _toggleEditMode() {
+  // バイブレーション関数を追加
+  Future<void> _generateHapticFeedback() async {
+    try {
+      // 複数の異なるタイプを使用して効果を高める
+      await HapticFeedback.mediumImpact();
+      await Future.delayed(const Duration(milliseconds: 10));
+      await HapticFeedback.lightImpact();
+    } catch (e) {
+      print('Haptic feedback error: $e');
+    }
+  }
+
+  // 編集モードの切り替え - asyncに変更
+  Future<void> _toggleEditMode() async {
+    // 編集モードがONになるときはバイブレーション
+    if (!_isEditMode) {
+      await _generateHapticFeedback();
+    }
+
     setState(() {
       _isEditMode = !_isEditMode;
 
@@ -1087,14 +1105,13 @@ class _MyPageScreenState extends State<MyPageScreen>
         onLongPress: () {
           // 長押しで編集モード開始
           if (!_isEditMode) {
-            HapticFeedback.vibrate();
-            _toggleEditMode();
+            _toggleEditMode(); // asyncメソッドを呼び出す
           }
         },
         onTap: () {
           // 編集モード時は画面タップで編集モードを終了
           if (_isEditMode) {
-            _toggleEditMode();
+            _toggleEditMode(); // asyncメソッドを呼び出す
           }
         },
         child: Stack(
@@ -1724,10 +1741,10 @@ class _MyPageScreenState extends State<MyPageScreen>
                             );
                           }
                           : null,
-                  onLongPress: () {
+                  onLongPress: () async {
                     // 長押しで編集モードを開始（バブリングを防止）
                     if (!_isEditMode) {
-                      HapticFeedback.vibrate();
+                      await _generateHapticFeedback(); // バイブレーション追加
                       _toggleEditMode();
                     }
                   },
@@ -2064,10 +2081,10 @@ class _MyPageScreenState extends State<MyPageScreen>
                             );
                           }
                           : null,
-                  onLongPress: () {
+                  onLongPress: () async {
                     // 長押しで編集モードを開始（バブリングを防止）
                     if (!_isEditMode) {
-                      HapticFeedback.vibrate();
+                      await _generateHapticFeedback(); // バイブレーション追加
                       _toggleEditMode();
                     }
                   },
