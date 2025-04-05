@@ -8,6 +8,7 @@ import '../models/book_models.dart';
 import '../repositories/book_repository.dart';
 import '../services/file_storage_service.dart'; // Import the file storage service
 import 'book_screen.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class BookOverviewScreen extends StatefulWidget {
   const BookOverviewScreen({Key? key}) : super(key: key);
@@ -226,18 +227,56 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
     }
   }
 
-  // Navigate to book screen - asyncに変更
+  // _navigateToBookScreen メソッドの修正版
   Future<void> _navigateToBookScreen() async {
+    // 拡大表示がまだなら拡大表示
+    if (!_isZoomed) {
+      _toggleCoverZoom();
+      return;
+    }
+
+    // 既に拡大表示されている場合は本の画面に遷移
     // バイブレーション実行
     await _generateHapticFeedback();
 
-    Navigator.pushNamed(
+    // 効果音再生（ページめくり音）
+    final AudioPlayer soundPlayer = AudioPlayer();
+    try {
+      await soundPlayer.setSourceAsset('page_flip.mp3');
+      await soundPlayer.resume();
+
+      // 1秒後に効果音を停止
+      Future.delayed(const Duration(seconds: 1), () {
+        soundPlayer.stop();
+        soundPlayer.dispose();
+      });
+    } catch (e) {
+      print('Error playing sound: $e');
+    }
+
+    // フェードイン遷移アニメーションを使用した画面遷移
+    Navigator.push(
       context,
-      '/book',
-      arguments: BookScreenArguments(
-        bookId: _book!.id,
-        title: _book!.title,
-        isTTS: false,
+      PageRouteBuilder(
+        pageBuilder:
+            (context, animation, secondaryAnimation) => BookScreen(
+              args: BookScreenArguments(
+                bookId: _book!.id,
+                title: _book!.title,
+                isTTS: false,
+              ),
+            ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          // スライドではなく、純粋なフェードインのみのアニメーション（1秒）
+          return FadeTransition(
+            opacity: Tween<double>(
+              begin: 0.0,
+              end: 1.0,
+            ).animate(CurvedAnimation(parent: animation, curve: Curves.easeIn)),
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 1000), // 1秒に設定
       ),
     );
   }
@@ -518,8 +557,10 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
               return ClipRect(
                 child: Image(
                   image: imageProvider,
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  height: 180, // 高さを少し小さくして調整
+                  width:
+                      MediaQuery.of(context).size.width *
+                      0.7, // 拡大 (0.6 -> 0.7)
+                  height: 240, // 高さを大きく (180 -> 240)
                   fit: BoxFit.contain,
                 ),
               );
@@ -530,12 +571,17 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
     );
   }
 
+  // お気に入りボタンのウィジェット
   Widget _buildFavoriteButton() {
+    // 画面サイズを取得
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return GestureDetector(
       onTap: _toggleFavorite,
       child: Container(
-        width: 60, // サイズを小さくして調整
-        height: 60, // サイズを小さくして調整
+        width: screenWidth * 0.15, // 画面幅の10%
+        height: screenHeight * 0.15, // 画面高さの10%
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color:
@@ -615,6 +661,152 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
     );
   }
 
+  // 拡大表示オーバーレイウィジェット
+  Widget _buildZoomedOverlay() {
+    // Screen size
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        return Opacity(
+          opacity: _opacityAnimation.value,
+          child: GestureDetector(
+            onTap: _toggleCoverZoom, // タップで閉じる
+            onHorizontalDragEnd: (details) {
+              // スワイプの方向を判定
+              if (details.primaryVelocity != null) {
+                if (details.primaryVelocity! > 0) {
+                  // 左スワイプ - 拡大表示を閉じる
+                  _toggleCoverZoom();
+                } else if (details.primaryVelocity! < 0) {
+                  // 右スワイプ - 本の画面へ移動
+                  _navigateToBookScreen();
+                }
+              }
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.9),
+                gradient: RadialGradient(
+                  colors: [
+                    Colors.black.withOpacity(0.85),
+                    Colors.black.withOpacity(0.95),
+                  ],
+                  center: Alignment.center,
+                  radius: 1.2,
+                ),
+              ),
+              width: double.infinity,
+              height: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // 閉じるボタン
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: _toggleCoverZoom,
+                      ),
+                    ),
+                  ),
+
+                  // 拡大表紙（クリックで本画面へ）
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: _navigateToBookScreen,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Hero(
+                          tag: 'cover-${_book!.id}',
+                          child: FutureBuilder<String>(
+                            future: _bookRepository.getAssetPath(
+                              _book!.coverAssetPath,
+                            ),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                );
+                              }
+
+                              final imagePath =
+                                  snapshot.data ?? _book!.coverAssetPath;
+                              ImageProvider imageProvider;
+
+                              if (imagePath.startsWith('assets/')) {
+                                imageProvider = AssetImage(imagePath);
+                              } else if (!imagePath.startsWith('http')) {
+                                imageProvider = FileImage(File(imagePath));
+                              } else {
+                                imageProvider = AssetImage(
+                                  _book!.coverAssetPath,
+                                );
+                              }
+
+                              return ClipRect(
+                                child: Image(
+                                  image: imageProvider,
+                                  fit: BoxFit.contain,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // 読むボタン
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 40.0, top: 20.0),
+                    child: AnimatedBuilder(
+                      animation: _animationController,
+                      builder: (context, child) {
+                        return Transform.translate(
+                          offset: Offset(0, 50 * (1 - _opacityAnimation.value)),
+                          child: Opacity(
+                            opacity: _opacityAnimation.value,
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: GestureDetector(
+                        onTap: _navigateToBookScreen,
+                        child: Container(
+                          width: screenWidth * 0.30,
+                          height: screenHeight * 0.15,
+
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('assets/button-frame-on.png'),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -672,7 +864,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
                 children: [
                   // 絵本タイトルと表紙（画面上部）- 高さ固定
                   Container(
-                    height: screenHeight * 0.36, // 少し小さく調整（38% → 36%）
+                    height: screenHeight * 0.42, // タイトル削除のため高さを増加
                     width: double.infinity,
                     padding: const EdgeInsets.all(15), // パディングを小さく
                     child: AspectRatio(
@@ -687,25 +879,9 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // Book cover
+                            // Book cover - 拡大 (タイトル削除)
                             _buildCoverImage(_book!.coverAssetPath),
-                            const SizedBox(height: 10), // 間隔を小さく
-                            // Book title
-                            AnimatedOpacity(
-                              opacity: _isAnimating || _isZoomed ? 0.0 : 1.0,
-                              duration: const Duration(milliseconds: 150),
-                              child: Text(
-                                _book!.title,
-                                style: const TextStyle(
-                                  fontSize: 16, // フォントサイズを小さく
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                                textAlign: TextAlign.center,
-                                maxLines: 2, // 2行まで表示可能に
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
+                            // タイトル削除
                           ],
                         ),
                       ),
@@ -722,7 +898,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
                         // Genre tags - 横スクロール可能に
                         if (_book!.genres != null && _book!.genres!.isNotEmpty)
                           Container(
-                            height: 40, // 固定高さを小さく
+                            height: 60, // 高さを増加（40 -> 60）- 2行分確保
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Row(
@@ -731,6 +907,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
                                       return Padding(
                                         padding: const EdgeInsets.only(
                                           right: 8.0,
+                                          bottom: 8.0, // 下部にも余白を追加して行間を確保
                                         ),
                                         child: _buildGenreTag(genre),
                                       );
@@ -794,7 +971,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
                   // 説明欄 - スクロール可能セクション
                   if (_book!.summary != null)
                     Container(
-                      height: screenHeight * 0.16, // 少し小さく調整（18% → 16%）
+                      height: screenHeight * 0.12, // 高さを縮小（0.16 -> 0.12）
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Container(
                         width: double.infinity,
@@ -808,22 +985,23 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
                         ),
                         child: SingleChildScrollView(
                           physics: const BouncingScrollPhysics(),
-                          padding: const EdgeInsets.all(12), // パディングを小さく
+                          padding: const EdgeInsets.all(12),
                           child: Text(
                             _book!.summary!,
-                            style: const TextStyle(
-                              fontSize: 13, // フォントサイズを小さく
-                              height: 1.4, // 行間を小さく
-                            ),
+                            style: const TextStyle(fontSize: 13, height: 1.4),
                           ),
                         ),
                       ),
                     ),
 
-                  // ダウンロードステータス表示 - 別コンテナに分割
+                  // ダウンロードステータス表示 - 別コンテナに分割 (修正: iOS対応)
                   Container(
-                    height: screenHeight * 0.05, // 高さを固定
+                    height: screenHeight * 0.04, // 高さを固定
                     padding: const EdgeInsets.symmetric(horizontal: 16),
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 7,
+                      horizontal: 10,
+                    ),
                     child: Center(
                       child:
                           _isDownloaded
@@ -908,176 +1086,55 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
                               ),
                     ),
                   ),
+
+                  // 読むボタンとお気に入りボタンの親コンテナ (修正: iOS対応)
+                  Container(
+                    height: screenHeight * 0.15, // 高さを小さく (0.14 -> 0.10)
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // スペース
+                        SizedBox(width: screenWidth * 0.10),
+
+                        // お気に入りボタン - 左側に配置
+                        //Padding(
+                        //padding: EdgeInsets.only(left: screenWidth * 0.08),
+                        //child:
+                        _buildFavoriteButton(),
+                        //),
+
+                        // スペース
+                        SizedBox(width: screenWidth * 0.10),
+
+                        // 読むボタン - 中央に配置
+                        GestureDetector(
+                          onTap: _navigateToBookScreen,
+                          child: Container(
+                            width: screenWidth * 0.30,
+                            height: screenHeight * 0.15,
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage('assets/button-frame.png'),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // バランスのためのスペース
+                        //SizedBox(width: screenWidth * 0.15),
+                        // スペース
+                        SizedBox(width: screenWidth * 0.35),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
 
-          // 読むボタンを画面下部に固定配置 - 完全に別の要素として配置
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: bottomPadding + 10, // ナビゲーションバーの上に余白を取って配置
-            child: Center(
-              child: GestureDetector(
-                onTap: _navigateToBookScreen,
-                child: Container(
-                  width: 220,
-                  height: 74,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/button-frame.png'),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          // Favorite button (bottom left) - ナビゲーションバーの上に配置
-          Positioned(
-            left: screenWidth * 0.08, // 少し内側に
-            bottom: bottomPadding + 30, // 読むボタンより上に配置
-            child: _buildFavoriteButton(),
-          ),
-
-          // Zoomed overlay
-          if (_isZoomed)
-            AnimatedBuilder(
-              animation: _animationController,
-              builder: (context, child) {
-                return Opacity(
-                  opacity: _opacityAnimation.value,
-                  child: GestureDetector(
-                    onTap: _toggleCoverZoom, // Close on tap
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.9),
-                        gradient: RadialGradient(
-                          colors: [
-                            Colors.black.withOpacity(0.85),
-                            Colors.black.withOpacity(0.95),
-                          ],
-                          center: Alignment.center,
-                          radius: 1.2,
-                        ),
-                      ),
-                      width: double.infinity,
-                      height: double.infinity,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // Close button
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.close,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
-                                onPressed: _toggleCoverZoom,
-                              ),
-                            ),
-                          ),
-
-                          // Enlarged cover
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                              ),
-                              child: Hero(
-                                tag: 'cover-${_book!.id}',
-                                child: FutureBuilder<String>(
-                                  future: _bookRepository.getAssetPath(
-                                    _book!.coverAssetPath,
-                                  ),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const Center(
-                                        child: CircularProgressIndicator(
-                                          color: Colors.white,
-                                        ),
-                                      );
-                                    }
-
-                                    final imagePath =
-                                        snapshot.data ?? _book!.coverAssetPath;
-                                    ImageProvider imageProvider;
-
-                                    if (imagePath.startsWith('assets/')) {
-                                      imageProvider = AssetImage(imagePath);
-                                    } else if (!imagePath.startsWith('http')) {
-                                      imageProvider = FileImage(
-                                        File(imagePath),
-                                      );
-                                    } else {
-                                      imageProvider = AssetImage(
-                                        _book!.coverAssetPath,
-                                      );
-                                    }
-
-                                    return ClipRect(
-                                      child: Image(
-                                        image: imageProvider,
-                                        fit: BoxFit.contain,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          // Read button
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 40.0,
-                              top: 20.0,
-                            ),
-                            child: AnimatedBuilder(
-                              animation: _animationController,
-                              builder: (context, child) {
-                                return Transform.translate(
-                                  offset: Offset(
-                                    0,
-                                    50 * (1 - _opacityAnimation.value),
-                                  ),
-                                  child: Opacity(
-                                    opacity: _opacityAnimation.value,
-                                    child: child,
-                                  ),
-                                );
-                              },
-                              child: GestureDetector(
-                                onTap: _navigateToBookScreen,
-                                child: Container(
-                                  width: 220, // 小さく
-                                  height: 74, // 小さく
-                                  decoration: const BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                        'assets/button-frame.png',
-                                      ),
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
+          // 拡大表示のオーバーレイ (修正)
+          if (_isZoomed) _buildZoomedOverlay(),
         ],
       ),
     );

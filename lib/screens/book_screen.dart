@@ -1,5 +1,6 @@
 // lib/screens/book_screen.dart
 import 'dart:io';
+import 'dart:async'; // Timer用にimportを追加
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,6 +9,33 @@ import '../models/book_models.dart';
 import '../repositories/book_repository.dart';
 import 'review_screen.dart';
 import 'package:flutter/services.dart' show HapticFeedback;
+
+// 文字レイヤー自動表示の速度設定
+enum AutoTextDisplaySpeed {
+  off, // 自動表示なし
+  slow, // 遅い (3秒)
+  normal, // 普通 (1.5秒)
+  fast, // 早い (1秒)
+  instant, // 最初から表示
+}
+
+// 速度設定の名前マッピング
+const Map<AutoTextDisplaySpeed, String> autoTextSpeedNames = {
+  AutoTextDisplaySpeed.off: '自動表示なし',
+  AutoTextDisplaySpeed.slow: '遅い (3秒)',
+  AutoTextDisplaySpeed.normal: '普通 (1.5秒)',
+  AutoTextDisplaySpeed.fast: '早い (1秒)',
+  AutoTextDisplaySpeed.instant: '最初から表示',
+};
+
+// 速度設定の時間マッピング (ミリ秒)
+const Map<AutoTextDisplaySpeed, int> autoTextSpeedTimes = {
+  AutoTextDisplaySpeed.off: 0,
+  AutoTextDisplaySpeed.slow: 3000,
+  AutoTextDisplaySpeed.normal: 1500,
+  AutoTextDisplaySpeed.fast: 1000,
+  AutoTextDisplaySpeed.instant: 0,
+};
 
 // BookScreenに渡すパラメータ
 class BookScreenArguments {
@@ -37,7 +65,7 @@ class BookScreen extends StatefulWidget {
 }
 
 class _BookScreenState extends State<BookScreen>
-    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
+    with WidgetsBindingObserver, TickerProviderStateMixin {
   // レポジトリ
   final BookRepository _bookRepository = BookRepository();
 
@@ -64,6 +92,9 @@ class _BookScreenState extends State<BookScreen>
   String? _currentAudioPath;
   AudioTrack? _currentTrack;
 
+  // 文字自動表示の設定
+  AutoTextDisplaySpeed _autoTextSpeed = AutoTextDisplaySpeed.normal;
+
   // 修正点①: 最終ページ用のタップカウント
   int _lastPageTapCount = 0;
 
@@ -89,6 +120,9 @@ class _BookScreenState extends State<BookScreen>
   // スワイプ検出用
   double _touchStartY = 0;
 
+  // 修正点③: 自動テキスト表示のタイマー
+  Timer? _autoTextTimer;
+
   @override
   void initState() {
     super.initState();
@@ -108,6 +142,9 @@ class _BookScreenState extends State<BookScreen>
     // 初期化を非同期で安全に行う
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       debugPrint('初期化: アプリの初期化を開始します');
+
+      // 自動表示速度の設定を読み込む
+      await _loadAutoTextSpeedSetting();
 
       // デフォルトでサウンドを有効にする
       _soundEnabled = true;
@@ -130,8 +167,76 @@ class _BookScreenState extends State<BookScreen>
       await Future.delayed(const Duration(milliseconds: 300));
       await _setupAudio();
 
+      // 最初のページ表示後に自動でテキストレイヤーを表示するタイマーをセット
+      _scheduleAutoTextDisplay();
+
       debugPrint('初期化: アプリの初期化が完了しました');
     });
+  }
+
+  // 自動表示速度の設定を保存
+  Future<void> _saveAutoTextSpeedSetting() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('auto_text_speed', _autoTextSpeed.index);
+      print('自動表示速度を保存しました: $_autoTextSpeed');
+    } catch (e) {
+      print('自動表示速度の保存に失敗しました: $e');
+    }
+  }
+
+  // 自動表示速度の設定を読み込む
+  Future<void> _loadAutoTextSpeedSetting() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final speedIndex = prefs.getInt('auto_text_speed');
+      if (speedIndex != null &&
+          speedIndex >= 0 &&
+          speedIndex < AutoTextDisplaySpeed.values.length) {
+        setState(() {
+          _autoTextSpeed = AutoTextDisplaySpeed.values[speedIndex];
+        });
+      }
+      print('自動表示速度を読み込みました: $_autoTextSpeed');
+    } catch (e) {
+      print('自動表示速度の読み込みに失敗しました: $e');
+    }
+  }
+
+  // 修正点③: 自動テキスト表示のスケジュール
+  void _scheduleAutoTextDisplay() {
+    if (_book != null && _book!.pages != null && _book!.pages!.isNotEmpty) {
+      // 既存のタイマーをキャンセル
+      _autoTextTimer?.cancel();
+
+      // 現在のページのページIDを取得
+      final pageId = _book!.pages![_currentPage].pageId;
+
+      // 設定に基づいてテキスト表示を制御
+      if (_autoTextSpeed == AutoTextDisplaySpeed.instant) {
+        // 即時表示
+        if (mounted && !(_textVisibility[pageId] ?? false)) {
+          setState(() {
+            _textVisibility[pageId] = true;
+          });
+        }
+      } else if (_autoTextSpeed != AutoTextDisplaySpeed.off) {
+        // タイマーによる遅延表示（オフ以外）
+        final delayMs = autoTextSpeedTimes[_autoTextSpeed] ?? 1500;
+
+        // テキストがまだ表示されていない場合のみスケジュール
+        if (!(_textVisibility[pageId] ?? false)) {
+          _autoTextTimer = Timer(Duration(milliseconds: delayMs), () {
+            if (mounted) {
+              setState(() {
+                _textVisibility[pageId] = true;
+              });
+            }
+          });
+        }
+      }
+      // オフの場合は何もしない
+    }
   }
 
   @override
@@ -152,6 +257,9 @@ class _BookScreenState extends State<BookScreen>
     WidgetsBinding.instance.removeObserver(this);
     _pageController.dispose();
     _animationController.dispose();
+
+    // 自動テキスト表示のタイマーをキャンセル
+    _autoTextTimer?.cancel();
 
     // 音声を停止して解放
     try {
@@ -199,7 +307,8 @@ class _BookScreenState extends State<BookScreen>
 
           // すべてのページでテキスト非表示に初期化
           for (var page in book.pages!) {
-            _textVisibility[page.pageId] = false;
+            _textVisibility[page.pageId] =
+                _autoTextSpeed == AutoTextDisplaySpeed.instant;
           }
         });
       } else {
@@ -436,7 +545,57 @@ class _BookScreenState extends State<BookScreen>
     }
   }
 
-  // ページに応じてBGMを確認・切り替える関数
+  // 音量のフェードアウト処理
+  Future<void> _fadeOutAudio(Duration duration) async {
+    if (!_bgmPlaying) return;
+
+    try {
+      // 現在の音量を保存
+      final startVolume = _volume;
+      final steps = 10; // フェードアウトのステップ数
+
+      for (int i = steps; i >= 0; i--) {
+        final fadeVolume = startVolume * i / steps;
+        await _audioPlayer.setVolume(fadeVolume);
+        await Future.delayed(
+          Duration(milliseconds: duration.inMilliseconds ~/ steps),
+        );
+      }
+    } catch (e) {
+      debugPrint('フェードアウトエラー: $e');
+    }
+  }
+
+  // 音量のフェードイン処理
+  Future<void> _fadeInAudio(Duration duration) async {
+    if (!_bgmPlaying) return;
+
+    try {
+      // 目標音量
+      final targetVolume = _volume;
+      final steps = 10; // フェードインのステップ数
+
+      // 一旦音量を0に設定
+      await _audioPlayer.setVolume(0);
+
+      for (int i = 0; i <= steps; i++) {
+        final fadeVolume = targetVolume * i / steps;
+        await _audioPlayer.setVolume(fadeVolume);
+        await Future.delayed(
+          Duration(milliseconds: duration.inMilliseconds ~/ steps),
+        );
+      }
+
+      // 最終的に目標音量に設定（念のため）
+      await _audioPlayer.setVolume(targetVolume);
+    } catch (e) {
+      debugPrint('フェードインエラー: $e');
+      // エラー時は直接目標音量に設定
+      await _audioPlayer.setVolume(_volume);
+    }
+  }
+
+  // ページに応じてBGMを確認・切り替える関数（フェード効果追加）
   Future<void> _checkAndUpdateBGM(int pageNumber) async {
     if (_isChangingTrack || _book?.audio == null) return;
 
@@ -455,9 +614,11 @@ class _BookScreenState extends State<BookScreen>
       _isChangingTrack = true;
 
       try {
-        // BGMを一旦停止
+        // BGMを一旦停止（フェードアウト）
         final wasPlaying = _bgmPlaying;
         if (wasPlaying) {
+          // フェードアウト（500ms）
+          await _fadeOutAudio(const Duration(milliseconds: 500));
           await _audioPlayer.pause();
         }
 
@@ -482,9 +643,11 @@ class _BookScreenState extends State<BookScreen>
         _currentTrack = newTrack;
         debugPrint('トラック変更: ${newTrack.assetPath} (ページ: $actualPageNumber)');
 
-        // 再生中だった場合は再開
+        // 再生中だった場合は再開（フェードイン）
         if (wasPlaying) {
           await _audioPlayer.resume();
+          // フェードイン（1000ms）
+          await _fadeInAudio(const Duration(milliseconds: 1000));
           setState(() {
             _bgmPlaying = true;
           });
@@ -497,14 +660,24 @@ class _BookScreenState extends State<BookScreen>
     }
   }
 
-  // BGM再生 - シンプルに
+  // BGM再生（フェードイン）
   Future<void> _playBackgroundMusic() async {
     try {
       debugPrint('BGM再生開始試行');
+
+      // 音量を一旦0に設定
+      final savedVolume = _volume;
+      await _audioPlayer.setVolume(0);
+
+      // 再生開始
       await _audioPlayer.resume();
       setState(() {
         _bgmPlaying = true;
       });
+
+      // フェードイン
+      await _fadeInAudio(const Duration(milliseconds: 1000));
+
       debugPrint('BGM再生開始');
     } catch (e) {
       debugPrint('BGM再生エラー: $e');
@@ -514,6 +687,7 @@ class _BookScreenState extends State<BookScreen>
         await Future.delayed(const Duration(milliseconds: 500));
         debugPrint('BGM再生再試行');
         await _audioPlayer.resume();
+        await _audioPlayer.setVolume(_volume); // エラー時は直接設定
         setState(() {
           _bgmPlaying = true;
         });
@@ -523,17 +697,28 @@ class _BookScreenState extends State<BookScreen>
     }
   }
 
-  // BGM一時停止 - シンプルに
+  // BGM一時停止（フェードアウト）
   Future<void> _stopBackgroundMusic() async {
     try {
       debugPrint('BGM停止試行');
+
+      // フェードアウト
+      await _fadeOutAudio(const Duration(milliseconds: 500));
+
+      // 停止
       await _audioPlayer.pause();
       setState(() {
         _bgmPlaying = false;
       });
+
       debugPrint('BGM停止完了');
     } catch (e) {
       debugPrint('BGM停止エラー: $e');
+      // エラー時は直接停止
+      await _audioPlayer.pause();
+      setState(() {
+        _bgmPlaying = false;
+      });
     }
   }
 
@@ -583,6 +768,19 @@ class _BookScreenState extends State<BookScreen>
         debugPrint('音量調整エラー: $e');
       }
     }
+  }
+
+  // 自動表示速度を変更するメソッド
+  void _changeAutoTextSpeed(AutoTextDisplaySpeed newSpeed) {
+    setState(() {
+      _autoTextSpeed = newSpeed;
+    });
+
+    // 速度設定を保存
+    _saveAutoTextSpeedSetting();
+
+    // 現在ページの自動表示をスケジュールし直す
+    _scheduleAutoTextDisplay();
   }
 
   // ページを前に移動する (シンプル版)
@@ -656,25 +854,20 @@ class _BookScreenState extends State<BookScreen>
     }
   }
 
-  // タッチ開始時のハンドラー（垂直方向のみを監視）
+  // 修正点②: タッチ開始時のハンドラー（垂直方向のみを監視）
   void _handleTouchStart(DragStartDetails details) {
     _touchStartY = details.globalPosition.dy;
   }
 
-  // スワイプ終了時のハンドラー（垂直方向）
+  // 修正点②: スワイプ終了時のハンドラー（垂直方向）- 方向に関係なく上下スワイプで操作するように変更
   void _handleVerticalSwipeEnd(DragEndDetails details) {
     final touchEndY = details.velocity.pixelsPerSecond.dy;
 
-    // 上向きスワイプ（メニュー表示）
-    if (touchEndY.abs() > 200 && touchEndY < 0) {
+    // スワイプの強さが一定以上ある場合に反応
+    if (touchEndY.abs() > 200) {
       setState(() {
-        _showMenu = true;
-      });
-    }
-    // 下向きスワイプ（メニュー非表示）
-    else if (touchEndY.abs() > 200 && touchEndY > 0) {
-      setState(() {
-        _showMenu = false;
+        // 現在の状態と逆にトグル
+        _showMenu = !_showMenu;
       });
     }
   }
@@ -798,6 +991,9 @@ class _BookScreenState extends State<BookScreen>
     // 次のページと前のページの画像をプリキャッシュ
     _cacheSurroundingPages(pageIndex);
 
+    // 修正点③: 新しいページに移動したら自動テキスト表示タイマーをセット
+    _scheduleAutoTextDisplay();
+
     debugPrint('Page changed to: $pageIndex');
   }
 
@@ -825,12 +1021,376 @@ class _BookScreenState extends State<BookScreen>
             // テキストレイヤー（アニメーション付きの表示/非表示）
             AnimatedOpacity(
               opacity: isTextVisible ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 200),
+              // 自動表示（スケジュール）時は600ms、手動（タップ）では200msで適用
+              duration: const Duration(milliseconds: 600), // アニメーション時間を延長
               child: _getImageWidget(page.textImage),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  // 修正点④: カスタムヘッダーオーバーレイを構築
+  Widget _buildHeaderOverlay() {
+    return AnimatedOpacity(
+      opacity: _showMenu ? 1.0 : 0.0,
+      duration: const Duration(milliseconds: 300),
+      child: Visibility(
+        visible: _showMenu,
+        child: Container(
+          padding: EdgeInsets.fromLTRB(
+            16,
+            MediaQuery.of(context).padding.top + 8,
+            16,
+            8,
+          ),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.black.withOpacity(0.95), // より暗い背景色
+                Colors.black.withOpacity(0.85), // より暗い背景色
+                Colors.black.withOpacity(0.6),
+                Colors.transparent,
+              ],
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 閉じるボタン削除 - 上部の閉じるボタンを削除
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Text(
+                  widget.args.title.isNotEmpty
+                      ? widget.args.title
+                      : _book?.title ?? '',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                '${_currentPage + 1} / ${_book?.pages?.length ?? 0} ページ',
+                style: const TextStyle(color: Colors.white70, fontSize: 14),
+              ),
+              // 曲名を表示
+              if (_currentAudioPath != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: Text(
+                    '再生中: ${_getAudioFileName(_currentAudioPath!)}',
+                    style: const TextStyle(color: Colors.white60, fontSize: 12),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // オーディオファイル名を取得
+  String _getAudioFileName(String path) {
+    // パスからファイル名を抽出
+    final fileName = path.split('/').last;
+    // 拡張子を除去
+    return fileName.split('.').first;
+  }
+
+  // 修正点④: カスタムフッターオーバーレイを構築
+  Widget _buildFooterOverlay() {
+    return AnimatedOpacity(
+      opacity: _showMenu ? 1.0 : 0.0,
+      duration: const Duration(milliseconds: 300),
+      child: Visibility(
+        visible: _showMenu,
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Colors.black.withOpacity(0.95), // より暗い背景色
+                Colors.black.withOpacity(0.85), // より暗い背景色
+                Colors.black.withOpacity(0.6),
+                Colors.transparent,
+              ],
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // コントロールボタン一覧
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // 閉じるボタン
+                  _buildControlButton(
+                    icon: Icons.exit_to_app,
+                    label: '絵本を閉じる',
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  // 最初のページに戻るボタン
+                  _buildControlButton(
+                    icon: Icons.first_page,
+                    label: '最初に戻る',
+                    onPressed: _currentPage > 0 ? _restartBook : null,
+                    isEnabled: _currentPage > 0,
+                  ),
+                  // 前のページボタン
+                  _buildControlButton(
+                    icon: Icons.navigate_before,
+                    label: '前ページ',
+                    onPressed: _currentPage > 0 ? _turnToPreviousPage : null,
+                    isEnabled: _currentPage > 0,
+                  ),
+                  // 次のページボタン
+                  _buildControlButton(
+                    icon: Icons.navigate_next,
+                    label: '次ページ',
+                    onPressed:
+                        _currentPage < (_book?.pages?.length ?? 0) - 1
+                            ? _turnToNextPage
+                            : null,
+                    isEnabled: _currentPage < (_book?.pages?.length ?? 0) - 1,
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              // BGM・音量・文字表示速度コントロール
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // 音量調整ボタン
+                  _buildControlButton(
+                    icon:
+                        _soundEnabled
+                            ? (_volume > 0.5
+                                ? Icons.volume_up
+                                : Icons.volume_down)
+                            : Icons.volume_off,
+                    label: _soundEnabled ? '音量' : '音声オフ',
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        backgroundColor: Colors.black87,
+                        builder: (BuildContext context) {
+                          return StatefulBuilder(
+                            builder: (
+                              BuildContext context,
+                              StateSetter setModalState,
+                            ) {
+                              return Container(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextButton.icon(
+                                          icon: Icon(
+                                            _soundEnabled
+                                                ? Icons.volume_up
+                                                : Icons.volume_off,
+                                            color: Colors.white,
+                                          ),
+                                          label: Text(
+                                            _soundEnabled ? 'サウンドオン' : 'サウンドオフ',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            _toggleBackgroundMusic();
+                                            setModalState(() {});
+                                            setState(() {});
+                                          },
+                                        ),
+                                        // 閉じるボタン
+                                        TextButton(
+                                          child: const Text(
+                                            '閉じる',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          onPressed:
+                                              () => Navigator.pop(context),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.volume_down,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Slider(
+                                            value: _volume,
+                                            min: 0.0,
+                                            max: 1.0,
+                                            activeColor: Colors.white,
+                                            inactiveColor: Colors.white24,
+                                            onChanged: (value) async {
+                                              await _audioPlayer.setVolume(
+                                                value,
+                                              );
+                                              setModalState(() {
+                                                _volume = value;
+                                              });
+                                              setState(() {
+                                                _volume = value;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        const Icon(
+                                          Icons.volume_up,
+                                          color: Colors.white,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  // 文字表示速度調整ボタン
+                  _buildControlButton(
+                    icon: Icons.text_fields,
+                    label: '文字表示速度',
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        backgroundColor: Colors.black87,
+                        builder: (BuildContext context) {
+                          return StatefulBuilder(
+                            builder: (
+                              BuildContext context,
+                              StateSetter setModalState,
+                            ) {
+                              return Container(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text(
+                                      '文字表示速度',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    ...AutoTextDisplaySpeed.values.map((speed) {
+                                      return RadioListTile<
+                                        AutoTextDisplaySpeed
+                                      >(
+                                        title: Text(
+                                          autoTextSpeedNames[speed] ??
+                                              speed.toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        value: speed,
+                                        groupValue: _autoTextSpeed,
+                                        activeColor: Colors.amber,
+                                        onChanged: (newValue) {
+                                          if (newValue != null) {
+                                            setModalState(() {
+                                              _autoTextSpeed = newValue;
+                                            });
+                                            setState(() {
+                                              _autoTextSpeed = newValue;
+                                            });
+                                            _changeAutoTextSpeed(newValue);
+                                            // 閉じる前に少し待つ
+                                            Future.delayed(
+                                              const Duration(milliseconds: 200),
+                                              () {
+                                                Navigator.pop(context);
+                                              },
+                                            );
+                                          }
+                                        },
+                                      );
+                                    }).toList(),
+                                    const SizedBox(height: 8),
+                                    TextButton(
+                                      child: const Text(
+                                        '閉じる',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 修正点⑤: 機能ボタンを作成
+  Widget _buildControlButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback? onPressed,
+    bool isEnabled = true,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          icon: Icon(
+            icon,
+            color: isEnabled ? Colors.white : Colors.white38,
+            size: 28,
+          ),
+          onPressed: onPressed,
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            color: isEnabled ? Colors.white70 : Colors.white38,
+            fontSize: 12,
+          ),
+        ),
+      ],
     );
   }
 
@@ -845,6 +1405,12 @@ class _BookScreenState extends State<BookScreen>
 
     return Scaffold(
       backgroundColor: Colors.black,
+      // AppBar を削除
+
+      // 下部ナビゲーションバーを非表示に（修正点③）
+      extendBodyBehindAppBar: true,
+      extendBody: true,
+
       body: Stack(
         children: [
           // メインのコンテンツ
@@ -878,7 +1444,18 @@ class _BookScreenState extends State<BookScreen>
                     ),
           ),
 
-          // ページめくりのナビゲーションボタン
+          // 上部オーバーレイメニュー - 修正点④
+          _buildHeaderOverlay(),
+
+          // 下部オーバーレイメニュー - 修正点④
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: _buildFooterOverlay(),
+          ),
+
+          // ページめくりのナビゲーションボタン（中央部分にのみ表示）
           if (!_showMenu && !_isPageTurning)
             Positioned(
               left: 0,
@@ -923,233 +1500,6 @@ class _BookScreenState extends State<BookScreen>
                   else
                     const SizedBox(width: 40),
                 ],
-              ),
-            ),
-
-          // 上部メニュー - オーバーレイとして表示（表示/非表示の切り替えはアニメーション）
-          if (_showMenu)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(16, 50, 16, 16),
-                color: Colors.black.withOpacity(0.5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min, // 高さを最小限に抑える
-                  children: [
-                    // 戻るボタン
-                    ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.3),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                      child: const Text(
-                        '戻る',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    // タイトル表示
-                    Text(
-                      widget.args.title.isNotEmpty
-                          ? widget.args.title
-                          : _book!.title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    // 追加情報
-                    Text(
-                      '絵本ID: ${widget.args.bookId}' +
-                          (widget.args.isTTS ? ' [読み聞かせモード]' : ''),
-                      style: const TextStyle(color: Colors.grey, fontSize: 14),
-                    ),
-                    // ページ番号表示
-                    const SizedBox(height: 8),
-                    Text(
-                      'ページ: ${_currentPage + 1}/${_book!.pages!.length}',
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                    // 現在のBGM情報
-                    if (_currentTrack != null)
-                      Text(
-                        '現在のBGM: ${_currentAudioPath?.split('/').last ?? '未設定'}',
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-
-          // 下部メニュー - オーバーレイとして表示（BGMボタンのみ）
-          if (_showMenu)
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                color: Colors.black.withOpacity(0.5),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min, // 高さを最小限に抑える
-                  children: [
-                    // ナビゲーションボタン
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // 最初に戻るボタン
-                        ElevatedButton(
-                          onPressed: _currentPage > 0 ? _restartBook : null,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white.withOpacity(0.2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                          ),
-                          child: const Icon(
-                            Icons.first_page,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-
-                        // 前のページボタン
-                        ElevatedButton(
-                          onPressed:
-                              _currentPage > 0 ? _turnToPreviousPage : null,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white.withOpacity(0.2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                          ),
-                          child: const Icon(
-                            Icons.navigate_before,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-
-                        // 次のページボタン
-                        ElevatedButton(
-                          onPressed:
-                              _currentPage < _book!.pages!.length - 1
-                                  ? _turnToNextPage
-                                  : null,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white.withOpacity(0.2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                          ),
-                          child: const Icon(
-                            Icons.navigate_next,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // BGMボタンと音量調整ボタン
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // BGMオン/オフボタン
-                        ElevatedButton(
-                          onPressed: _toggleBackgroundMusic,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white.withOpacity(0.2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 12,
-                            ),
-                          ),
-                          child: Text(
-                            'BGM: ${_bgmPlaying ? 'オン' : 'オフ'}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-
-                        // 音量調整ボタン（修正点②）
-                        const SizedBox(width: 12),
-                        ElevatedButton(
-                          onPressed: _decreaseVolume,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white.withOpacity(0.2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 12,
-                            ),
-                          ),
-                          child: const Icon(
-                            Icons.volume_down,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        ElevatedButton(
-                          onPressed: _increaseVolume,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white.withOpacity(0.2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 12,
-                            ),
-                          ),
-                          child: const Icon(
-                            Icons.volume_up,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 8),
-                    // 現在の音量表示
-                    Text(
-                      '現在の音量: ${(_volume * 100).toInt()}%',
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                  ],
-                ),
               ),
             ),
 

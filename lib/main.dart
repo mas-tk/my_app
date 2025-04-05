@@ -262,4 +262,13 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
+
+  // BookScreenからの通知を受け取るためのメソッド
+  void setBottomNavigationBarVisibility(bool isVisible) {
+    if (_hideBottomNavigationBar != !isVisible) {
+      setState(() {
+        _hideBottomNavigationBar = !isVisible;
+      });
+    }
+  }
 }
