@@ -95,7 +95,7 @@ class _BookScreenState extends State<BookScreen>
   // 文字自動表示の設定
   AutoTextDisplaySpeed _autoTextSpeed = AutoTextDisplaySpeed.normal;
 
-  // 修正点①: 最終ページ用のタップカウント
+  // 最終ページ用のタップカウント
   int _lastPageTapCount = 0;
 
   // アニメーション関連の状態
@@ -120,7 +120,7 @@ class _BookScreenState extends State<BookScreen>
   // スワイプ検出用
   double _touchStartY = 0;
 
-  // 修正点③: 自動テキスト表示のタイマー
+  // 自動テキスト表示のタイマー
   Timer? _autoTextTimer;
 
   @override
@@ -174,6 +174,41 @@ class _BookScreenState extends State<BookScreen>
     });
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      if (_bgmPlaying) {
+        _audioPlayer.pause();
+      }
+    } else if (state == AppLifecycleState.resumed) {
+      if (_bgmPlaying) {
+        _audioPlayer.resume();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _pageController.dispose();
+
+    // 音声を停止して解放
+    try {
+      _audioPlayer.stop();
+    } catch (e) {
+      debugPrint('Error stopping audio: $e');
+    }
+
+    _audioPlayer.dispose();
+
+    // コールバックが設定されていれば呼び出す - 必ずこの行が実行されることを確認
+    widget.onDispose?.call();
+
+    print("BookScreen disposed, callback executed");
+
+    super.dispose();
+  }
+
   // 自動表示速度の設定を保存
   Future<void> _saveAutoTextSpeedSetting() async {
     try {
@@ -203,7 +238,7 @@ class _BookScreenState extends State<BookScreen>
     }
   }
 
-  // 修正点③: 自動テキスト表示のスケジュール
+  // 自動テキスト表示のスケジュール
   void _scheduleAutoTextDisplay() {
     if (_book != null && _book!.pages != null && _book!.pages!.isNotEmpty) {
       // 既存のタイマーをキャンセル
@@ -237,47 +272,6 @@ class _BookScreenState extends State<BookScreen>
       }
       // オフの場合は何もしない
     }
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      if (_bgmPlaying) {
-        _audioPlayer.pause();
-      }
-    } else if (state == AppLifecycleState.resumed) {
-      if (_bgmPlaying) {
-        _audioPlayer.resume();
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _pageController.dispose();
-    _animationController.dispose();
-
-    // 自動テキスト表示のタイマーをキャンセル
-    _autoTextTimer?.cancel();
-
-    // 音声を停止して解放
-    try {
-      _audioPlayer.stop();
-    } catch (e) {
-      debugPrint('Error stopping audio: $e');
-    }
-
-    _audioPlayer.dispose();
-
-    // キャッシュをクリア
-    _imagePathCache.clear();
-    _imageCache.clear();
-
-    // コールバックが設定されていれば呼び出す
-    widget.onDispose?.call();
-
-    super.dispose();
   }
 
   // バイブレーション関数
@@ -738,7 +732,7 @@ class _BookScreenState extends State<BookScreen>
     }
   }
 
-  // 修正点②: 音量を上げるメソッド
+  // 音量を上げるメソッド
   Future<void> _increaseVolume() async {
     if (_volume < 1.0) {
       try {
@@ -754,7 +748,7 @@ class _BookScreenState extends State<BookScreen>
     }
   }
 
-  // 修正点②: 音量を下げるメソッド
+  // 音量を下げるメソッド
   Future<void> _decreaseVolume() async {
     if (_volume > 0.0) {
       try {
@@ -783,7 +777,7 @@ class _BookScreenState extends State<BookScreen>
     _scheduleAutoTextDisplay();
   }
 
-  // ページを前に移動する (シンプル版)
+  // ページを前に移動する
   void _turnToPreviousPage() {
     if (_currentPage > 0 && !_isPageTurning) {
       setState(() {
@@ -805,7 +799,7 @@ class _BookScreenState extends State<BookScreen>
     }
   }
 
-  // ページを次に移動する (シンプル版)
+  // ページを次に移動する
   Future<void> _turnToNextPage() async {
     if (_book != null &&
         _currentPage < _book!.pages!.length - 1 &&
@@ -832,7 +826,7 @@ class _BookScreenState extends State<BookScreen>
     }
   }
 
-  // 最初のページに戻る (シンプル版)
+  // 最初のページに戻る
   void _restartBook() {
     if (_currentPage > 0 && !_isPageTurning) {
       setState(() {
@@ -854,12 +848,12 @@ class _BookScreenState extends State<BookScreen>
     }
   }
 
-  // 修正点②: タッチ開始時のハンドラー（垂直方向のみを監視）
+  // タッチ開始時のハンドラー
   void _handleTouchStart(DragStartDetails details) {
     _touchStartY = details.globalPosition.dy;
   }
 
-  // 修正点②: スワイプ終了時のハンドラー（垂直方向）- 方向に関係なく上下スワイプで操作するように変更
+  // 垂直方向スワイプ終了時のハンドラー
   void _handleVerticalSwipeEnd(DragEndDetails details) {
     final touchEndY = details.velocity.pixelsPerSecond.dy;
 
@@ -943,18 +937,33 @@ class _BookScreenState extends State<BookScreen>
     );
   }
 
-  // 修正点①: ページタップの処理 - 最終ページかそれ以外かで分岐
+  // ページタップの処理 - 最終ページかそれ以外かで分岐
   Future<void> _toggleTextLayer(String pageId) async {
     if (_isLastPage) {
-      // 新しいタップカウントを計算
-      int newTapCount = (_lastPageTapCount + 1) % 4;
-      setState(() {
-        _lastPageTapCount = newTapCount;
-        _textVisibility[pageId] = newTapCount == 1 || newTapCount == 2;
-      });
-      // タップカウントが 2 のときにバイブレーションさせる
-      if (newTapCount == 2) {
+      // 現在のテキスト表示状態を取得
+      bool isCurrentlyVisible = _textVisibility[pageId] ?? false;
+
+      // 自動表示の場合、最初のタップは既に表示状態なので、次の状態に進める
+      if (isCurrentlyVisible && _lastPageTapCount == 0) {
+        // 既に表示されていて、まだタップされていない場合は2に
+        setState(() {
+          _lastPageTapCount = 2;
+          // テキスト表示状態は変更しない
+        });
+        // コメントボタン表示に対応するバイブレーション
         await _generateHapticFeedback();
+      } else {
+        // 通常の3状態循環
+        int newTapCount = (_lastPageTapCount + 1) % 3;
+        setState(() {
+          _lastPageTapCount = newTapCount;
+          // 0: テキスト非表示、1: テキスト表示、2: テキスト表示+コメントボタン表示
+          _textVisibility[pageId] = newTapCount == 1 || newTapCount == 2;
+        });
+        // タップカウントが 2 のときにバイブレーションさせる (コメントボタン表示時)
+        if (newTapCount == 2) {
+          await _generateHapticFeedback();
+        }
       }
     } else {
       setState(() {
@@ -971,7 +980,7 @@ class _BookScreenState extends State<BookScreen>
       // 最後のページかどうかをチェック
       _isLastPage = (_book != null && pageIndex == _book!.pages!.length - 1);
 
-      // 修正点①: 最終ページに入る場合はタップカウントをリセット
+      // 最終ページに入る場合はタップカウントをリセット
       if (_isLastPage) {
         _lastPageTapCount = 0;
 
@@ -991,7 +1000,7 @@ class _BookScreenState extends State<BookScreen>
     // 次のページと前のページの画像をプリキャッシュ
     _cacheSurroundingPages(pageIndex);
 
-    // 修正点③: 新しいページに移動したら自動テキスト表示タイマーをセット
+    // 新しいページに移動したら自動テキスト表示タイマーをセット
     _scheduleAutoTextDisplay();
 
     debugPrint('Page changed to: $pageIndex');
@@ -1031,7 +1040,7 @@ class _BookScreenState extends State<BookScreen>
     );
   }
 
-  // 修正点④: カスタムヘッダーオーバーレイを構築
+  // ヘッダーオーバーレイを構築
   Widget _buildHeaderOverlay() {
     return AnimatedOpacity(
       opacity: _showMenu ? 1.0 : 0.0,
@@ -1039,6 +1048,7 @@ class _BookScreenState extends State<BookScreen>
       child: Visibility(
         visible: _showMenu,
         child: Container(
+          width: double.infinity, // 画面全体の幅を使用
           padding: EdgeInsets.fromLTRB(
             16,
             MediaQuery.of(context).padding.top + 8,
@@ -1052,7 +1062,7 @@ class _BookScreenState extends State<BookScreen>
               colors: [
                 Colors.black.withOpacity(0.95), // より暗い背景色
                 Colors.black.withOpacity(0.85), // より暗い背景色
-                Colors.black.withOpacity(0.6),
+                Colors.black.withOpacity(0.80),
                 Colors.transparent,
               ],
             ),
@@ -1108,7 +1118,7 @@ class _BookScreenState extends State<BookScreen>
     return fileName.split('.').first;
   }
 
-  // 修正点④: カスタムフッターオーバーレイを構築
+  // フッターオーバーレイを構築
   Widget _buildFooterOverlay() {
     return AnimatedOpacity(
       opacity: _showMenu ? 1.0 : 0.0,
@@ -1116,6 +1126,7 @@ class _BookScreenState extends State<BookScreen>
       child: Visibility(
         visible: _showMenu,
         child: Container(
+          width: double.infinity, // 画面全体の幅を使用
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -1124,7 +1135,7 @@ class _BookScreenState extends State<BookScreen>
               colors: [
                 Colors.black.withOpacity(0.95), // より暗い背景色
                 Colors.black.withOpacity(0.85), // より暗い背景色
-                Colors.black.withOpacity(0.6),
+                Colors.black.withOpacity(0.80),
                 Colors.transparent,
               ],
             ),
@@ -1132,7 +1143,7 @@ class _BookScreenState extends State<BookScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // コントロールボタン一覧
+              // Single row of controls (previous/next page buttons removed)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -1149,32 +1160,6 @@ class _BookScreenState extends State<BookScreen>
                     onPressed: _currentPage > 0 ? _restartBook : null,
                     isEnabled: _currentPage > 0,
                   ),
-                  // 前のページボタン
-                  _buildControlButton(
-                    icon: Icons.navigate_before,
-                    label: '前ページ',
-                    onPressed: _currentPage > 0 ? _turnToPreviousPage : null,
-                    isEnabled: _currentPage > 0,
-                  ),
-                  // 次のページボタン
-                  _buildControlButton(
-                    icon: Icons.navigate_next,
-                    label: '次ページ',
-                    onPressed:
-                        _currentPage < (_book?.pages?.length ?? 0) - 1
-                            ? _turnToNextPage
-                            : null,
-                    isEnabled: _currentPage < (_book?.pages?.length ?? 0) - 1,
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-
-              // BGM・音量・文字表示速度コントロール
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
                   // 音量調整ボタン
                   _buildControlButton(
                     icon:
@@ -1305,7 +1290,9 @@ class _BookScreenState extends State<BookScreen>
                                       ),
                                     ),
                                     const SizedBox(height: 16),
-                                    ...AutoTextDisplaySpeed.values.map((speed) {
+                                    ...AutoTextDisplaySpeed.values.map<Widget>((
+                                      speed,
+                                    ) {
                                       return RadioListTile<
                                         AutoTextDisplaySpeed
                                       >(
@@ -1365,7 +1352,7 @@ class _BookScreenState extends State<BookScreen>
     );
   }
 
-  // 修正点⑤: 機能ボタンを作成
+  // 機能ボタンを作成
   Widget _buildControlButton({
     required IconData icon,
     required String label,
@@ -1399,25 +1386,39 @@ class _BookScreenState extends State<BookScreen>
     if (_isLoading || _book == null) {
       return const Scaffold(
         backgroundColor: Colors.black,
+        bottomNavigationBar: null, // 明示的にnull
         body: Center(child: CircularProgressIndicator(color: Colors.white)),
       );
     }
 
     return Scaffold(
       backgroundColor: Colors.black,
-      // AppBar を削除
-
-      // 下部ナビゲーションバーを非表示に（修正点③）
+      appBar: null, // 不要なら削除
+      bottomNavigationBar: null, // 明示的にnull
       extendBodyBehindAppBar: true,
       extendBody: true,
-
       body: Stack(
         children: [
           // メインのコンテンツ
           GestureDetector(
-            onVerticalDragStart: _handleTouchStart,
-            onVerticalDragEnd: _handleVerticalSwipeEnd,
-            onHorizontalDragEnd: _handleHorizontalSwipe,
+            // メニュー表示中はジェスチャー無効
+            onVerticalDragStart: _showMenu ? null : _handleTouchStart,
+            onVerticalDragEnd: (details) {
+              if (_showMenu) {
+                // メニュー表示中の場合、上下スワイプでメニューを非表示にする
+                if (details.velocity.pixelsPerSecond.dy.abs() > 200) {
+                  setState(() {
+                    _showMenu = false;
+                  });
+                }
+              } else {
+                // メニュー非表示中の場合、上下スワイプでメニューを表示
+                _handleVerticalSwipeEnd(details);
+              }
+            },
+            onHorizontalDragEnd: _showMenu ? null : _handleHorizontalSwipe,
+            // メニュー表示中は一切タップイベントを捕捉しない
+            onTap: _showMenu ? null : null,
             child:
                 _isPageTurning
                     ? AnimatedBuilder(
@@ -1444,10 +1445,25 @@ class _BookScreenState extends State<BookScreen>
                     ),
           ),
 
-          // 上部オーバーレイメニュー - 修正点④
+          // メニュー表示中のタップを捕捉するための透明なオーバーレイ
+          if (_showMenu)
+            Positioned.fill(
+              child: GestureDetector(
+                // 透明な全画面サイズのオーバーレイ
+                behavior: HitTestBehavior.opaque, // 重要: 透明でもタップを捕捉
+                onTap: () {
+                  setState(() {
+                    _showMenu = false;
+                  });
+                },
+                child: Container(color: Colors.transparent),
+              ),
+            ),
+
+          // 上部オーバーレイメニュー
           _buildHeaderOverlay(),
 
-          // 下部オーバーレイメニュー - 修正点④
+          // 下部オーバーレイメニュー
           Positioned(
             left: 0,
             right: 0,
@@ -1503,7 +1519,7 @@ class _BookScreenState extends State<BookScreen>
               ),
             ),
 
-          // 最後のページでコメントボタンを表示（修正点①）
+          // 最後のページでコメントボタンを表示
           if (_isLastPage && _lastPageTapCount == 2)
             Positioned(bottom: 20, right: 20, child: _buildReviewButton()),
 

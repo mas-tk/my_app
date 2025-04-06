@@ -46,8 +46,9 @@ class MyApp extends StatelessWidget {
       ),
       home: const MainPage(),
       routes: {
+        // ここは /bookOverview, /favorites, /review など固定画面のルートを定義
         '/bookOverview': (context) => const BookOverviewScreen(),
-        '/favorites': (context) => const FavoritesScreen(), // お気に入り一覧画面を追加
+        '/favorites': (context) => const FavoritesScreen(),
         '/review': (context) {
           final args =
               ModalRoute.of(context)!.settings.arguments
@@ -55,15 +56,7 @@ class MyApp extends StatelessWidget {
           return ReviewScreen(args: args);
         },
       },
-      onGenerateRoute: (settings) {
-        if (settings.name == '/book') {
-          final args = settings.arguments as BookScreenArguments;
-          return MaterialPageRoute(
-            builder: (context) => BookScreen(args: args),
-          );
-        }
-        return null;
-      },
+      // ★ MaterialApp レベルの onGenerateRoute を削除
     );
   }
 }
@@ -79,6 +72,9 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   bool _hideBottomNavigationBar = false;
+
+  // BookScreenの表示状態を追跡する
+  bool _isBookScreenActive = false;
 
   // 各タブごとに Navigator のキーを用意して状態を保持する
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [
@@ -104,7 +100,7 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  // 各タブの Navigator をオフステージに配置して状態を保持
+  // タブ内の Navigator で画面遷移を制御
   Widget _buildOffstageNavigator(int index) {
     return Offstage(
       offstage: _selectedIndex != index,
@@ -112,18 +108,22 @@ class _MainPageState extends State<MainPage> {
         key: _navigatorKeys[index],
         initialRoute: '/',
         onGenerateRoute: (RouteSettings settings) {
-          WidgetBuilder builder;
+          // ルート名に基づいて画面を返す
+          if (settings.name == '/book') {
+            // BottomNavigationBar を隠す
+            setState(() {
+              _hideBottomNavigationBar = true;
+            });
 
-          // ルート名に基づいて適切な画面を返す
-          if (settings.name == '/bookOverview') {
-            builder = (context) => const BookOverviewScreen();
-          } else if (settings.name == '/book') {
             final args = settings.arguments as BookScreenArguments;
-            builder =
-                (context) => BookScreen(
+
+            // フェードアニメを実装した PageRouteBuilder
+            return PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return BookScreen(
                   args: args,
                   onDispose: () {
-                    // BookScreen が破棄されたときに呼ばれるコールバック
+                    // BookScreen が破棄されたとき
                     if (mounted) {
                       setState(() {
                         _hideBottomNavigationBar = false;
@@ -131,46 +131,50 @@ class _MainPageState extends State<MainPage> {
                     }
                   },
                 );
-
-            // タブバーを非表示にするためのコールバックを設定
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (mounted) {
-                setState(() {
-                  _hideBottomNavigationBar = true;
-                });
-              }
-            });
+              },
+              transitionDuration: const Duration(milliseconds: 1000), // 1秒
+              transitionsBuilder: (
+                context,
+                animation,
+                secondaryAnimation,
+                child,
+              ) {
+                return FadeTransition(
+                  opacity: Tween<double>(
+                    begin: 0.0,
+                    end: 1.0,
+                  ).animate(animation),
+                  child: child,
+                );
+              },
+            );
+          } else if (settings.name == '/') {
+            // タブのメイン画面
+            return MaterialPageRoute(
+              builder: (context) => _getTabScreen(index),
+              settings: settings,
+            );
           } else if (settings.name == '/review') {
+            // レビュー画面でもナビゲーションバーを非表示にしたい場合
+            setState(() {
+              _hideBottomNavigationBar = true;
+            });
             final args = settings.arguments as ReviewScreenArguments;
-            builder = (context) => ReviewScreen(args: args);
-
-            // タブバーを非表示にするためのコールバックを設定
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (mounted) {
-                setState(() {
-                  _hideBottomNavigationBar = true;
-                });
-              }
-            });
-          } else {
-            // デフォルトルート - タブバーを表示
-            builder = (context) => _getTabScreen(index);
-
-            // デフォルトルートに戻った場合、タブバーを表示するためのコールバックを設定
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (mounted && _hideBottomNavigationBar) {
-                setState(() {
-                  _hideBottomNavigationBar = false;
-                });
-              }
-            });
+            return MaterialPageRoute(
+              builder: (context) => ReviewScreen(args: args),
+              settings: settings,
+            );
+          } else if (settings.name == '/bookOverview') {
+            return MaterialPageRoute(
+              builder: (context) => const BookOverviewScreen(),
+              settings: settings,
+            );
           }
 
+          // その他のルートが来たらデフォルトでタブ画面を返す
           return MaterialPageRoute(
-            builder: builder,
+            builder: (context) => _getTabScreen(index),
             settings: settings,
-            // 画面遷移が完了した時に呼ばれるコールバック
-            maintainState: true,
           );
         },
       ),
@@ -179,19 +183,16 @@ class _MainPageState extends State<MainPage> {
 
   void _onItemTapped(int index) {
     if (index == _selectedIndex) {
-      // 既に選択中の場合、Navigator のスタックをポップして先頭に戻す
+      // 既に選択中の場合、スタックを先頭まで戻す
       _navigatorKeys[index].currentState!.popUntil((route) => route.isFirst);
-
-      // メニューを再表示
-      if (_hideBottomNavigationBar) {
-        setState(() {
-          _hideBottomNavigationBar = false;
-        });
-      }
+      // NavBar 再表示したければ
+      setState(() {
+        _hideBottomNavigationBar = false;
+      });
     } else {
+      // タブを切り替え
       setState(() {
         _selectedIndex = index;
-        // タブを切り替えた時、ボトムナビゲーションバーを再表示
         _hideBottomNavigationBar = false;
       });
     }
@@ -199,6 +200,10 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(
+      "MainPage build called, _hideBottomNavigationBar = $_hideBottomNavigationBar",
+    );
+
     return WillPopScope(
       onWillPop: () async {
         final isFirstRouteInCurrentTab =
@@ -206,18 +211,14 @@ class _MainPageState extends State<MainPage> {
 
         // 画面が戻ったとき、下部メニューを再表示
         if (!isFirstRouteInCurrentTab) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted && _hideBottomNavigationBar) {
-              setState(() {
-                _hideBottomNavigationBar = false;
-              });
-            }
+          setState(() {
+            _hideBottomNavigationBar = false;
           });
           return false;
         }
 
+        // 現在のタブがルート画面の場合、最初のタブでなければ切り替え
         if (isFirstRouteInCurrentTab) {
-          // 現在のタブがルート画面の場合、最初のタブでなければそれに切り替え
           if (_selectedIndex != 0) {
             _onItemTapped(0);
             return false;
@@ -227,9 +228,8 @@ class _MainPageState extends State<MainPage> {
         return isFirstRouteInCurrentTab;
       },
       child: Scaffold(
-        // 各タブのNavigatorをStackで重ねる
         body: Stack(
-          children: List.generate(4, (index) => _buildOffstageNavigator(index)),
+          children: List.generate(4, (i) => _buildOffstageNavigator(i)),
         ),
         bottomNavigationBar:
             _hideBottomNavigationBar
@@ -261,14 +261,5 @@ class _MainPageState extends State<MainPage> {
                 ),
       ),
     );
-  }
-
-  // BookScreenからの通知を受け取るためのメソッド
-  void setBottomNavigationBarVisibility(bool isVisible) {
-    if (_hideBottomNavigationBar != !isVisible) {
-      setState(() {
-        _hideBottomNavigationBar = !isVisible;
-      });
-    }
   }
 }

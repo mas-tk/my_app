@@ -254,29 +254,13 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
       print('Error playing sound: $e');
     }
 
-    // フェードイン遷移アニメーションを使用した画面遷移
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        pageBuilder:
-            (context, animation, secondaryAnimation) => BookScreen(
-              args: BookScreenArguments(
-                bookId: _book!.id,
-                title: _book!.title,
-                isTTS: false,
-              ),
-            ),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          // スライドではなく、純粋なフェードインのみのアニメーション（1秒）
-          return FadeTransition(
-            opacity: Tween<double>(
-              begin: 0.0,
-              end: 1.0,
-            ).animate(CurvedAnimation(parent: animation, curve: Curves.easeIn)),
-            child: child,
-          );
-        },
-        transitionDuration: const Duration(milliseconds: 1000), // 1秒に設定
+    // ★ 直接 PageRouteBuilder を使う代わりに pushNamed を使用
+    Navigator.of(context).pushNamed(
+      '/book',
+      arguments: BookScreenArguments(
+        bookId: _book!.id,
+        title: _book!.title,
+        isTTS: false,
       ),
     );
   }
