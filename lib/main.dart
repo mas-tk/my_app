@@ -24,6 +24,14 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  // ステータスバーを透明にして背景画像を上まで表示できるようにする
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light, // ダークな背景に対して白いアイコン
+    ),
+  );
+
   // プリインストールされた本を初期化
   final bookRepository = BookRepository();
   await bookRepository.initializePreinstalledBooks();
@@ -56,7 +64,6 @@ class MyApp extends StatelessWidget {
           return ReviewScreen(args: args);
         },
       },
-      // ★ MaterialApp レベルの onGenerateRoute を削除
     );
   }
 }

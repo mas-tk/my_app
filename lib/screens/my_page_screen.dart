@@ -1165,7 +1165,7 @@ class _MyPageScreenState extends State<MyPageScreen>
             // 中間層3: 装飾要素（ランプ、ラジオ、ティーカップ）
             // 左上のランプ
             Positioned(
-              top: 0,
+              top: _screenWidth * 0.05,
               left: 0,
               child: Image.asset(
                 'assets/lamp_left.png',
@@ -1176,7 +1176,7 @@ class _MyPageScreenState extends State<MyPageScreen>
 
             // 右上のランプ
             Positioned(
-              top: 0,
+              top: _screenWidth * 0.05,
               right: 0,
               child: Image.asset(
                 'assets/lamp_right.png',
@@ -2261,17 +2261,7 @@ class _MyPageScreenState extends State<MyPageScreen>
     _screenWidth = MediaQuery.of(context).size.width;
     _screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(0), // ほぼ見えないヘッダー
-        child: AppBar(
-          elevation: 0, // 影なし
-          backgroundColor: Colors.transparent, // 透明背景
-          toolbarHeight: 0, // ツールバーの高さをゼロに
-        ),
-      ),
-      body: _buildBookshelfScreen(context),
-    );
+    return Scaffold(body: _buildBookshelfScreen(context));
   }
 }
 

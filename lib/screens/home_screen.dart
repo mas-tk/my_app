@@ -177,6 +177,14 @@ class _HomeScreenState extends State<HomeScreen> {
     _screenWidth = MediaQuery.of(context).size.width;
     _screenHeight = MediaQuery.of(context).size.height;
 
+    // シェルフセクションを動的に初期化
+    _shelfSections = _getShelfSections(context);
+
+    // デバイスの安全でない領域のパディングを取得
+    final EdgeInsets padding = MediaQuery.of(context).padding;
+    // 上部の安全でない領域（ノッチ/Dynamic Island）の高さ
+    final double topPadding = padding.top;
+
     // パーセンテージから実際の寸法を計算
     final double sideMargin = _screenWidth * _sideMarginPercent;
 
@@ -225,7 +233,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           // 本棚の背景
                           Positioned(
-                            top: _screenHeight * _shelfBackgroundTopPercent,
+                            //top: _screenHeight * _shelfBackgroundTopPercent,
+                            top:
+                                topPadding +
+                                (_screenHeight * 0.03), // ノッチの高さ + 少し余裕を持たせる
                             bottom:
                                 _screenHeight * _shelfBackgroundBottomPercent,
                             left: 0,
@@ -233,6 +244,23 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Image.asset(
                               'assets/shelf_background.png',
                               fit: BoxFit.fill,
+                            ),
+                          ),
+
+                          // タイトルプレート - 追加
+                          Positioned(
+                            //top:_screenHeight * _shelfBackgroundTopPercent +(_screenHeight * 0.01), // 位置を調整
+                            top:
+                                topPadding +
+                                (_screenHeight * 0.04), // ノッチの高さ + 適切な余白
+                            left: 0,
+                            width: totalWidth,
+                            child: Center(
+                              child: Image.asset(
+                                'assets/plate_home_1.png', // 画像を追加
+                                width: _screenWidth * 0.5, // 幅を調整
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
 
@@ -249,6 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               effectiveWidth: effectiveWidth,
                               shelfLeftMargin: shelfLeftMargin,
                               shelfBoardWidth: shelfBoardWidth,
+                              topPadding: topPadding, // topPaddingを渡す
                             ),
                         ],
                       ),
@@ -258,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   // 装飾要素
                   // 左上のランプ
                   Positioned(
-                    top: 0,
+                    top: _screenWidth * 0.05,
                     left: 0,
                     child: Image.asset(
                       'assets/lamp_left.png',
@@ -269,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   // 右上のランプ
                   Positioned(
-                    top: 0,
+                    top: _screenWidth * 0.05,
                     right: 0,
                     child: Image.asset(
                       'assets/lamp_right.png',
@@ -304,6 +333,51 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // initStateで初期化する代わりに、buildメソッドでシェルフセクションを初期化する関数を作成
+  List<ShelfSection> _getShelfSections(BuildContext context) {
+    // デバイスのセーフエリアパディングを取得
+    final EdgeInsets padding = MediaQuery.of(context).padding;
+    final double topPadding = padding.top;
+
+    // スクリーンサイズに基づく相対的な位置調整
+    final double screenHeight = MediaQuery.of(context).size.height;
+
+    // トップパディングの割合を計算（この値を元にシェルフの位置を調整）
+    final double topPaddingPercent = topPadding / screenHeight;
+
+    return [
+      // 1段目
+      ShelfSection(
+        title: '注目の作品',
+        // topPositionはノッチの高さに応じて動的に調整
+        // 基本位置は0.12だが、ノッチの高さに基づいて調整
+        topPosition: 0.12 + (topPaddingPercent * 0.5), // ノッチ高さの半分程度を加算
+        titleToBookGap: 0.04,
+        bookToShelfGap: -0.006,
+        booksPerScreen: 3,
+      ),
+      // 2段目
+      ShelfSection(
+        title: '新着作品',
+        // 1段目からの相対位置を維持
+        topPosition: 0.12 + (topPaddingPercent * 0.5) + 0.28, // 1段目 + 段間隔
+        titleToBookGap: 0.04,
+        bookToShelfGap: -0.006,
+        booksPerScreen: 5,
+      ),
+      // 3段目
+      ShelfSection(
+        title: '人気作品',
+        // 2段目からの相対位置を維持
+        topPosition:
+            0.12 + (topPaddingPercent * 0.5) + 0.28 * 1.7, // 1段目 + 段間隔×1.7
+        titleToBookGap: 0.04,
+        bookToShelfGap: -0.006,
+        booksPerScreen: 5,
+      ),
+    ];
+  }
+
   // 棚のセクション（タイトル、本、棚板）を構築するヘルパーメソッド
   List<Widget> _buildShelfSection({
     required ShelfSection section,
@@ -312,9 +386,11 @@ class _HomeScreenState extends State<HomeScreen> {
     required double effectiveWidth,
     required double shelfLeftMargin,
     required double shelfBoardWidth,
+    required double topPadding, // ノッチの高さ
   }) {
     // タイトルの位置を計算
-    final double titleY = _screenHeight * section.topPosition;
+    //final double titleY = _screenHeight * section.topPosition;
+    final double titleY = topPadding + (_screenHeight * section.topPosition);
 
     // 本の位置と寸法を計算
     double bookWidth;
@@ -440,16 +516,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _screenWidth = MediaQuery.of(context).size.width;
     _screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(0),
-        child: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          toolbarHeight: 0,
-        ),
-      ),
-      body: _buildBookshelfScreen(context),
-    );
+    return Scaffold(body: _buildBookshelfScreen(context));
   }
 }
