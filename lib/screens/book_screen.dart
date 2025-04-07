@@ -4,11 +4,11 @@ import 'dart:async'; // Timer用にimportを追加
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:turn_page_transition/turn_page_transition.dart';
 import '../models/book_models.dart';
 import '../repositories/book_repository.dart';
 import 'review_screen.dart';
 import 'package:flutter/services.dart' show HapticFeedback;
+import '../widgets/page_turn_animation.dart'; // 新しいページめくりアニメーションをインポート
 
 // 文字レイヤー自動表示の速度設定
 enum AutoTextDisplaySpeed {
@@ -92,6 +92,9 @@ class _BookScreenState extends State<BookScreen>
   String? _currentAudioPath;
   AudioTrack? _currentTrack;
 
+  double _dragProgress = 0.0;
+  bool _isDragging = false;
+
   // 文字自動表示の設定
   AutoTextDisplaySpeed _autoTextSpeed = AutoTextDisplaySpeed.normal;
 
@@ -101,7 +104,7 @@ class _BookScreenState extends State<BookScreen>
   // アニメーション関連の状態
   bool _isPageTurning = false;
   int _targetPage = 0;
-  final Duration _pageTurnDuration = const Duration(milliseconds: 600);
+  final Duration _pageTurnDuration = const Duration(milliseconds: 500);
 
   // ページめくりの方向
   TurnDirection _turnDirection = TurnDirection.rightToLeft;
@@ -135,42 +138,42 @@ class _BookScreenState extends State<BookScreen>
       duration: _pageTurnDuration,
     );
 
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    // 基本的なアニメーションを定義
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOutCubic, // よりスムーズな曲線に変更
     );
 
     // 初期化を非同期で安全に行う
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      debugPrint('初期化: アプリの初期化を開始します');
-
       // 自動表示速度の設定を読み込む
       await _loadAutoTextSpeedSetting();
 
       // デフォルトでサウンドを有効にする
       _soundEnabled = true;
 
+      // 本データを先に読み込み、画面をできるだけ早く表示
       await _loadBookData();
 
-      debugPrint('初期化: 本データのロードが完了しました');
+      // 画面表示後、バックグラウンドでリソース初期化を続行
+      if (mounted) {
+        Future.microtask(() async {
+          // BGMプレーヤーを初期設定
+          await _setupPlayer();
 
-      // BGMプレーヤーを初期設定
-      await _setupPlayer();
+          // ユーザーのお気に入り状態を取得
+          await _loadUserPreferences();
 
-      // 事前に画像パスを解決しておく
-      await _precacheImages();
-
-      // ユーザーのお気に入り状態を取得
-      await _loadUserPreferences();
-
-      // 音楽設定を非同期で初期化
-      // 少し遅延させることで準備が確実に完了するようにする
-      await Future.delayed(const Duration(milliseconds: 300));
-      await _setupAudio();
+          // 音楽設定を非同期で初期化
+          if (mounted) {
+            await Future.delayed(const Duration(milliseconds: 100));
+            await _setupAudio();
+          }
+        });
+      }
 
       // 最初のページ表示後に自動でテキストレイヤーを表示するタイマーをセット
       _scheduleAutoTextDisplay();
-
-      debugPrint('初期化: アプリの初期化が完了しました');
     });
   }
 
@@ -191,6 +194,11 @@ class _BookScreenState extends State<BookScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _pageController.dispose();
+    _animationController.dispose();
+
+    // キャッシュをクリア
+    _imageCache.clear();
+    _imagePathCache.clear();
 
     // 音声を停止して解放
     try {
@@ -200,11 +208,10 @@ class _BookScreenState extends State<BookScreen>
     }
 
     _audioPlayer.dispose();
+    _autoTextTimer?.cancel();
 
-    // コールバックが設定されていれば呼び出す - 必ずこの行が実行されることを確認
+    // コールバックが設定されていれば呼び出す
     widget.onDispose?.call();
-
-    print("BookScreen disposed, callback executed");
 
     super.dispose();
   }
@@ -305,6 +312,17 @@ class _BookScreenState extends State<BookScreen>
                 _autoTextSpeed == AutoTextDisplaySpeed.instant;
           }
         });
+
+        // リソース読み込みを非同期で行い、UIブロックを防ぐ
+        // 最初のページだけ優先的にプリキャッシュ
+        if (book.pages!.isNotEmpty) {
+          final firstPage = book.pages![0];
+          await _cacheImage(firstPage.baseImage);
+          await _cacheImage(firstPage.textImage);
+
+          // 残りは別の非同期処理で
+          Future.microtask(() => _precacheImages());
+        }
       } else {
         throw Exception('本データが見つかりませんでした');
       }
@@ -410,15 +428,24 @@ class _BookScreenState extends State<BookScreen>
 
   // キャッシュから画像ウィジェットを取得
   Widget _getImageWidget(String imagePath) {
-    final cachedPath = _imagePathCache[imagePath] ?? imagePath;
+    try {
+      final cachedPath = _imagePathCache[imagePath] ?? imagePath;
 
-    if (_imageCache.containsKey(cachedPath)) {
-      return _imageCache[cachedPath]!;
+      if (_imageCache.containsKey(cachedPath)) {
+        return _imageCache[cachedPath]!;
+      }
+
+      final image = _createImageWidget(cachedPath, imagePath);
+      _imageCache[cachedPath] = image;
+      return image;
+    } catch (e) {
+      print('Error getting image widget: $e');
+      // エラー時のフォールバック表示
+      return Container(
+        color: Colors.grey[300],
+        child: const Center(child: Icon(Icons.broken_image, size: 48)),
+      );
     }
-
-    final image = _createImageWidget(cachedPath, imagePath);
-    _imageCache[cachedPath] = image;
-    return image;
   }
 
   // 現在のページの周辺ページをキャッシュする
@@ -779,7 +806,7 @@ class _BookScreenState extends State<BookScreen>
 
   // ページを前に移動する
   void _turnToPreviousPage() {
-    if (_currentPage > 0 && !_isPageTurning) {
+    if (_currentPage > 0 && !_isPageTurning && !_isDragging) {
       setState(() {
         _isPageTurning = true;
         _targetPage = _currentPage - 1;
@@ -803,7 +830,8 @@ class _BookScreenState extends State<BookScreen>
   Future<void> _turnToNextPage() async {
     if (_book != null &&
         _currentPage < _book!.pages!.length - 1 &&
-        !_isPageTurning) {
+        !_isPageTurning &&
+        !_isDragging) {
       // ページめくり時のバイブレーション
       await _generateHapticFeedback();
 
@@ -1004,6 +1032,117 @@ class _BookScreenState extends State<BookScreen>
     _scheduleAutoTextDisplay();
 
     debugPrint('Page changed to: $pageIndex');
+  }
+
+  // 新しいページめくりアニメーションと既存のページめくりを連携する変換関数
+  PageTurnDirection _getPageTurnDirection(TurnDirection direction) {
+    return direction == TurnDirection.rightToLeft
+        ? PageTurnDirection.rightToLeft
+        : PageTurnDirection.leftToRight;
+  }
+
+  // 新しいページめくりアニメーションを使用するメソッド
+  Widget _buildPageTurnEffect() {
+    return RealisticPageTurn(
+      animation: _animation,
+      direction: _getPageTurnDirection(_turnDirection),
+      currentPage: _buildPageContent(_currentPage),
+      nextPage: _buildPageContent(_targetPage),
+      duration: _pageTurnDuration,
+    );
+  }
+
+  // 水平方向のドラッグ開始時のハンドラー
+  void _handleHorizontalDragStart(DragStartDetails details) {
+    if (_isPageTurning) return;
+
+    setState(() {
+      _isDragging = true;
+      _dragProgress = 0.0;
+
+      // 左から右へのドラッグの場合、前のページに戻る
+      if (details.globalPosition.dx < MediaQuery.of(context).size.width / 2) {
+        if (_currentPage > 0) {
+          _targetPage = _currentPage - 1;
+          _turnDirection = TurnDirection.leftToRight;
+        } else {
+          _targetPage = _currentPage;
+          _isDragging = false;
+          return;
+        }
+      } else {
+        // 右から左へのドラッグの場合、次のページへ進む
+        if (_currentPage < _book!.pages!.length - 1) {
+          _targetPage = _currentPage + 1;
+          _turnDirection = TurnDirection.rightToLeft;
+        } else {
+          _targetPage = _currentPage;
+          _isDragging = false;
+          return;
+        }
+      }
+
+      // アニメーションをリセット
+      _animationController.reset();
+    });
+  }
+
+  // 水平方向のドラッグ更新時のハンドラー
+  void _handleHorizontalDragUpdate(DragUpdateDetails details) {
+    if (!_isDragging) return;
+
+    // スワイプの方向に基づいてドラッグの進行度を計算
+    // 画面幅の半分の距離で完全にページがめくれるようにする
+    final screenWidth = MediaQuery.of(context).size.width;
+    double delta = details.delta.dx / (screenWidth * 0.5);
+
+    // 右から左へめくる場合は値を反転
+    if (_turnDirection == TurnDirection.rightToLeft) {
+      delta = -delta;
+    }
+
+    setState(() {
+      _dragProgress = (_dragProgress + delta).clamp(0.0, 1.0);
+      _animationController.value = _dragProgress;
+    });
+  }
+
+  // 水平方向のドラッグ終了時のハンドラー
+  void _handleHorizontalDragEnd(DragEndDetails details) {
+    if (!_isDragging) return;
+
+    final velocity = details.velocity.pixelsPerSecond.dx;
+    bool completePageTurn = false;
+
+    // 速度または進行度に基づいてアニメーションを完了するか元に戻すかを決定
+    if (_turnDirection == TurnDirection.rightToLeft) {
+      // 右から左へめくる場合
+      completePageTurn = (velocity < -200 || _dragProgress > 0.5);
+    } else {
+      // 左から右へめくる場合
+      completePageTurn = (velocity > 200 || _dragProgress > 0.5);
+    }
+
+    if (completePageTurn) {
+      // ページめくりを完了
+      _animationController.forward().then((_) {
+        setState(() {
+          _currentPage = _targetPage;
+          _isDragging = false;
+
+          // ページコントローラーを更新
+          _pageController = PageController(initialPage: _currentPage);
+          _handlePageChanged(_currentPage);
+        });
+      });
+    } else {
+      // ページめくりをキャンセル（元に戻す）
+      _animationController.reverse().then((_) {
+        setState(() {
+          _isDragging = false;
+        });
+      });
+    }
   }
 
   // ページコンテンツを構築
@@ -1416,24 +1555,16 @@ class _BookScreenState extends State<BookScreen>
                 _handleVerticalSwipeEnd(details);
               }
             },
-            onHorizontalDragEnd: _showMenu ? null : _handleHorizontalSwipe,
+            onHorizontalDragStart:
+                _showMenu ? null : _handleHorizontalDragStart,
+            onHorizontalDragUpdate:
+                _showMenu ? null : _handleHorizontalDragUpdate,
+            onHorizontalDragEnd: _showMenu ? null : _handleHorizontalDragEnd,
             // メニュー表示中は一切タップイベントを捕捉しない
             onTap: _showMenu ? null : null,
             child:
-                _isPageTurning
-                    ? AnimatedBuilder(
-                      animation: _animation,
-                      builder: (context, child) {
-                        return TurnPageTransition(
-                          animation: _animation,
-                          overleafColor: Colors.white,
-                          direction: _turnDirection,
-                          child: _buildPageContent(
-                            _targetPage,
-                          ), // 常にめくった先のページを表示
-                        );
-                      },
-                    )
+                _isPageTurning || _isDragging
+                    ? _buildPageTurnEffect() // 新しいページめくりアニメーションを使用
                     : PageView.builder(
                       controller: _pageController,
                       itemCount: _book!.pages!.length,
@@ -1551,3 +1682,6 @@ class _BookScreenState extends State<BookScreen>
     );
   }
 }
+
+// TurnDirectionのenumはページめくりの方向を示す
+enum TurnDirection { rightToLeft, leftToRight }

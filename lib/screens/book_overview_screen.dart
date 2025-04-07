@@ -235,7 +235,22 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
       return;
     }
 
-    // 既に拡大表示されている場合は本の画面に遷移
+    // 効果音再生と同時に、バックグラウンドで最初のページの画像をプリロードしておく
+    if (_book != null && _book!.pages != null && _book!.pages!.isNotEmpty) {
+      final firstPage = _book!.pages![0];
+      // 非同期で画像をプリロード - 完了を待たない
+      _bookRepository.getAssetPath(firstPage.baseImage).then((path) {
+        if (path != null) {
+          precacheImage(
+            path.startsWith('assets/')
+                ? AssetImage(path)
+                : FileImage(File(path)) as ImageProvider,
+            context,
+          );
+        }
+      });
+    }
+
     // バイブレーション実行
     await _generateHapticFeedback();
 
@@ -980,10 +995,10 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
 
                   // ダウンロードステータス表示 - 別コンテナに分割 (修正: iOS対応)
                   Container(
-                    height: screenHeight * 0.04, // 高さを固定
+                    height: screenHeight * 0.03, // 高さを固定
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     margin: const EdgeInsets.symmetric(
-                      vertical: 7,
+                      vertical: 3,
                       horizontal: 10,
                     ),
                     child: Center(
@@ -1074,6 +1089,7 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
                   // 読むボタンとお気に入りボタンの親コンテナ (修正: iOS対応)
                   Container(
                     height: screenHeight * 0.15, // 高さを小さく (0.14 -> 0.10)
+                    margin: const EdgeInsets.only(top: 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

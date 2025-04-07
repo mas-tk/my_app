@@ -139,7 +139,7 @@ class _MainPageState extends State<MainPage> {
                   },
                 );
               },
-              transitionDuration: const Duration(milliseconds: 1000), // 1秒
+              transitionDuration: const Duration(milliseconds: 500), // 0.5秒
               transitionsBuilder: (
                 context,
                 animation,
