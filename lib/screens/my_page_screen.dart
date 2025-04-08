@@ -1165,7 +1165,7 @@ class _MyPageScreenState extends State<MyPageScreen>
             // 中間層3: 装飾要素（ランプ、ラジオ、ティーカップ）
             // 左上のランプ
             Positioned(
-              top: _screenWidth * 0.05,
+              top: _screenWidth * 0.08,
               left: 0,
               child: Image.asset(
                 'assets/lamp_left.png',
@@ -1176,7 +1176,7 @@ class _MyPageScreenState extends State<MyPageScreen>
 
             // 右上のランプ
             Positioned(
-              top: _screenWidth * 0.05,
+              top: _screenWidth * 0.08,
               right: 0,
               child: Image.asset(
                 'assets/lamp_right.png',

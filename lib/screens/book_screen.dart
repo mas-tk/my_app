@@ -4,38 +4,11 @@ import 'dart:async'; // Timer用にimportを追加
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:turn_page_transition/turn_page_transition.dart';
 import '../models/book_models.dart';
 import '../repositories/book_repository.dart';
 import 'review_screen.dart';
 import 'package:flutter/services.dart' show HapticFeedback;
-import '../widgets/page_turn_animation.dart'; // 新しいページめくりアニメーションをインポート
-
-// 文字レイヤー自動表示の速度設定
-enum AutoTextDisplaySpeed {
-  off, // 自動表示なし
-  slow, // 遅い (3秒)
-  normal, // 普通 (1.5秒)
-  fast, // 早い (1秒)
-  instant, // 最初から表示
-}
-
-// 速度設定の名前マッピング
-const Map<AutoTextDisplaySpeed, String> autoTextSpeedNames = {
-  AutoTextDisplaySpeed.off: '自動表示なし',
-  AutoTextDisplaySpeed.slow: '遅い (3秒)',
-  AutoTextDisplaySpeed.normal: '普通 (1.5秒)',
-  AutoTextDisplaySpeed.fast: '早い (1秒)',
-  AutoTextDisplaySpeed.instant: '最初から表示',
-};
-
-// 速度設定の時間マッピング (ミリ秒)
-const Map<AutoTextDisplaySpeed, int> autoTextSpeedTimes = {
-  AutoTextDisplaySpeed.off: 0,
-  AutoTextDisplaySpeed.slow: 3000,
-  AutoTextDisplaySpeed.normal: 1500,
-  AutoTextDisplaySpeed.fast: 1000,
-  AutoTextDisplaySpeed.instant: 0,
-};
 
 // BookScreenに渡すパラメータ
 class BookScreenArguments {
@@ -92,11 +65,9 @@ class _BookScreenState extends State<BookScreen>
   String? _currentAudioPath;
   AudioTrack? _currentTrack;
 
-  double _dragProgress = 0.0;
-  bool _isDragging = false;
-
   // 文字自動表示の設定
-  AutoTextDisplaySpeed _autoTextSpeed = AutoTextDisplaySpeed.normal;
+  bool _autoTextEnabled = true; // 自動表示のオン/オフ状態
+  double _autoTextDelaySeconds = 1.5; // 自動表示の遅延（秒単位）
 
   // 最終ページ用のタップカウント
   int _lastPageTapCount = 0;
@@ -138,16 +109,14 @@ class _BookScreenState extends State<BookScreen>
       duration: _pageTurnDuration,
     );
 
-    // 基本的なアニメーションを定義
-    _animation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOutCubic, // よりスムーズな曲線に変更
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
 
     // 初期化を非同期で安全に行う
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // 自動表示速度の設定を読み込む
-      await _loadAutoTextSpeedSetting();
+      // 自動表示設定を読み込む
+      await _loadAutoTextSettings();
 
       // デフォルトでサウンドを有効にする
       _soundEnabled = true;
@@ -216,32 +185,34 @@ class _BookScreenState extends State<BookScreen>
     super.dispose();
   }
 
-  // 自動表示速度の設定を保存
-  Future<void> _saveAutoTextSpeedSetting() async {
+  // 自動表示設定の保存
+  Future<void> _saveAutoTextSettings() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt('auto_text_speed', _autoTextSpeed.index);
-      print('自動表示速度を保存しました: $_autoTextSpeed');
+      await prefs.setBool('auto_text_enabled', _autoTextEnabled);
+      await prefs.setDouble('auto_text_delay_seconds', _autoTextDelaySeconds);
+      print(
+        '自動表示設定を保存しました: 有効=${_autoTextEnabled}, 遅延=${_autoTextDelaySeconds}秒',
+      );
     } catch (e) {
-      print('自動表示速度の保存に失敗しました: $e');
+      print('自動表示設定の保存に失敗しました: $e');
     }
   }
 
-  // 自動表示速度の設定を読み込む
-  Future<void> _loadAutoTextSpeedSetting() async {
+  // 自動表示設定の読み込み
+  Future<void> _loadAutoTextSettings() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final speedIndex = prefs.getInt('auto_text_speed');
-      if (speedIndex != null &&
-          speedIndex >= 0 &&
-          speedIndex < AutoTextDisplaySpeed.values.length) {
-        setState(() {
-          _autoTextSpeed = AutoTextDisplaySpeed.values[speedIndex];
-        });
-      }
-      print('自動表示速度を読み込みました: $_autoTextSpeed');
+      setState(() {
+        _autoTextEnabled = prefs.getBool('auto_text_enabled') ?? true;
+        _autoTextDelaySeconds =
+            prefs.getDouble('auto_text_delay_seconds') ?? 1.5;
+      });
+      print(
+        '自動表示設定を読み込みました: 有効=${_autoTextEnabled}, 遅延=${_autoTextDelaySeconds}秒',
+      );
     } catch (e) {
-      print('自動表示速度の読み込みに失敗しました: $e');
+      print('自動表示設定の読み込みに失敗しました: $e');
     }
   }
 
@@ -251,33 +222,32 @@ class _BookScreenState extends State<BookScreen>
       // 既存のタイマーをキャンセル
       _autoTextTimer?.cancel();
 
+      // 自動表示が無効の場合は何もしない
+      if (!_autoTextEnabled) {
+        print('自動表示は無効です - タイマーをスケジュールしません');
+        return;
+      }
+
       // 現在のページのページIDを取得
       final pageId = _book!.pages![_currentPage].pageId;
 
-      // 設定に基づいてテキスト表示を制御
-      if (_autoTextSpeed == AutoTextDisplaySpeed.instant) {
-        // 即時表示
-        if (mounted && !(_textVisibility[pageId] ?? false)) {
+      // 既にテキストが表示されている場合はスケジュールしない
+      if (_textVisibility[pageId] ?? false) {
+        return;
+      }
+
+      // タイマーによる遅延表示
+      final delayMs = (_autoTextDelaySeconds * 1000).toInt();
+      print('タイマーをスケジュール: $_autoTextDelaySeconds秒後にテキストを表示');
+
+      _autoTextTimer = Timer(Duration(milliseconds: delayMs), () {
+        if (mounted) {
           setState(() {
             _textVisibility[pageId] = true;
           });
+          print('自動表示タイマー実行: テキストを表示');
         }
-      } else if (_autoTextSpeed != AutoTextDisplaySpeed.off) {
-        // タイマーによる遅延表示（オフ以外）
-        final delayMs = autoTextSpeedTimes[_autoTextSpeed] ?? 1500;
-
-        // テキストがまだ表示されていない場合のみスケジュール
-        if (!(_textVisibility[pageId] ?? false)) {
-          _autoTextTimer = Timer(Duration(milliseconds: delayMs), () {
-            if (mounted) {
-              setState(() {
-                _textVisibility[pageId] = true;
-              });
-            }
-          });
-        }
-      }
-      // オフの場合は何もしない
+      });
     }
   }
 
@@ -308,8 +278,7 @@ class _BookScreenState extends State<BookScreen>
 
           // すべてのページでテキスト非表示に初期化
           for (var page in book.pages!) {
-            _textVisibility[page.pageId] =
-                _autoTextSpeed == AutoTextDisplaySpeed.instant;
+            _textVisibility[page.pageId] = false;
           }
         });
 
@@ -791,22 +760,42 @@ class _BookScreenState extends State<BookScreen>
     }
   }
 
-  // 自動表示速度を変更するメソッド
-  void _changeAutoTextSpeed(AutoTextDisplaySpeed newSpeed) {
+  // 自動表示の有効/無効を切り替えるメソッド
+  void _toggleAutoTextDisplay() {
+    // 設定を保存
+    _saveAutoTextSettings();
+
+    // 自動表示の状態変更時の処理
+    if (_autoTextEnabled) {
+      // 有効になった場合、現在ページの自動表示をスケジュールし直す
+      _scheduleAutoTextDisplay();
+    } else {
+      // 無効になった場合、タイマーをキャンセル
+      _autoTextTimer?.cancel();
+    }
+
+    // デバッグログ
+    print('自動表示設定を変更しました: $_autoTextEnabled');
+  }
+
+  // 自動表示の遅延時間を変更するメソッド
+  void _changeAutoTextDelay(double newDelaySeconds) {
     setState(() {
-      _autoTextSpeed = newSpeed;
+      _autoTextDelaySeconds = newDelaySeconds;
     });
 
-    // 速度設定を保存
-    _saveAutoTextSpeedSetting();
+    // 設定を保存
+    _saveAutoTextSettings();
 
     // 現在ページの自動表示をスケジュールし直す
-    _scheduleAutoTextDisplay();
+    if (_autoTextEnabled) {
+      _scheduleAutoTextDisplay();
+    }
   }
 
   // ページを前に移動する
   void _turnToPreviousPage() {
-    if (_currentPage > 0 && !_isPageTurning && !_isDragging) {
+    if (_currentPage > 0 && !_isPageTurning) {
       setState(() {
         _isPageTurning = true;
         _targetPage = _currentPage - 1;
@@ -830,8 +819,7 @@ class _BookScreenState extends State<BookScreen>
   Future<void> _turnToNextPage() async {
     if (_book != null &&
         _currentPage < _book!.pages!.length - 1 &&
-        !_isPageTurning &&
-        !_isDragging) {
+        !_isPageTurning) {
       // ページめくり時のバイブレーション
       await _generateHapticFeedback();
 
@@ -994,6 +982,7 @@ class _BookScreenState extends State<BookScreen>
         }
       }
     } else {
+      // 通常のページでは、単純に表示状態を切り替え
       setState(() {
         _textVisibility[pageId] = !(_textVisibility[pageId] ?? false);
       });
@@ -1029,120 +1018,12 @@ class _BookScreenState extends State<BookScreen>
     _cacheSurroundingPages(pageIndex);
 
     // 新しいページに移動したら自動テキスト表示タイマーをセット
-    _scheduleAutoTextDisplay();
+    // ただし自動表示が有効な場合のみ
+    if (_autoTextEnabled) {
+      _scheduleAutoTextDisplay();
+    }
 
     debugPrint('Page changed to: $pageIndex');
-  }
-
-  // 新しいページめくりアニメーションと既存のページめくりを連携する変換関数
-  PageTurnDirection _getPageTurnDirection(TurnDirection direction) {
-    return direction == TurnDirection.rightToLeft
-        ? PageTurnDirection.rightToLeft
-        : PageTurnDirection.leftToRight;
-  }
-
-  // 新しいページめくりアニメーションを使用するメソッド
-  Widget _buildPageTurnEffect() {
-    return RealisticPageTurn(
-      animation: _animation,
-      direction: _getPageTurnDirection(_turnDirection),
-      currentPage: _buildPageContent(_currentPage),
-      nextPage: _buildPageContent(_targetPage),
-      duration: _pageTurnDuration,
-    );
-  }
-
-  // 水平方向のドラッグ開始時のハンドラー
-  void _handleHorizontalDragStart(DragStartDetails details) {
-    if (_isPageTurning) return;
-
-    setState(() {
-      _isDragging = true;
-      _dragProgress = 0.0;
-
-      // 左から右へのドラッグの場合、前のページに戻る
-      if (details.globalPosition.dx < MediaQuery.of(context).size.width / 2) {
-        if (_currentPage > 0) {
-          _targetPage = _currentPage - 1;
-          _turnDirection = TurnDirection.leftToRight;
-        } else {
-          _targetPage = _currentPage;
-          _isDragging = false;
-          return;
-        }
-      } else {
-        // 右から左へのドラッグの場合、次のページへ進む
-        if (_currentPage < _book!.pages!.length - 1) {
-          _targetPage = _currentPage + 1;
-          _turnDirection = TurnDirection.rightToLeft;
-        } else {
-          _targetPage = _currentPage;
-          _isDragging = false;
-          return;
-        }
-      }
-
-      // アニメーションをリセット
-      _animationController.reset();
-    });
-  }
-
-  // 水平方向のドラッグ更新時のハンドラー
-  void _handleHorizontalDragUpdate(DragUpdateDetails details) {
-    if (!_isDragging) return;
-
-    // スワイプの方向に基づいてドラッグの進行度を計算
-    // 画面幅の半分の距離で完全にページがめくれるようにする
-    final screenWidth = MediaQuery.of(context).size.width;
-    double delta = details.delta.dx / (screenWidth * 0.5);
-
-    // 右から左へめくる場合は値を反転
-    if (_turnDirection == TurnDirection.rightToLeft) {
-      delta = -delta;
-    }
-
-    setState(() {
-      _dragProgress = (_dragProgress + delta).clamp(0.0, 1.0);
-      _animationController.value = _dragProgress;
-    });
-  }
-
-  // 水平方向のドラッグ終了時のハンドラー
-  void _handleHorizontalDragEnd(DragEndDetails details) {
-    if (!_isDragging) return;
-
-    final velocity = details.velocity.pixelsPerSecond.dx;
-    bool completePageTurn = false;
-
-    // 速度または進行度に基づいてアニメーションを完了するか元に戻すかを決定
-    if (_turnDirection == TurnDirection.rightToLeft) {
-      // 右から左へめくる場合
-      completePageTurn = (velocity < -200 || _dragProgress > 0.5);
-    } else {
-      // 左から右へめくる場合
-      completePageTurn = (velocity > 200 || _dragProgress > 0.5);
-    }
-
-    if (completePageTurn) {
-      // ページめくりを完了
-      _animationController.forward().then((_) {
-        setState(() {
-          _currentPage = _targetPage;
-          _isDragging = false;
-
-          // ページコントローラーを更新
-          _pageController = PageController(initialPage: _currentPage);
-          _handlePageChanged(_currentPage);
-        });
-      });
-    } else {
-      // ページめくりをキャンセル（元に戻す）
-      _animationController.reverse().then((_) {
-        setState(() {
-          _isDragging = false;
-        });
-      });
-    }
   }
 
   // ページコンテンツを構築
@@ -1210,38 +1091,70 @@ class _BookScreenState extends State<BookScreen>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 閉じるボタン削除 - 上部の閉じるボタンを削除
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Text(
-                  widget.args.title.isNotEmpty
-                      ? widget.args.title
-                      : _book?.title ?? '',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // 本の情報
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.args.title.isNotEmpty
+                              ? widget.args.title
+                              : _book?.title ?? '',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Text(
+                              '${_currentPage + 1} / ${_book?.pages?.length ?? 0} ページ',
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                              ),
+                            ),
+                            // 修正③: BGMファイル名の表示位置を改善
+                            if (_currentAudioPath != null)
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 20.0,
+                                ), // 間隔を広げる
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      'BGM: ',
+                                      style: const TextStyle(
+                                        color: Colors.white60,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    Text(
+                                      _getAudioFileName(_currentAudioPath!),
+                                      style: const TextStyle(
+                                        color: Colors.white60,
+                                        fontSize: 12,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                ],
               ),
-              const SizedBox(height: 4),
-              Text(
-                '${_currentPage + 1} / ${_book?.pages?.length ?? 0} ページ',
-                style: const TextStyle(color: Colors.white70, fontSize: 14),
-              ),
-              // 曲名を表示
-              if (_currentAudioPath != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: Text(
-                    '再生中: ${_getAudioFileName(_currentAudioPath!)}',
-                    style: const TextStyle(color: Colors.white60, fontSize: 12),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
             ],
           ),
         ),
@@ -1420,59 +1333,118 @@ class _BookScreenState extends State<BookScreen>
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Text(
-                                      '文字表示速度',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 16),
-                                    ...AutoTextDisplaySpeed.values.map<Widget>((
-                                      speed,
-                                    ) {
-                                      return RadioListTile<
-                                        AutoTextDisplaySpeed
-                                      >(
-                                        title: Text(
-                                          autoTextSpeedNames[speed] ??
-                                              speed.toString(),
-                                          style: const TextStyle(
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          '文字表示速度',
+                                          style: TextStyle(
                                             color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        value: speed,
-                                        groupValue: _autoTextSpeed,
-                                        activeColor: Colors.amber,
-                                        onChanged: (newValue) {
-                                          if (newValue != null) {
-                                            setModalState(() {
-                                              _autoTextSpeed = newValue;
-                                            });
-                                            setState(() {
-                                              _autoTextSpeed = newValue;
-                                            });
-                                            _changeAutoTextSpeed(newValue);
-                                            // 閉じる前に少し待つ
-                                            Future.delayed(
-                                              const Duration(milliseconds: 200),
-                                              () {
-                                                Navigator.pop(context);
-                                              },
-                                            );
-                                          }
-                                        },
-                                      );
-                                    }).toList(),
-                                    const SizedBox(height: 8),
-                                    TextButton(
-                                      child: const Text(
-                                        '閉じる',
+                                        // 閉じるボタン
+                                        TextButton(
+                                          child: const Text(
+                                            '閉じる',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          onPressed:
+                                              () => Navigator.pop(context),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 16),
+                                    // 自動表示のON/OFFスイッチ
+                                    SwitchListTile(
+                                      title: const Text(
+                                        '自動表示',
                                         style: TextStyle(color: Colors.white),
                                       ),
-                                      onPressed: () => Navigator.pop(context),
+                                      value: _autoTextEnabled,
+                                      activeColor: Colors.amber,
+                                      onChanged: (value) {
+                                        setModalState(() {
+                                          _autoTextEnabled = value;
+                                        });
+                                        setState(() {
+                                          _autoTextEnabled = value;
+                                        });
+                                        _toggleAutoTextDisplay();
+                                      },
                                     ),
+                                    const SizedBox(height: 8),
+                                    // 自動表示の遅延時間スライダー（ONの場合のみ表示）
+                                    if (_autoTextEnabled) ...[
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 16.0,
+                                        ),
+                                        child: Text(
+                                          '表示までの時間',
+                                          style: TextStyle(
+                                            color: Colors.white70,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              '0秒',
+                                              style: TextStyle(
+                                                color: Colors.white70,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Slider(
+                                                value: _autoTextDelaySeconds,
+                                                min: 0.0,
+                                                max: 5.0,
+                                                divisions: 10,
+                                                activeColor: Colors.amber,
+                                                inactiveColor: Colors.white24,
+                                                label:
+                                                    "${_autoTextDelaySeconds.toStringAsFixed(1)}秒",
+                                                onChanged: (value) {
+                                                  setModalState(() {
+                                                    _autoTextDelaySeconds =
+                                                        value;
+                                                  });
+                                                },
+                                                onChangeEnd: (value) {
+                                                  setState(() {
+                                                    _autoTextDelaySeconds =
+                                                        value;
+                                                  });
+                                                  _changeAutoTextDelay(value);
+                                                },
+                                              ),
+                                            ),
+                                            const Text(
+                                              '5秒',
+                                              style: TextStyle(
+                                                color: Colors.white70,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Text(
+                                        '現在の設定: ${_autoTextDelaySeconds.toStringAsFixed(1)}秒',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
                                   ],
                                 ),
                               );
@@ -1541,30 +1513,40 @@ class _BookScreenState extends State<BookScreen>
           // メインのコンテンツ
           GestureDetector(
             // メニュー表示中はジェスチャー無効
-            onVerticalDragStart: _showMenu ? null : _handleTouchStart,
+            onVerticalDragStart: _handleTouchStart,
             onVerticalDragEnd: (details) {
-              if (_showMenu) {
-                // メニュー表示中の場合、上下スワイプでメニューを非表示にする
-                if (details.velocity.pixelsPerSecond.dy.abs() > 200) {
-                  setState(() {
-                    _showMenu = false;
-                  });
-                }
-              } else {
-                // メニュー非表示中の場合、上下スワイプでメニューを表示
-                _handleVerticalSwipeEnd(details);
+              // 修正①: メニュー表示・非表示に関わらず上下スワイプで表示状態を切り替え
+              if (details.velocity.pixelsPerSecond.dy.abs() > 200) {
+                setState(() {
+                  _showMenu = !_showMenu;
+                });
               }
             },
-            onHorizontalDragStart:
-                _showMenu ? null : _handleHorizontalDragStart,
-            onHorizontalDragUpdate:
-                _showMenu ? null : _handleHorizontalDragUpdate,
-            onHorizontalDragEnd: _showMenu ? null : _handleHorizontalDragEnd,
+            onHorizontalDragEnd: _showMenu ? null : _handleHorizontalSwipe,
             // メニュー表示中は一切タップイベントを捕捉しない
-            onTap: _showMenu ? null : null,
+            onTap:
+                _showMenu
+                    ? () {
+                      setState(() {
+                        _showMenu = false;
+                      });
+                    }
+                    : null,
             child:
-                _isPageTurning || _isDragging
-                    ? _buildPageTurnEffect() // 新しいページめくりアニメーションを使用
+                _isPageTurning
+                    ? AnimatedBuilder(
+                      animation: _animation,
+                      builder: (context, child) {
+                        return TurnPageTransition(
+                          animation: _animation,
+                          overleafColor: Colors.white,
+                          direction: _turnDirection,
+                          child: _buildPageContent(
+                            _targetPage,
+                          ), // 常にめくった先のページを表示
+                        );
+                      },
+                    )
                     : PageView.builder(
                       controller: _pageController,
                       itemCount: _book!.pages!.length,
@@ -1586,6 +1568,14 @@ class _BookScreenState extends State<BookScreen>
                   setState(() {
                     _showMenu = false;
                   });
+                },
+                // 修正①: 上下スワイプもメニュー非表示に対応
+                onVerticalDragEnd: (details) {
+                  if (details.velocity.pixelsPerSecond.dy.abs() > 200) {
+                    setState(() {
+                      _showMenu = false;
+                    });
+                  }
                 },
                 child: Container(color: Colors.transparent),
               ),
@@ -1682,6 +1672,3 @@ class _BookScreenState extends State<BookScreen>
     );
   }
 }
-
-// TurnDirectionのenumはページめくりの方向を示す
-enum TurnDirection { rightToLeft, leftToRight }

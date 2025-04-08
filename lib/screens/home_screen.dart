@@ -287,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   // 装飾要素
                   // 左上のランプ
                   Positioned(
-                    top: _screenWidth * 0.05,
+                    top: _screenWidth * 0.08,
                     left: 0,
                     child: Image.asset(
                       'assets/lamp_left.png',
@@ -298,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   // 右上のランプ
                   Positioned(
-                    top: _screenWidth * 0.05,
+                    top: _screenWidth * 0.08,
                     right: 0,
                     child: Image.asset(
                       'assets/lamp_right.png',
