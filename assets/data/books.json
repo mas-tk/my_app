@@ -1815,6 +1815,144 @@
           }
         ]
       }
+    },
+    {
+      "id": "13",
+      "title": "夕凪のフィロソフィア",
+      "coverAssetPath": "assets/bookcovers/cover13.png",
+      "summary": "日没のひとときだけ開く、海辺の小さな哲学カフェ「フィロソフィア」。静かな対話が、悩める心にそっと灯をともす――。",
+      "views": 98765,
+      "likes": 420,
+      "comments": 32,
+      "rating": 4.7,
+      "genres": ["ファンタジー", "冒険", "成長"],
+      "pages": [
+        {
+          "pageId": "001",
+          "baseImage": "assets/books/book13/001-1.png",
+          "textImage": "assets/books/book13/001-2.png"
+        },
+        {
+          "pageId": "002",
+          "baseImage": "assets/books/book13/002-1.png",
+          "textImage": "assets/books/book13/002-2.png"
+        },
+        {
+          "pageId": "003",
+          "baseImage": "assets/books/book13/003-1.png",
+          "textImage": "assets/books/book13/003-2.png"
+        },
+        {
+          "pageId": "004",
+          "baseImage": "assets/books/book13/004-1.png",
+          "textImage": "assets/books/book13/004-2.png"
+        },
+        {
+          "pageId": "005",
+          "baseImage": "assets/books/book13/005-1.png",
+          "textImage": "assets/books/book13/005-2.png"
+        },
+        {
+          "pageId": "006",
+          "baseImage": "assets/books/book13/006-1.png",
+          "textImage": "assets/books/book13/006-2.png"
+        },
+        {
+          "pageId": "007",
+          "baseImage": "assets/books/book13/007-1.png",
+          "textImage": "assets/books/book13/007-2.png"
+        },
+        {
+          "pageId": "008",
+          "baseImage": "assets/books/book13/008-1.png",
+          "textImage": "assets/books/book13/008-2.png"
+        },
+        {
+          "pageId": "009",
+          "baseImage": "assets/books/book13/009-1.png",
+          "textImage": "assets/books/book13/009-2.png"
+        },
+        {
+          "pageId": "010",
+          "baseImage": "assets/books/book13/010-1.png",
+          "textImage": "assets/books/book13/010-2.png"
+        },
+        {
+          "pageId": "011",
+          "baseImage": "assets/books/book13/011-1.png",
+          "textImage": "assets/books/book13/011-2.png"
+        },
+        {
+          "pageId": "012",
+          "baseImage": "assets/books/book13/012-1.png",
+          "textImage": "assets/books/book13/012-2.png"
+        },
+        {
+          "pageId": "013",
+          "baseImage": "assets/books/book13/013-1.png",
+          "textImage": "assets/books/book13/013-2.png"
+        },
+        {
+          "pageId": "014",
+          "baseImage": "assets/books/book13/014-1.png",
+          "textImage": "assets/books/book13/014-2.png"
+        },
+        {
+          "pageId": "015",
+          "baseImage": "assets/books/book13/015-1.png",
+          "textImage": "assets/books/book13/015-2.png"
+        },
+        {
+          "pageId": "016",
+          "baseImage": "assets/books/book13/016-1.png",
+          "textImage": "assets/books/book13/016-2.png"
+        },
+        {
+          "pageId": "017",
+          "baseImage": "assets/books/book13/017-1.png",
+          "textImage": "assets/books/book13/017-2.png"
+        },
+        {
+          "pageId": "018",
+          "baseImage": "assets/books/book13/018-1.png",
+          "textImage": "assets/books/book13/018-2.png"
+        },
+        {
+          "pageId": "019",
+          "baseImage": "assets/books/book13/019-1.png",
+          "textImage": "assets/books/book13/019-2.png"
+        },
+        {
+          "pageId": "020",
+          "baseImage": "assets/books/book13/020-1.png",
+          "textImage": "assets/books/book13/020-2.png"
+        }
+      ],
+      "audio": {
+        "bookId": "13",
+        "tracks": [
+          {
+            "assetPath": "assets/audio/book3_part1.mp3",
+            "startPage": 1,
+            "endPage": 5
+          },
+          {
+            "assetPath": "assets/audio/book3_part2.mp3",
+            "startPage": 6,
+            "endPage": 10
+          },
+          {
+            "assetPath": "assets/audio/book3_part3.mp3",
+            "startPage": 11,
+            "endPage": 15
+          },
+          {
+            "assetPath": "assets/audio/book3_part4.mp3",
+            "startPage": 16,
+            "endPage": 20
+          }
+        ]
+      }
     }
 
 

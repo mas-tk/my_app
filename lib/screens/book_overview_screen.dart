@@ -846,296 +846,327 @@ class _BookOverviewScreenState extends State<BookOverviewScreen>
 
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          // Background
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/wooden-frame-background.jpg'),
-                fit: BoxFit.cover,
+      // スワイプして戻る機能を追加
+      body: GestureDetector(
+        // 左から右へのスワイプを検出
+        onHorizontalDragEnd: (details) {
+          if (details.primaryVelocity != null && details.primaryVelocity! > 0) {
+            // 右方向へのスワイプ
+            Navigator.pop(context); // 前の画面に戻る
+          }
+        },
+        child: Stack(
+          children: [
+            // Background
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/wooden-frame-background.jpg'),
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            child: SafeArea(
-              // SafeAreaで下部のパディングを含めない（ナビゲーションバーはアプリ独自のもののため）
-              bottom: false,
-              child: Column(
-                children: [
-                  // 絵本タイトルと表紙（画面上部）- 高さ固定
-                  Container(
-                    height: screenHeight * 0.42, // タイトル削除のため高さを増加
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(15), // パディングを小さく
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/blackboard.png'),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // Book cover - 拡大 (タイトル削除)
-                            _buildCoverImage(_book!.coverAssetPath),
-                            // タイトル削除
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // ジャンルタグとレビュー情報（中央部分）- ジャンルタグは横スクロール可能に
-                  Container(
-                    height: screenHeight * 0.14, // 少し小さく調整（16% → 14%）
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min, // 必要最小限の高さに
-                      children: [
-                        // Genre tags - 横スクロール可能に
-                        if (_book!.genres != null && _book!.genres!.isNotEmpty)
-                          Container(
-                            height: 60, // 高さを増加（40 -> 60）- 2行分確保
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children:
-                                    _book!.genres!.map((genre) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(
-                                          right: 8.0,
-                                          bottom: 8.0, // 下部にも余白を追加して行間を確保
-                                        ),
-                                        child: _buildGenreTag(genre),
-                                      );
-                                    }).toList(),
-                              ),
+              child: SafeArea(
+                // SafeAreaで下部のパディングを含めない（ナビゲーションバーはアプリ独自のもののため）
+                bottom: false,
+                child: Column(
+                  children: [
+                    // 絵本タイトルと表紙（画面上部）- 高さ固定
+                    Container(
+                      height: screenHeight * 0.42, // タイトル削除のため高さを増加
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(15), // パディングを小さく
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('assets/blackboard.png'),
+                              fit: BoxFit.fill,
                             ),
                           ),
-
-                        const SizedBox(height: 12), // 間隔を小さく
-                        // Views and rating
-                        if (_book!.views != null &&
-                            _book!.rating != null &&
-                            _book!.comments != null)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              // Views
-                              Row(
-                                children: [
-                                  const Text(
-                                    '👁️',
-                                    style: TextStyle(fontSize: 14), // 小さく
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    _book!.views.toString(),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14, // 小さく
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              // Star rating
-                              _buildRatingStars(_book!.rating!),
-
-                              // Comments
-                              Row(
-                                children: [
-                                  const Text(
-                                    '💬',
-                                    style: TextStyle(fontSize: 14), // 小さく
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    _book!.comments.toString(),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14, // 小さく
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              // Book cover - 拡大 (タイトル削除)
+                              _buildCoverImage(_book!.coverAssetPath),
+                              // タイトル削除
                             ],
-                          ),
-                      ],
-                    ),
-                  ),
-
-                  // 説明欄 - スクロール可能セクション
-                  if (_book!.summary != null)
-                    Container(
-                      height: screenHeight * 0.12, // 高さを縮小（0.16 -> 0.12）
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: const Color(0xFF8B4513),
-                            width: 2,
-                          ),
-                        ),
-                        child: SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
-                          padding: const EdgeInsets.all(12),
-                          child: Text(
-                            _book!.summary!,
-                            style: const TextStyle(fontSize: 13, height: 1.4),
                           ),
                         ),
                       ),
                     ),
 
-                  // ダウンロードステータス表示 - 別コンテナに分割 (修正: iOS対応)
-                  Container(
-                    height: screenHeight * 0.03, // 高さを固定
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 3,
-                      horizontal: 10,
+                    // ジャンルタグとレビュー情報（中央部分）- ジャンルタグは横スクロール可能に
+                    Container(
+                      height: screenHeight * 0.14, // 少し小さく調整（16% → 14%）
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min, // 必要最小限の高さに
+                        children: [
+                          // Genre tags - 横スクロール可能に
+                          if (_book!.genres != null &&
+                              _book!.genres!.isNotEmpty)
+                            Container(
+                              height: 60, // 高さを増加（40 -> 60）- 2行分確保
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children:
+                                      _book!.genres!.map((genre) {
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: 8.0,
+                                            bottom: 8.0, // 下部にも余白を追加して行間を確保
+                                          ),
+                                          child: _buildGenreTag(genre),
+                                        );
+                                      }).toList(),
+                                ),
+                              ),
+                            ),
+
+                          const SizedBox(height: 12), // 間隔を小さく
+                          // Views and rating
+                          if (_book!.views != null &&
+                              _book!.rating != null &&
+                              _book!.comments != null)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Views
+                                Row(
+                                  children: [
+                                    const Text(
+                                      '👁️',
+                                      style: TextStyle(fontSize: 14), // 小さく
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      _book!.views.toString(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14, // 小さく
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                // Star rating
+                                _buildRatingStars(_book!.rating!),
+
+                                // Comments
+                                Row(
+                                  children: [
+                                    const Text(
+                                      '💬',
+                                      style: TextStyle(fontSize: 14), // 小さく
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      _book!.comments.toString(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14, // 小さく
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                        ],
+                      ),
                     ),
-                    child: Center(
-                      child:
-                          _isDownloaded
-                              ? Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.green.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.check_circle,
-                                      color: Colors.green,
-                                      size: 18,
-                                    ),
-                                    SizedBox(width: 6),
-                                    Text(
-                                      'ダウンロード済み',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                              : _isDownloading
-                              ? Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    SizedBox(
-                                      width: 14,
-                                      height: 14,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                              Colors.white,
-                                            ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 6),
-                                    Text(
-                                      'ダウンロード中...',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                              : ElevatedButton.icon(
-                                onPressed: _downloadBook,
-                                icon: const Icon(Icons.download, size: 16),
-                                label: const Text(
-                                  'オフライン読書用にダウンロード',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                  foregroundColor: Colors.white,
+
+                    // 説明欄 - スクロール可能セクション
+                    if (_book!.summary != null)
+                      Container(
+                        height: screenHeight * 0.12, // 高さを縮小（0.16 -> 0.12）
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: const Color(0xFF8B4513),
+                              width: 2,
+                            ),
+                          ),
+                          child: SingleChildScrollView(
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.all(12),
+                            child: Text(
+                              _book!.summary!,
+                              style: const TextStyle(fontSize: 13, height: 1.4),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                    // ダウンロードステータス表示 - 別コンテナに分割 (修正: iOS対応)
+                    Container(
+                      height: screenHeight * 0.03, // 高さを固定
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 3,
+                        horizontal: 10,
+                      ),
+                      child: Center(
+                        child:
+                            _isDownloaded
+                                ? Container(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 12,
                                     vertical: 6,
                                   ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.green.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.check_circle,
+                                        color: Colors.green,
+                                        size: 18,
+                                      ),
+                                      SizedBox(width: 6),
+                                      Text(
+                                        'ダウンロード済み',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                                : _isDownloading
+                                ? Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(
+                                        width: 14,
+                                        height: 14,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                Colors.white,
+                                              ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 6),
+                                      Text(
+                                        'ダウンロード中...',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                                : ElevatedButton.icon(
+                                  onPressed: _downloadBook,
+                                  icon: const Icon(Icons.download, size: 16),
+                                  label: const Text(
+                                    'オフライン読書用にダウンロード',
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue,
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 6,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                      ),
                     ),
-                  ),
+                    // 読むボタンとお気に入りボタンの親コンテナ (修正: iOS対応)
+                    Container(
+                      height: screenHeight * 0.15, // 高さを小さく (0.14 -> 0.10)
+                      margin: const EdgeInsets.only(top: 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // スペース
+                          SizedBox(width: screenWidth * 0.10),
 
-                  // 読むボタンとお気に入りボタンの親コンテナ (修正: iOS対応)
-                  Container(
-                    height: screenHeight * 0.15, // 高さを小さく (0.14 -> 0.10)
-                    margin: const EdgeInsets.only(top: 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // スペース
-                        SizedBox(width: screenWidth * 0.10),
+                          // お気に入りボタン - 左側に配置
+                          //Padding(
+                          //padding: EdgeInsets.only(left: screenWidth * 0.08),
+                          //child:
+                          _buildFavoriteButton(),
+                          //),
 
-                        // お気に入りボタン - 左側に配置
-                        //Padding(
-                        //padding: EdgeInsets.only(left: screenWidth * 0.08),
-                        //child:
-                        _buildFavoriteButton(),
-                        //),
+                          // スペース
+                          SizedBox(width: screenWidth * 0.10),
 
-                        // スペース
-                        SizedBox(width: screenWidth * 0.10),
-
-                        // 読むボタン - 中央に配置
-                        GestureDetector(
-                          onTap: _navigateToBookScreen,
-                          child: Container(
-                            width: screenWidth * 0.30,
-                            height: screenHeight * 0.15,
-                            decoration: const BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage('assets/button-frame.png'),
-                                fit: BoxFit.contain,
+                          // 読むボタン - 中央に配置
+                          GestureDetector(
+                            onTap: _navigateToBookScreen,
+                            child: Container(
+                              width: screenWidth * 0.30,
+                              height: screenHeight * 0.15,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('assets/button-frame.png'),
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                           ),
-                        ),
 
-                        // バランスのためのスペース
-                        //SizedBox(width: screenWidth * 0.15),
-                        // スペース
-                        SizedBox(width: screenWidth * 0.35),
-                      ],
+                          // バランスのためのスペース
+                          //SizedBox(width: screenWidth * 0.15),
+                          // スペース
+                          SizedBox(width: screenWidth * 0.35),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
 
-          // 拡大表示のオーバーレイ (修正)
-          if (_isZoomed) _buildZoomedOverlay(),
-        ],
+            // 戻るボタンをより控えめにサイド中央に配置
+            Positioned(
+              left: 5,
+              top: MediaQuery.of(context).size.height * 0.5 - 20, // 画面の中央よりやや上
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0), // 透明に
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white.withOpacity(0.3), // アイコンも少し透明に
+                    size: 30,
+                  ),
+                ),
+              ),
+            ),
+
+            // 拡大表示のオーバーレイ (修正)
+            if (_isZoomed) _buildZoomedOverlay(),
+          ],
+        ),
       ),
     );
   }

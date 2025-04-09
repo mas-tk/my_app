@@ -1,0 +1,23 @@
+[
+    {
+      "id": "pickup",
+      "name": "ピックアップ",
+      "tags": [
+        {"id": "featured", "name": "注目の作品", "icon": "✨", "isSelected": false},
+        {"id": "new", "name": "新着作品", "icon": "🆕", "isSelected": false},
+        {"id": "popular", "name": "人気作品", "icon": "🔥", "isSelected": false}
+      ]
+    },
+    {
+      "id": "genres",
+      "name": "ジャンル",
+      "tags": [
+        {"id": "fantasy", "name": "ファンタジー", "icon": "🧚", "isSelected": false},
+        {"id": "adventure", "name": "冒険", "icon": "🚀", "isSelected": false},
+        {"id": "growth", "name": "成長", "icon": "🌱", "isSelected": false},
+        {"id": "memory", "name": "思い出", "icon": "📸", "isSelected": false},
+        {"id": "promise", "name": "約束", "icon": "🤝", "isSelected": false},
+        {"id": "educational", "name": "ためになる", "icon": "📚", "isSelected": false}
+      ]
+    }
+  ]

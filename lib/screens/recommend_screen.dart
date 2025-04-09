@@ -5,30 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import '../models/book_models.dart';
 import '../repositories/book_repository.dart';
-
-// タググループモデル
-class TagGroup {
-  final String id;
-  final String name;
-  final List<Tag> tags;
-
-  TagGroup({required this.id, required this.name, required this.tags});
-}
-
-// タグモデル
-class Tag {
-  final String id;
-  final String name;
-  final String? icon; // 絵文字やアイコンのコード
-  bool isSelected;
-
-  Tag({
-    required this.id,
-    required this.name,
-    this.icon,
-    this.isSelected = false,
-  });
-}
+import '../repositories/tag_repository.dart';
 
 class RecommendScreen extends StatefulWidget {
   const RecommendScreen({Key? key}) : super(key: key);
@@ -39,9 +16,12 @@ class RecommendScreen extends StatefulWidget {
 
 class _RecommendScreenState extends State<RecommendScreen> {
   final BookRepository _bookRepository = BookRepository();
+  final TagRepository _tagRepository = TagRepository();
+
   List<Book> _allBooks = [];
   List<Book> _filteredBooks = [];
   List<Book> _searchResults = [];
+  List<TagGroup> _tagGroups = [];
   bool _isLoading = true;
   String _searchQuery = '';
   bool _isSearching = false;
@@ -49,45 +29,23 @@ class _RecommendScreenState extends State<RecommendScreen> {
   // 選択されたタグのリスト
   final List<Tag> _selectedTags = [];
 
-  // タググループとタグの定義
-  final List<TagGroup> _tagGroups = [
-    TagGroup(
-      id: 'pickup',
-      name: 'ピックアップ',
-      tags: [
-        Tag(id: 'featured', name: '注目の作品', icon: '✨'),
-        Tag(id: 'new', name: '新着作品', icon: '🆕'),
-        Tag(id: 'popular', name: '人気作品', icon: '🔥'),
-      ],
-    ),
-    TagGroup(
-      id: 'genres',
-      name: 'ジャンル',
-      tags: [
-        Tag(id: 'fantasy', name: 'ファンタジー', icon: '🧚'),
-        Tag(id: 'adventure', name: '冒険', icon: '🚀'),
-        Tag(id: 'growth', name: '成長', icon: '🌱'),
-        Tag(id: 'memory', name: '思い出', icon: '📸'),
-        Tag(id: 'promise', name: '約束', icon: '🤝'),
-        Tag(id: 'educational', name: 'ためになる', icon: '📚'),
-      ],
-    ),
-  ];
-
   @override
   void initState() {
     super.initState();
-    _loadBooks();
+    _loadData();
   }
 
-  // 本のデータを読み込む
-  Future<void> _loadBooks() async {
+  // 本とタグのデータを読み込む
+  Future<void> _loadData() async {
     setState(() {
       _isLoading = true;
     });
 
     try {
-      // ローカルのJSONファイルから本のデータを読み込む
+      // タググループを読み込む
+      final tagGroups = await _tagRepository.getTagGroups();
+
+      // 本のデータを読み込む
       final String jsonString = await rootBundle.loadString(
         'assets/data/books.json',
       );
@@ -96,13 +54,14 @@ class _RecommendScreenState extends State<RecommendScreen> {
           booksData.map((json) => Book.fromJson(json)).toList();
 
       setState(() {
+        _tagGroups = tagGroups;
         _allBooks = books;
         _filteredBooks = books;
         _searchResults = books;
         _isLoading = false;
       });
     } catch (e) {
-      print('Error loading books: $e');
+      print('Error loading data: $e');
       setState(() {
         _isLoading = false;
       });
@@ -440,15 +399,17 @@ class _RecommendScreenState extends State<RecommendScreen> {
           context,
         ).pushNamed('/bookOverview', arguments: {'bookId': book.id});
       },
+      // 全体の高さを210pxに固定
       child: Container(
         margin: const EdgeInsets.only(bottom: 20),
+        height: 210,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 本の表紙画像（カルーセル機能）
             SizedBox(
-              width: 120,
-              height: 180,
+              width: 140,
+              height: 210,
               child: Stack(
                 children: [
                   // 画像表示 - PageViewを循環させる
@@ -465,8 +426,8 @@ class _RecommendScreenState extends State<RecommendScreen> {
                         borderRadius: BorderRadius.circular(8),
                         child: Image.asset(
                           carouselImages[actualIndex],
-                          width: 120,
-                          height: 180,
+                          width: 140,
+                          height: 210,
                           fit: BoxFit.cover,
                         ),
                       );
@@ -516,6 +477,7 @@ class _RecommendScreenState extends State<RecommendScreen> {
                 angle: 0.01, // わずかに傾ける
                 child: Container(
                   padding: const EdgeInsets.all(12),
+                  height: 210, // コンテナ自体の高さも固定
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
@@ -530,7 +492,7 @@ class _RecommendScreenState extends State<RecommendScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // タイトル
+                      // タイトル（最大2行）
                       Text(
                         book.title,
                         style: const TextStyle(
@@ -543,32 +505,37 @@ class _RecommendScreenState extends State<RecommendScreen> {
 
                       const SizedBox(height: 8),
 
-                      // ジャンルタグ
+                      // ジャンルタグ（横スクロール可能な1行）
                       if (book.genres != null && book.genres!.isNotEmpty)
-                        Wrap(
-                          spacing: 6,
-                          runSpacing: 6,
-                          children:
-                              book.genres!.map((genre) {
-                                return Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 6,
-                                    vertical: 2,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue.shade100,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    genre,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.blue.shade800,
+                        SizedBox(
+                          height: 24, // タグの高さを固定
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children:
+                                book.genres!.map((genre) {
+                                  return Container(
+                                    margin: const EdgeInsets.only(right: 6),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 2,
                                     ),
-                                  ),
-                                );
-                              }).toList(),
-                        ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue.shade100,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      genre,
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.blue.shade800,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                          ),
+                        )
+                      else
+                        SizedBox(height: 24), // タグがない場合も同じ高さを確保
 
                       const SizedBox(height: 8),
 
@@ -633,20 +600,23 @@ class _RecommendScreenState extends State<RecommendScreen> {
 
                       const SizedBox(height: 8),
 
-                      // 概要
+                      // 概要 - タイトルの実際の高さを計算して行数を決定
                       if (book.summary != null)
-                        Text(
-                          book.summary!,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey.shade700,
+                        Expanded(
+                          child: Text(
+                            book.summary!,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey.shade700,
+                              height: 1.3,
+                            ),
+                            // 標準では3行表示、タイトルが明らかに1行のみの場合は4行表示
+                            maxLines: book.title.length < 15 ? 4 : 3,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-
-                      // 「詳細を見る」ボタンを削除し、下部に若干の余白を追加
-                      const SizedBox(height: 4),
+                        )
+                      else
+                        Spacer(), // 概要がない場合は空白を表示
                     ],
                   ),
                 ),
