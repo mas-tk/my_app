@@ -1166,7 +1166,7 @@ class _MyPageScreenState extends State<MyPageScreen>
             // 左上のランプ
             Positioned(
               top: _screenWidth * 0.08,
-              left: 0,
+              left: -3,
               child: Image.asset(
                 'assets/lamp_left.png',
                 width: _screenWidth * 0.25, // 画面幅の25%
@@ -1177,7 +1177,7 @@ class _MyPageScreenState extends State<MyPageScreen>
             // 右上のランプ
             Positioned(
               top: _screenWidth * 0.08,
-              right: 0,
+              right: -3,
               child: Image.asset(
                 'assets/lamp_right.png',
                 width: _screenWidth * 0.25, // 画面幅の25%
@@ -1187,23 +1187,23 @@ class _MyPageScreenState extends State<MyPageScreen>
 
             // 左下のラジオ
             Positioned(
-              bottom: 0,
-              left: 0,
+              bottom: -5,
+              left: -3,
               child: Image.asset(
                 'assets/radio.png',
-                width: _screenWidth * 0.3, // 画面幅の30%
-                height: _screenHeight * 0.15, // 画面高さの15%
+                width: _screenWidth * 0.31,
+                height: _screenHeight * 0.155,
               ),
             ),
 
             // 右下のティーカップ
             Positioned(
-              bottom: 0,
-              right: 0,
+              bottom: -5,
+              right: -3,
               child: Image.asset(
                 'assets/teacup.png',
-                width: _screenWidth * 0.3, // 画面幅の30%
-                height: _screenHeight * 0.15, // 画面高さの15%
+                width: _screenWidth * 0.31,
+                height: _screenHeight * 0.155,
               ),
             ),
 

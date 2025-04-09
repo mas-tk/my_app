@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // パーセンテージによる定義
   final double _sideMarginPercent = 0.03;
   final double _shelfBackgroundTopPercent = 0.05;
-  final double _shelfBackgroundBottomPercent = 0.05;
+  final double _shelfBackgroundBottomPercent = 0.08; // 棚の下部の余白
   final double _shelfLeftMarginPercent = 0.005;
   final double _initialScrollPercentage = 1.005;
 
@@ -288,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   // 左上のランプ
                   Positioned(
                     top: _screenWidth * 0.08,
-                    left: 0,
+                    left: -3,
                     child: Image.asset(
                       'assets/lamp_left.png',
                       width: _screenWidth * 0.25,
@@ -299,7 +299,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   // 右上のランプ
                   Positioned(
                     top: _screenWidth * 0.08,
-                    right: 0,
+                    right: -3,
                     child: Image.asset(
                       'assets/lamp_right.png',
                       width: _screenWidth * 0.25,
@@ -309,23 +309,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   // 左下のラジオ
                   Positioned(
-                    bottom: 0,
-                    left: 0,
+                    bottom: -5,
+                    left: -3,
                     child: Image.asset(
                       'assets/radio.png',
-                      width: _screenWidth * 0.3,
-                      height: _screenHeight * 0.15,
+                      width: _screenWidth * 0.31,
+                      height: _screenHeight * 0.155,
                     ),
                   ),
 
                   // 右下のティーカップ
                   Positioned(
-                    bottom: 0,
-                    right: 0,
+                    bottom: -5,
+                    right: -3,
                     child: Image.asset(
                       'assets/teacup.png',
-                      width: _screenWidth * 0.3,
-                      height: _screenHeight * 0.15,
+                      width: _screenWidth * 0.31,
+                      height: _screenHeight * 0.155,
                     ),
                   ),
                 ],
@@ -351,7 +351,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: '注目の作品',
         // topPositionはノッチの高さに応じて動的に調整
         // 基本位置は0.12だが、ノッチの高さに基づいて調整
-        topPosition: 0.12 + (topPaddingPercent * 0.5), // ノッチ高さの半分程度を加算
+        topPosition: 0.09 + (topPaddingPercent * 0.5), // ノッチ高さの半分程度を加算
         titleToBookGap: 0.04,
         bookToShelfGap: -0.006,
         booksPerScreen: 3,
@@ -360,7 +360,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ShelfSection(
         title: '新着作品',
         // 1段目からの相対位置を維持
-        topPosition: 0.12 + (topPaddingPercent * 0.5) + 0.28, // 1段目 + 段間隔
+        topPosition: 0.09 + (topPaddingPercent * 0.5) + 0.27, // 1段目 + 段間隔
         titleToBookGap: 0.04,
         bookToShelfGap: -0.006,
         booksPerScreen: 5,
@@ -370,7 +370,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: '人気作品',
         // 2段目からの相対位置を維持
         topPosition:
-            0.12 + (topPaddingPercent * 0.5) + 0.28 * 1.7, // 1段目 + 段間隔×1.7
+            0.09 + (topPaddingPercent * 0.5) + 0.27 * 1.7, // 1段目 + 段間隔×1.7
         titleToBookGap: 0.04,
         bookToShelfGap: -0.006,
         booksPerScreen: 5,
