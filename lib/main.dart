@@ -258,7 +258,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.warehouse),
-                      label: '倉庫',
+                      label: '全ての絵本',
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.settings),
