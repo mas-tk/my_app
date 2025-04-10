@@ -122,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // 1段目
       ShelfSection(
         title: '注目の作品',
-        topPosition: 0.12,
+        topPosition: 0.08,
         titleToBookGap: 0.04,
         bookToShelfGap: -0.006,
         booksPerScreen: 3,
@@ -130,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // 2段目
       ShelfSection(
         title: '新着作品',
-        topPosition: 0.12 + 0.28,
+        topPosition: 0.08 + 0.28,
         titleToBookGap: 0.04,
         bookToShelfGap: -0.006,
         booksPerScreen: 5,
@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // 3段目
       ShelfSection(
         title: '人気作品',
-        topPosition: 0.12 + 0.28 * 1.7,
+        topPosition: 0.08 + 0.28 * 1.7,
         titleToBookGap: 0.04,
         bookToShelfGap: -0.006,
         booksPerScreen: 5,
@@ -233,14 +233,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           // 本棚の背景
                           Positioned(
-                            //top: _screenHeight * _shelfBackgroundTopPercent,
                             top:
                                 topPadding +
                                 (_screenHeight * 0.03), // ノッチの高さ + 少し余裕を持たせる
-                            bottom:
-                                _screenHeight * _shelfBackgroundBottomPercent,
                             left: 0,
                             width: totalWidth,
+                            height:
+                                _screenHeight * 0.80, // 画面の75%の高さに設定（この値は調整可能）
                             child: Image.asset(
                               'assets/shelf_background.png',
                               fit: BoxFit.fill,
@@ -313,8 +312,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     left: -3,
                     child: Image.asset(
                       'assets/radio.png',
-                      width: _screenWidth * 0.31,
-                      height: _screenHeight * 0.155,
+                      width: _screenWidth * 0.34,
+                      height: _screenHeight * 0.17,
                     ),
                   ),
 
@@ -324,8 +323,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     right: -3,
                     child: Image.asset(
                       'assets/teacup.png',
-                      width: _screenWidth * 0.31,
-                      height: _screenHeight * 0.155,
+                      width: _screenWidth * 0.34,
+                      height: _screenHeight * 0.17,
                     ),
                   ),
                 ],
@@ -351,7 +350,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: '注目の作品',
         // topPositionはノッチの高さに応じて動的に調整
         // 基本位置は0.12だが、ノッチの高さに基づいて調整
-        topPosition: 0.09 + (topPaddingPercent * 0.5), // ノッチ高さの半分程度を加算
+        topPosition: 0.07 + (topPaddingPercent * 0.5), // ノッチ高さの半分程度を加算
         titleToBookGap: 0.04,
         bookToShelfGap: -0.006,
         booksPerScreen: 3,
@@ -360,7 +359,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ShelfSection(
         title: '新着作品',
         // 1段目からの相対位置を維持
-        topPosition: 0.09 + (topPaddingPercent * 0.5) + 0.27, // 1段目 + 段間隔
+        topPosition: 0.08 + (topPaddingPercent * 0.5) + 0.27, // 1段目 + 段間隔
         titleToBookGap: 0.04,
         bookToShelfGap: -0.006,
         booksPerScreen: 5,
@@ -370,7 +369,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: '人気作品',
         // 2段目からの相対位置を維持
         topPosition:
-            0.09 + (topPaddingPercent * 0.5) + 0.27 * 1.7, // 1段目 + 段間隔×1.7
+            0.08 + (topPaddingPercent * 0.5) + 0.27 * 1.7, // 1段目 + 段間隔×1.7
         titleToBookGap: 0.04,
         bookToShelfGap: -0.006,
         booksPerScreen: 5,
