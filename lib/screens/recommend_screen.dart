@@ -392,6 +392,13 @@ class _RecommendScreenState extends State<RecommendScreen> {
     // 現在表示中の画像インデックス
     final ValueNotifier<int> currentImageIndex = ValueNotifier(0);
 
+    // ①解決策：PageControllerの初期ページに大きな値を設定
+    // 大きな値（10000）の半分から開始することで、左右どちらにもスワイプ可能
+    final int initialPage = 10000;
+    final PageController pageController = PageController(
+      initialPage: initialPage,
+    );
+
     return GestureDetector(
       // カード全体をタップ可能に
       onTap: () {
@@ -414,6 +421,7 @@ class _RecommendScreenState extends State<RecommendScreen> {
                 children: [
                   // 画像表示 - PageViewを循環させる
                   PageView.builder(
+                    controller: pageController, // 追加：ページコントローラを指定
                     itemCount: null, // nullを設定して無限スクロールを実現
                     onPageChanged: (index) {
                       // 実際のインデックスを計算（循環）
@@ -475,149 +483,173 @@ class _RecommendScreenState extends State<RecommendScreen> {
             Expanded(
               child: Transform.rotate(
                 angle: 0.01, // わずかに傾ける
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  height: 210, // コンテナ自体の高さも固定
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 4,
-                        offset: Offset(2, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // タイトル（最大2行）
-                      Text(
-                        book.title,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                // ②解決策：GestureDetectorを追加してテキスト部分でのスワイプを検出
+                child: GestureDetector(
+                  // 水平方向のスワイプを検出
+                  onHorizontalDragEnd: (details) {
+                    // スワイプの速度から方向を判断
+                    if (details.primaryVelocity! < 0) {
+                      // 左スワイプ - 次のページへ
+                      pageController.nextPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    } else if (details.primaryVelocity! > 0) {
+                      // 右スワイプ - 前のページへ
+                      pageController.previousPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    height: 210, // コンテナ自体の高さも固定
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 4,
+                          offset: Offset(2, 2),
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // タイトル（最大2行）
+                        Text(
+                          book.title,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
 
-                      const SizedBox(height: 8),
+                        const SizedBox(height: 8),
 
-                      // ジャンルタグ（横スクロール可能な1行）
-                      if (book.genres != null && book.genres!.isNotEmpty)
-                        SizedBox(
-                          height: 24, // タグの高さを固定
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children:
-                                book.genres!.map((genre) {
-                                  return Container(
-                                    margin: const EdgeInsets.only(right: 6),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 6,
-                                      vertical: 2,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue.shade100,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Text(
-                                      genre,
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        color: Colors.blue.shade800,
+                        // ジャンルタグ（横スクロール可能な1行）
+                        if (book.genres != null && book.genres!.isNotEmpty)
+                          SizedBox(
+                            height: 24, // タグの高さを固定
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children:
+                                  book.genres!.map((genre) {
+                                    return Container(
+                                      margin: const EdgeInsets.only(right: 6),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 2,
                                       ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue.shade100,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        genre,
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: Colors.blue.shade800,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                            ),
+                          )
+                        else
+                          SizedBox(height: 24), // タグがない場合も同じ高さを確保
+
+                        const SizedBox(height: 8),
+
+                        // 統計情報
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.remove_red_eye,
+                              size: 14,
+                              color: Colors.grey,
+                            ),
+                            const SizedBox(width: 2),
+                            Text(
+                              '${book.views ?? 0}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+
+                            Icon(Icons.favorite, size: 14, color: Colors.red),
+                            const SizedBox(width: 2),
+                            Text(
+                              '${book.likes ?? 0}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+
+                            Icon(Icons.comment, size: 14, color: Colors.blue),
+                            const SizedBox(width: 2),
+                            Text(
+                              '${book.comments ?? 0}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+
+                            Spacer(),
+
+                            if (book.rating != null)
+                              Row(
+                                children: [
+                                  Text(
+                                    book.rating!.toString(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      color: Colors.amber.shade800,
                                     ),
-                                  );
-                                }).toList(),
-                          ),
-                        )
-                      else
-                        SizedBox(height: 24), // タグがない場合も同じ高さを確保
-
-                      const SizedBox(height: 8),
-
-                      // 統計情報
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.remove_red_eye,
-                            size: 14,
-                            color: Colors.grey,
-                          ),
-                          const SizedBox(width: 2),
-                          Text(
-                            '${book.views ?? 0}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-
-                          Icon(Icons.favorite, size: 14, color: Colors.red),
-                          const SizedBox(width: 2),
-                          Text(
-                            '${book.likes ?? 0}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-
-                          Icon(Icons.comment, size: 14, color: Colors.blue),
-                          const SizedBox(width: 2),
-                          Text(
-                            '${book.comments ?? 0}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-
-                          Spacer(),
-
-                          if (book.rating != null)
-                            Row(
-                              children: [
-                                Text(
-                                  book.rating!.toString(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                    color: Colors.amber.shade800,
                                   ),
-                                ),
-                                const SizedBox(width: 2),
-                                Icon(Icons.star, size: 14, color: Colors.amber),
-                              ],
-                            ),
-                        ],
-                      ),
+                                  const SizedBox(width: 2),
+                                  Icon(
+                                    Icons.star,
+                                    size: 14,
+                                    color: Colors.amber,
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
 
-                      const SizedBox(height: 8),
+                        const SizedBox(height: 8),
 
-                      // 概要 - タイトルの実際の高さを計算して行数を決定
-                      if (book.summary != null)
-                        Expanded(
-                          child: Text(
-                            book.summary!,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey.shade700,
-                              height: 1.3,
+                        // 概要 - タイトルの実際の高さを計算して行数を決定
+                        if (book.summary != null)
+                          Expanded(
+                            child: Text(
+                              book.summary!,
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey.shade700,
+                                height: 1.3,
+                              ),
+                              // 標準では3行表示、タイトルが明らかに1行のみの場合は4行表示
+                              maxLines: book.title.length < 15 ? 4 : 3,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            // 標準では3行表示、タイトルが明らかに1行のみの場合は4行表示
-                            maxLines: book.title.length < 15 ? 4 : 3,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        )
-                      else
-                        Spacer(), // 概要がない場合は空白を表示
-                    ],
+                          )
+                        else
+                          Spacer(), // 概要がない場合は空白を表示
+                      ],
+                    ),
                   ),
                 ),
               ),
