@@ -16,6 +16,13 @@ dependencies:
   shared_preferences: ^2.0.15
   path_provider: ^2.0.11
   turn_page_transition: ^0.4.0  # Added for page turn animation
+  share_plus: ^7.0.2  # Added for sharing functionality
+
+  # Add these new dependencies for animations
+  #flutter_gif: ^0.0.4  # For GIF animations # flutter_gifはエラーが出るため削除
+  video_player: ^2.8.1  # For video animations
+  lottie: ^2.6.0  # For Lottie animations
+  cached_network_image: ^3.3.0  # For better image loading and caching
 
 dev_dependencies:
   flutter_test:
@@ -45,12 +52,18 @@ flutter:
     - assets/bookmark_off.png
     - assets/page_flip.mp3
 
+   # Add new directories for animations
+    - assets/animations/
+    - assets/videos/
+    - assets/lottie/
+
     # データファイル
     - assets/data/books.json
     - assets/data/categories.json
     - assets/data/shelf_categories.json
     - assets/data/favorite_books.json
     - assets/data/decoration_objects.json
+    - assets/data/reviews/
 
     # 本のカバー画像
     - assets/bookcovers/
@@ -104,3 +117,14 @@ flutter:
     
     # 絵本ページ画像
     - assets/books/book1/
+
+    # tags
+    - assets/data/tags.json
+
+    # コインとガチャ関連
+    - assets/data/coins.json
+    - assets/data/gacha_types.json
+    - assets/gacha/standard_gacha.png
+    - assets/gacha/premium_gacha.png
+    - assets/gacha/limited_gacha.png
+

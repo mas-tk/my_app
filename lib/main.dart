@@ -11,6 +11,8 @@ import 'screens/recommend_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/review_screen.dart'; // レビュー画面を追加
 import 'screens/favorites_screen.dart'; // お気に入り一覧画面を追加
+import 'screens/gacha_screen.dart'; // GachaScreenをインポート
+import 'screens/gacha_select_screen.dart';
 
 // リポジトリのインポート
 import 'repositories/book_repository.dart';
@@ -63,6 +65,12 @@ class MyApp extends StatelessWidget {
                   as ReviewScreenArguments;
           return ReviewScreen(args: args);
         },
+        // '/gacha': (context) => const GachaScreen(), // 古いルート定義を削除または以下のように変更
+        '/gacha': (context) {
+          // デフォルトガチャタイプとして'standard'を使用
+          return const GachaScreen(gachaTypeId: 'standard');
+        },
+        '/gachaSelect': (context) => const GachaSelectScreen(), // 新しいルートを追加
       },
     );
   }
@@ -120,6 +128,7 @@ class _MainPageState extends State<MainPage> {
             // BottomNavigationBar を隠す
             setState(() {
               _hideBottomNavigationBar = true;
+              _isBookScreenActive = true; // BookScreen表示フラグを設定
             });
 
             final args = settings.arguments as BookScreenArguments;
@@ -130,12 +139,16 @@ class _MainPageState extends State<MainPage> {
                 return BookScreen(
                   args: args,
                   onDispose: () {
-                    // BookScreen が破棄されたとき
-                    if (mounted) {
-                      setState(() {
-                        _hideBottomNavigationBar = false;
-                      });
-                    }
+                    // BookScreen が破棄されたときの処理を安全に行う
+                    // FrameCallbackを使って安全に状態更新
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (mounted) {
+                        setState(() {
+                          _hideBottomNavigationBar = false;
+                          _isBookScreenActive = false; // BookScreen非表示に戻す
+                        });
+                      }
+                    });
                   },
                 );
               },
@@ -146,13 +159,7 @@ class _MainPageState extends State<MainPage> {
                 secondaryAnimation,
                 child,
               ) {
-                return FadeTransition(
-                  opacity: Tween<double>(
-                    begin: 0.0,
-                    end: 1.0,
-                  ).animate(animation),
-                  child: child,
-                );
+                return FadeTransition(opacity: animation, child: child);
               },
             );
           } else if (settings.name == '/') {
@@ -208,7 +215,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     print(
-      "MainPage build called, _hideBottomNavigationBar = $_hideBottomNavigationBar",
+      "MainPage build called, _hideBottomNavigationBar = $_hideBottomNavigationBar, _isBookScreenActive = $_isBookScreenActive",
     );
 
     return WillPopScope(
@@ -217,7 +224,7 @@ class _MainPageState extends State<MainPage> {
             !await _navigatorKeys[_selectedIndex].currentState!.maybePop();
 
         // 画面が戻ったとき、下部メニューを再表示
-        if (!isFirstRouteInCurrentTab) {
+        if (!isFirstRouteInCurrentTab && !_isBookScreenActive) {
           setState(() {
             _hideBottomNavigationBar = false;
           });
@@ -267,6 +274,70 @@ class _MainPageState extends State<MainPage> {
                   ],
                 ),
       ),
+    );
+  }
+}
+
+// アプリ全体で使用する遷移エフェクトを定義
+class SmoothFadeRoute<T> extends PageRoute<T> {
+  SmoothFadeRoute({
+    required this.builder,
+    RouteSettings? settings,
+    this.transitionDuration = const Duration(milliseconds: 400),
+    this.reverseTransitionDuration = const Duration(milliseconds: 400),
+    this.opaque = true,
+    this.barrierDismissible = false,
+    this.barrierColor,
+    this.barrierLabel,
+    this.maintainState = true,
+  }) : super(settings: settings);
+
+  final WidgetBuilder builder;
+
+  @override
+  final Duration transitionDuration;
+
+  @override
+  final Duration reverseTransitionDuration;
+
+  @override
+  final bool opaque;
+
+  @override
+  final bool barrierDismissible;
+
+  @override
+  final Color? barrierColor;
+
+  @override
+  final String? barrierLabel;
+
+  @override
+  final bool maintainState;
+
+  @override
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
+    return builder(context);
+  }
+
+  @override
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return FadeTransition(
+      opacity: CurvedAnimation(
+        parent: animation,
+        curve: Curves.easeOut,
+        reverseCurve: Curves.easeIn,
+      ),
+      child: child,
     );
   }
 }

@@ -1,0 +1,50 @@
+[
+    {
+      "username": "田中さん",
+      "rating": 4.5,
+      "comment": "とても素敵な絵本です。子供も大喜びでした。",
+      "date": "2025-04-09T15:04:32.000Z",
+      "likes": 42,
+      "isLiked": false
+    },
+    {
+      "username": "佐藤さん",
+      "rating": 5.0,
+      "comment": "ストーリーも絵も素晴らしい。何度も読み返しています。",
+      "date": "2025-04-04T12:22:15.000Z",
+      "likes": 26,
+      "isLiked": false
+    },
+    {
+      "username": "鈴木さん",
+      "rating": 3.5,
+      "comment": "面白いですが、もう少し長いとよかったかも。",
+      "date": "2025-03-30T09:18:45.000Z",
+      "likes": 17,
+      "isLiked": false
+    },
+    {
+      "username": "そういち",
+      "rating": 4.0, 
+      "comment": "人間の方が怖い？",
+      "date": "2025-03-27T22:44:10.000Z",
+      "likes": 15,
+      "isLiked": false
+    },
+    {
+      "username": "ぬを一",
+      "rating": 3.0,
+      "comment": "面白い漫画を見つけた",
+      "date": "2025-03-20T19:42:33.000Z",
+      "likes": 7,
+      "isLiked": false
+    },
+    {
+      "username": "あきなり",
+      "rating": 4.0,
+      "comment": "ウィルス持ってるからなぁ。主人公らは掛からない体質かな",
+      "date": "2025-03-10T08:47:22.000Z",
+      "likes": 5,
+      "isLiked": false
+    }
+  ]

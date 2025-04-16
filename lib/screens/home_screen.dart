@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/book_models.dart';
 import '../repositories/book_repository.dart';
+import 'gacha_screen.dart'; // GachaScreenをインポート
+import 'gacha_select_screen.dart';
 
 // 各棚段（カテゴリ）の情報を管理するクラス
 class ShelfSection {
@@ -321,10 +323,33 @@ class _HomeScreenState extends State<HomeScreen> {
                   Positioned(
                     bottom: -5,
                     right: -3,
-                    child: Image.asset(
-                      'assets/teacup.png',
-                      width: _screenWidth * 0.34,
-                      height: _screenHeight * 0.17,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(
+                              MaterialPageRoute(
+                                builder:
+                                    (context) =>
+                                        const GachaSelectScreen(), // GachaScreen から GachaSelectScreen に変更
+                              ),
+                            )
+                            .then((result) {
+                              if (result != null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      '新しいアイテムを獲得しました: ${result.name}',
+                                    ),
+                                  ),
+                                );
+                              }
+                            });
+                      },
+                      child: Image.asset(
+                        'assets/teacup.png',
+                        width: _screenWidth * 0.34,
+                        height: _screenHeight * 0.17,
+                      ),
                     ),
                   ),
                 ],

@@ -1,0 +1,47 @@
+[
+    {
+      "id": "standard",
+      "name": "スタンダードガチャ",
+      "description": "ベーシックなアイテムが手に入るガチャです。確率は均等です。",
+      "cost": 100,
+      "imagePath": "assets/gacha/standard_gacha.png",
+      "availableObjects": ["obj1", "obj2", "obj3", "obj4", "obj5", "obj6"],
+      "probabilities": {
+        "obj1": 20,
+        "obj2": 20,
+        "obj3": 20,
+        "obj4": 20,
+        "obj5": 10,
+        "obj6": 10
+      }
+    },
+    {
+      "id": "premium",
+      "name": "プレミアムガチャ",
+      "description": "レアなアイテムが高確率で手に入る高級ガチャです。",
+      "cost": 300,
+      "imagePath": "assets/gacha/premium_gacha.png",
+      "availableObjects": ["obj1", "obj2", "obj3", "obj4", "obj5", "obj6"],
+      "probabilities": {
+        "obj1": 5,
+        "obj2": 5,
+        "obj3": 10,
+        "obj4": 30,
+        "obj5": 30,
+        "obj6": 20
+      }
+    },
+    {
+      "id": "limited",
+      "name": "限定ガチャ",
+      "description": "期間限定の特別なアイテムが手に入るチャンス！",
+      "cost": 500,
+      "imagePath": "assets/gacha/limited_gacha.png",
+      "availableObjects": ["obj4", "obj5", "obj6"],
+      "probabilities": {
+        "obj4": 40,
+        "obj5": 40,
+        "obj6": 20
+      }
+    }
+  ]

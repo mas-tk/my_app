@@ -1,21 +1,16 @@
 // lib/screens/review_screen.dart
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/book_models.dart';
+import '../models/review_models.dart';
+import '../repositories/review_repository.dart';
+import '../repositories/coin_repository.dart';
 
-// レビューコメントモデル
-class ReviewComment {
-  final String username;
-  final double rating;
-  final String comment;
-  final DateTime date;
-
-  ReviewComment({
-    required this.username,
-    required this.rating,
-    required this.comment,
-    required this.date,
-  });
+// ソート方法の列挙型
+enum SortMethod {
+  byLikes, // いいね順
+  byDate, // 投稿順
 }
 
 class ReviewScreenArguments {
@@ -48,6 +43,16 @@ class _ReviewScreenState extends State<ReviewScreen> {
   List<ReviewComment> _reviews = [];
   bool _isLoading = true;
 
+  // ソート方法の状態変数
+  SortMethod _currentSortMethod = SortMethod.byLikes;
+
+  // フォーカスノード
+  final FocusNode _commentFocusNode = FocusNode();
+
+  // リポジトリ
+  final ReviewRepository _reviewRepository = ReviewRepository();
+  final CoinRepository _coinRepository = CoinRepository();
+
   @override
   void initState() {
     super.initState();
@@ -64,6 +69,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
   @override
   void dispose() {
     _commentController.dispose();
+    _commentFocusNode.dispose();
     super.dispose();
   }
 
@@ -90,29 +96,15 @@ class _ReviewScreenState extends State<ReviewScreen> {
     });
 
     try {
-      // 実際の実装では API からレビューを読み込む
-      // ここではデモ用にダミーデータを設定
+      // ReviewRepositoryからレビューを読み込む
+      final reviews = await _reviewRepository.getReviewsForBook(
+        widget.args.bookId,
+      );
+
       setState(() {
-        _reviews = [
-          ReviewComment(
-            username: '田中さん',
-            rating: 4.5,
-            comment: 'とても素敵な絵本です。子供も大喜びでした。',
-            date: DateTime.now().subtract(const Duration(days: 5)),
-          ),
-          ReviewComment(
-            username: '佐藤さん',
-            rating: 5.0,
-            comment: 'ストーリーも絵も素晴らしい。何度も読み返しています。',
-            date: DateTime.now().subtract(const Duration(days: 10)),
-          ),
-          ReviewComment(
-            username: '鈴木さん',
-            rating: 3.5,
-            comment: '面白いですが、もう少し長いとよかったかも。',
-            date: DateTime.now().subtract(const Duration(days: 15)),
-          ),
-        ];
+        _reviews = reviews;
+        // ソートを適用
+        _sortReviews();
       });
     } catch (e) {
       print('Error loading reviews: $e');
@@ -123,23 +115,73 @@ class _ReviewScreenState extends State<ReviewScreen> {
     }
   }
 
-  // お気に入り状態を切り替え
-  Future<void> _toggleFavorite() async {
-    try {
-      setState(() {
-        _isFavorite = !_isFavorite;
-      });
-
-      // SharedPreferences でお気に入り状態を保存
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('favorite_${widget.args.bookId}', _isFavorite);
-    } catch (e) {
-      print('Error toggling favorite: $e');
+  // レビューをソートする
+  void _sortReviews() {
+    if (_currentSortMethod == SortMethod.byLikes) {
+      // いいね数でソート（降順）
+      _reviews.sort((a, b) => b.likes.compareTo(a.likes));
+    } else {
+      // 投稿日時でソート（新しい順）
+      _reviews.sort((a, b) => b.date.compareTo(a.date));
     }
   }
 
-  // 評価を保存
-  Future<void> _saveRating() async {
+  // ソート方法を切り替える
+  void _toggleSortMethod() {
+    setState(() {
+      _currentSortMethod =
+          _currentSortMethod == SortMethod.byLikes
+              ? SortMethod.byDate
+              : SortMethod.byLikes;
+      _sortReviews();
+    });
+  }
+
+  // いいねを切り替える
+  Future<void> _toggleLike(int index) async {
+    // レビューリポジトリで処理を実行
+    final success = await _reviewRepository.toggleLike(
+      widget.args.bookId,
+      index,
+    );
+
+    if (success) {
+      // データを再読み込み
+      await _loadReviews();
+    }
+  }
+
+  // SNSシェア機能
+  Future<void> _shareToSNS() async {
+    try {
+      // ここでは実際のSNSシェア機能の代わりにスナックバーを表示
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('SNSにシェアしました！コインを獲得しました！')));
+
+      // コインを付与
+      await _coinRepository.earnCoins(
+        100, // 獲得コイン数
+        'share', // タイプ
+        '${widget.args.title}をSNSでシェアしました', // 説明
+      );
+    } catch (e) {
+      print('Error sharing to SNS: $e');
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('シェアに失敗しました')));
+    }
+  }
+
+  // コメントを保存
+  Future<void> _saveComment() async {
+    if (_commentController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('コメントを入力してください')));
+      return;
+    }
+
     try {
       // SharedPreferences で評価を保存
       final prefs = await SharedPreferences.getInstance();
@@ -153,19 +195,49 @@ class _ReviewScreenState extends State<ReviewScreen> {
         );
       }
 
+      // 新しいレビューを作成
+      final newReview = ReviewComment(
+        username: 'あなた', // ユーザー名
+        rating: _userRating,
+        comment: _commentController.text,
+        date: DateTime.now(),
+        likes: 0,
+        isLiked: false,
+      );
+
+      // リポジトリにレビューを追加
+      final success = await _reviewRepository.addReview(
+        widget.args.bookId,
+        newReview,
+      );
+
+      if (success) {
+        // データを再読み込み
+        await _loadReviews();
+
+        // テキストフィールドをクリア
+        setState(() {
+          _commentController.clear();
+        });
+
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('コメントを投稿しました')));
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('コメントの保存に失敗しました')));
+      }
+    } catch (e) {
+      print('Error saving comment: $e');
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('評価を保存しました')));
-
-      // 閉じる（オプション）
-      // Navigator.pop(context);
-    } catch (e) {
-      print('Error saving rating: $e');
+      ).showSnackBar(const SnackBar(content: Text('コメントの保存に失敗しました')));
     }
   }
 
   // レビューアイテムのウィジェット
-  Widget _buildReviewItem(ReviewComment review) {
+  Widget _buildReviewItem(ReviewComment review, int index) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -200,12 +272,11 @@ class _ReviewScreenState extends State<ReviewScreen> {
           // 星評価表示
           Row(
             children: [
-              ...List.generate(5, (index) {
+              ...List.generate(5, (i) {
                 return Icon(
-                  index < review.rating.floor()
+                  i < review.rating.floor()
                       ? Icons.star
-                      : (index < review.rating.ceil() &&
-                          index >= review.rating.floor())
+                      : (i < review.rating.ceil() && i >= review.rating.floor())
                       ? Icons.star_half
                       : Icons.star_border,
                   color: Colors.amber,
@@ -228,6 +299,33 @@ class _ReviewScreenState extends State<ReviewScreen> {
             review.comment,
             style: const TextStyle(color: Colors.white, fontSize: 14),
           ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              // いいねボタン
+              GestureDetector(
+                onTap: () => _toggleLike(index),
+                child: Row(
+                  children: [
+                    Icon(
+                      review.isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
+                      color: review.isLiked ? Colors.blue : Colors.white,
+                      size: 16,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      review.likes.toString(),
+                      style: TextStyle(
+                        color: review.isLiked ? Colors.blue : Colors.white,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -240,186 +338,263 @@ class _ReviewScreenState extends State<ReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black.withOpacity(0.5),
-        elevation: 0,
-        title: Text(
-          widget.args.title,
-          style: const TextStyle(color: Colors.white),
+    return GestureDetector(
+      // 左から右へのスワイプ検出で画面を閉じる
+      onHorizontalDragEnd: (details) {
+        if (details.primaryVelocity != null && details.primaryVelocity! > 0) {
+          // 右方向へのスワイプ（左から右）
+          Navigator.pop(context);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.black.withOpacity(0.5),
+          elevation: 0,
+          title: Text(
+            widget.args.title,
+            style: const TextStyle(color: Colors.white),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis, // タイトルが長い場合は省略
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white), // ←に変更
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body:
-          _isLoading
-              ? const Center(
-                child: CircularProgressIndicator(color: Colors.white),
-              )
-              : Container(
-                color: Colors.black.withOpacity(0.85),
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: SafeArea(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // 他のユーザーのレビュー
-                        const Text(
-                          'みんなの評価',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // レビューリスト
-                        ..._reviews.map((review) => _buildReviewItem(review)),
-
-                        const SizedBox(height: 32),
-                        const Divider(color: Colors.white30),
-                        const SizedBox(height: 24),
-
-                        // 自分の評価
-                        const Text(
-                          'あなたの評価',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // 星評価
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(5, (index) {
-                            return IconButton(
-                              icon: Icon(
-                                _userRating > index
-                                    ? Icons.star
-                                    : Icons.star_border,
-                                color: Colors.amber,
-                                size: 36,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _userRating = index + 1.0;
-                                });
-                              },
-                            );
-                          }),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // コメント入力
-                        TextField(
-                          controller: _commentController,
-                          maxLines: 3,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: 'この絵本についてのコメントを書いてください',
-                            hintStyle: TextStyle(
-                              color: Colors.white.withOpacity(0.5),
-                            ),
-                            filled: true,
-                            fillColor: Colors.white.withOpacity(0.1),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide.none,
+        body:
+            _isLoading
+                ? const Center(
+                  child: CircularProgressIndicator(color: Colors.white),
+                )
+                : Column(
+                  children: [
+                    // ソート切り替えセクション
+                    Container(
+                      color: Colors.black.withOpacity(0.5),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            'みんなのコメント',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // 評価保存ボタン
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _saveRating,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.amber,
-                              foregroundColor: Colors.black,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
+                          Spacer(),
+                          // ソート切り替えボタン
+                          TextButton.icon(
+                            onPressed: _toggleSortMethod,
+                            icon: Icon(
+                              _currentSortMethod == SortMethod.byLikes
+                                  ? Icons.thumb_up
+                                  : Icons.access_time,
+                              color: Colors.white,
+                              size: 16,
                             ),
-                            child: const Text(
-                              '評価を保存する',
+                            label: Text(
+                              _currentSortMethod == SortMethod.byLikes
+                                  ? 'いいね順'
+                                  : '投稿順',
                               style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
+                            ),
+                            style: TextButton.styleFrom(
+                              backgroundColor: Colors.black.withOpacity(0.3),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 32),
-                        const Divider(color: Colors.white30),
-                        const SizedBox(height: 24),
-
-                        // お気に入りセクション
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            // お気に入りボタン
-                            ElevatedButton.icon(
-                              icon: Icon(
-                                _isFavorite
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: _isFavorite ? Colors.red : Colors.white,
-                              ),
-                              label: Text(
-                                _isFavorite ? 'お気に入り済み' : 'お気に入りに追加',
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    _isFavorite
-                                        ? Colors.redAccent.withOpacity(0.2)
-                                        : Colors.white.withOpacity(0.2),
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
-                                ),
-                              ),
-                              onPressed: _toggleFavorite,
-                            ),
-
-                            // 閉じるボタン
-                            ElevatedButton.icon(
-                              icon: const Icon(
-                                Icons.arrow_back,
-                                color: Colors.white,
-                              ),
-                              label: const Text(
-                                '絵本に戻る',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green.withOpacity(0.3),
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
-                                ),
-                              ),
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                          ],
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
+
+                    // レビューリスト - 下部にパディングを入れてSNSシェアボタンが重ならないように
+                    Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                          top: 16,
+                          bottom: 90, // 下部に余白を追加
+                        ),
+                        itemCount: _reviews.length,
+                        itemBuilder: (context, index) {
+                          return _buildReviewItem(_reviews[index], index);
+                        },
+                      ),
+                    ),
+
+                    // 自分の評価とコメント入力部分（固定部分）
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 10,
+                            offset: Offset(0, -3),
+                          ),
+                        ],
+                      ),
+                      padding: EdgeInsets.only(
+                        top: 12,
+                        left: 16,
+                        right: 16,
+                        // キーボードの高さに合わせてパディングを調整
+                        bottom: MediaQuery.of(context).viewInsets.bottom + 12,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // 星評価とSNSシェアボタンを横に並べる
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // 星評価
+                              Row(
+                                children: List.generate(5, (index) {
+                                  return IconButton(
+                                    icon: Icon(
+                                      _userRating > index
+                                          ? Icons.star
+                                          : Icons.star_border,
+                                      color: Colors.amber,
+                                      size: 32,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _userRating = index + 1.0;
+                                      });
+                                    },
+                                    padding: EdgeInsets.zero,
+                                    constraints: BoxConstraints(
+                                      minWidth: 36,
+                                      minHeight: 36,
+                                    ),
+                                  );
+                                }),
+                              ),
+
+                              // SNSシェアボタン
+                              GestureDetector(
+                                onTap: _shareToSNS,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.amber.shade600,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black26,
+                                        blurRadius: 4,
+                                        offset: Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: const [
+                                      Icon(
+                                        Icons.share,
+                                        color: Colors.white,
+                                        size: 18,
+                                      ),
+                                      SizedBox(width: 4),
+                                      Text(
+                                        'シェアする',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+
+                          // コメント入力
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: _commentController,
+                                  focusNode: _commentFocusNode,
+                                  maxLines: null,
+                                  minLines: 1,
+                                  style: const TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    hintText: 'コメントを入力...',
+                                    hintStyle: TextStyle(
+                                      color: Colors.white.withOpacity(0.5),
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.white.withOpacity(0.1),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(24),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 12,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              // 送信ボタン
+                              IconButton(
+                                onPressed: _saveComment,
+                                icon: Icon(Icons.send, color: Colors.amber),
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Colors.amber.withOpacity(
+                                    0.2,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          // コメント入力下のコイン獲得ヒントテキスト
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8, bottom: 4),
+                            child: Center(
+                              child: Text(
+                                'SNSでシェアすると100コインゲット！',
+                                style: TextStyle(
+                                  color: Colors.amber.shade300,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
+      ),
     );
   }
 }

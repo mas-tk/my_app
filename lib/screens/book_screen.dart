@@ -179,8 +179,13 @@ class _BookScreenState extends State<BookScreen>
     _audioPlayer.dispose();
     _autoTextTimer?.cancel();
 
-    // コールバックが設定されていれば呼び出す
-    widget.onDispose?.call();
+    // コールバックが設定されていれば、次のフレームで呼び出す
+    if (widget.onDispose != null) {
+      // FrameCallbackを使って安全にコールバックを呼び出す
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.onDispose?.call();
+      });
+    }
 
     super.dispose();
   }
@@ -762,6 +767,10 @@ class _BookScreenState extends State<BookScreen>
 
   // 自動表示の有効/無効を切り替えるメソッド
   void _toggleAutoTextDisplay() {
+    setState(() {
+      _autoTextEnabled = !_autoTextEnabled;
+    });
+
     // 設定を保存
     _saveAutoTextSettings();
 
@@ -1129,9 +1138,9 @@ class _BookScreenState extends State<BookScreen>
                                 ), // 間隔を広げる
                                 child: Row(
                                   children: [
-                                    Text(
+                                    const Text(
                                       'BGM: ',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Colors.white60,
                                         fontSize: 12,
                                       ),
@@ -1224,7 +1233,8 @@ class _BookScreenState extends State<BookScreen>
                     onPressed: () {
                       showModalBottomSheet(
                         context: context,
-                        backgroundColor: Colors.black87,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
                         builder: (BuildContext context) {
                           return StatefulBuilder(
                             builder: (
@@ -1233,6 +1243,13 @@ class _BookScreenState extends State<BookScreen>
                             ) {
                               return Container(
                                 padding: const EdgeInsets.all(16),
+                                decoration: const BoxDecoration(
+                                  color: Colors.black87,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                  ),
+                                ),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -1321,7 +1338,8 @@ class _BookScreenState extends State<BookScreen>
                     onPressed: () {
                       showModalBottomSheet(
                         context: context,
-                        backgroundColor: Colors.black87,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
                         builder: (BuildContext context) {
                           return StatefulBuilder(
                             builder: (
@@ -1330,6 +1348,13 @@ class _BookScreenState extends State<BookScreen>
                             ) {
                               return Container(
                                 padding: const EdgeInsets.all(16),
+                                decoration: const BoxDecoration(
+                                  color: Colors.black87,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                  ),
+                                ),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [

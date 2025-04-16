@@ -6,11 +6,21 @@ import 'package:flutter/services.dart' show rootBundle, HapticFeedback;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../repositories/book_repository.dart';
 import '../repositories/object_repository.dart';
+import '../repositories/coin_repository.dart'; // 追加: コインリポジトリをインポート
 import '../models/book_models.dart' as app_models;
 import '../models/object_models.dart';
 import '../models/shelf_models.dart';
 import '../services/file_storage_service.dart';
+import '../services/share_service.dart'; // 追加: シェアサービスをインポート
+import '../widgets/sns_share_dialog.dart'; // 追加: SNSシェアダイアログをインポート
 import 'favorites_screen.dart';
+import 'gacha_screen.dart'; // GachaScreenをインポート
+import 'gacha_select_screen.dart';
+import '../widgets/simple_gif_player.dart';
+import '../models/animated_object_models.dart';
+import '../repositories/animated_object_repository.dart';
+import 'dart:async';
+import '../widgets/simple_gif_player.dart';
 
 // 編集用の空のスロットを表現するクラス
 class EmptyBookSlot {
@@ -57,6 +67,12 @@ class _MyPageScreenState extends State<MyPageScreen>
   // Add FileStorageService instance
   final FileStorageService _fileStorageService = FileStorageService();
 
+  // アニメーションオブジェクトリポジトリを追加
+  final AnimatedObjectRepository _animatedObjectRepository =
+      AnimatedObjectRepository();
+  OverlayEntry? _currentAnimationOverlay;
+  Timer? _animationTimer;
+
   // 表示モード管理
   bool _isEditMode = false; // 編集モード状態
 
@@ -65,6 +81,12 @@ class _MyPageScreenState extends State<MyPageScreen>
 
   // ObjectRepositoryインスタンス - オブジェクトの詳細情報を取得するため
   final ObjectRepository _objectRepository = ObjectRepository();
+
+  // CoinRepository インスタンス - シェア時にコインを獲得するため
+  final CoinRepository _coinRepository = CoinRepository();
+
+  // ShareService インスタンス - シェア機能を利用するため
+  final ShareService _shareService = ShareService();
 
   // 本の情報キャッシュ
   final Map<String, app_models.Book> _bookCache = {};
@@ -124,6 +146,9 @@ class _MyPageScreenState extends State<MyPageScreen>
   // 本の読み込み状態
   bool _isLoading = true;
 
+  // ウィジェットのグローバルキー (シェア機能で使用)
+  final GlobalKey _bookshelfKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -159,8 +184,20 @@ class _MyPageScreenState extends State<MyPageScreen>
 
   @override
   void dispose() {
+    _cleanupCurrentAnimation();
     _shakeController.dispose();
     super.dispose();
+  }
+
+  // アニメーションのクリーンアップ
+  void _cleanupCurrentAnimation() {
+    _animationTimer?.cancel();
+    _animationTimer = null;
+
+    if (_currentAnimationOverlay != null) {
+      _currentAnimationOverlay!.remove();
+      _currentAnimationOverlay = null;
+    }
   }
 
   // ここからデータロードのメソッド
@@ -733,6 +770,87 @@ class _MyPageScreenState extends State<MyPageScreen>
     }
   }
 
+  // シェアダイアログを表示
+  void _showShareDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        // dialogContextを使用
+        return SnsShareDialog(
+          onClose: () => Navigator.of(dialogContext).pop(), // dialogContextを使用
+          onShare:
+              (platform) => _shareToSNS(platform, dialogContext), // コンテキストを渡す
+        );
+      },
+    );
+  }
+
+  // SNSシェア機能の実装
+  Future<void> _shareToSNS(String platform, BuildContext dialogContext) async {
+    try {
+      // ダイアログを先に閉じる - マウントされていない問題を防ぐ
+      Navigator.of(dialogContext).pop();
+
+      // 少し待ってからキャプチャを実行
+      await Future.delayed(Duration(milliseconds: 200));
+
+      // ウィジェットのキャプチャ
+      final imageBytes = await _shareService.captureWidget(_bookshelfKey);
+
+      if (imageBytes != null) {
+        // プラットフォームに応じたシェアテキストを生成
+        final shareText = _shareService.generateShareText(platform);
+
+        // シェア実行
+        await _shareService.shareToSpecificPlatform(
+          platform: platform,
+          imageBytes: imageBytes,
+          customText: shareText,
+        );
+
+        // コインを付与
+        await _coinRepository.earnCoins(
+          100, // 獲得コイン数
+          'share', // タイプ
+          'SNSでシェアしました', // 説明
+        );
+
+        // 完了メッセージを表示 - mounted チェックを追加
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('シェアしました！100コインを獲得しました！')),
+          );
+        }
+      } else {
+        // 画像キャプチャに失敗した場合はテキストのみでシェア
+        final shareText = _shareService.generateShareText(platform);
+        await _shareService.shareText(text: shareText);
+
+        // コインを付与
+        await _coinRepository.earnCoins(
+          100, // 獲得コイン数
+          'share', // タイプ
+          'SNSでシェアしました', // 説明
+        );
+
+        // 完了メッセージを表示 - mounted チェックを追加
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('シェアしました！100コインを獲得しました！')),
+          );
+        }
+      }
+    } catch (e) {
+      print('シェアエラー: $e');
+      // エラーメッセージを表示 - mounted チェックを追加
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('シェアに失敗しました: $e')));
+      }
+    }
+  }
+
   // オブジェクトを配置する位置を選択するダイアログ
   Future<void> _showSelectPositionDialog(DecorationObject object) async {
     // 各カテゴリの利用可能な位置を取得
@@ -1074,6 +1192,142 @@ class _MyPageScreenState extends State<MyPageScreen>
     );
   }
 
+  // アニメーションを再生するメソッド
+  void _playObjectAnimation({
+    required BuildContext context,
+    required String objectId,
+    required Offset startPosition,
+    required Size objectSize,
+  }) {
+    // 既存のアニメーションをクリーンアップ
+    _cleanupCurrentAnimation();
+
+    // アニメーション情報の取得
+    final animInfo = _animatedObjectRepository.getAnimationForObject(objectId);
+    if (animInfo == null) return;
+
+    // ハプティックフィードバック（触覚フィードバック）を再生
+    HapticFeedback.mediumImpact();
+
+    // GIFアニメーションのオーバーレイを作成
+    _currentAnimationOverlay = OverlayEntry(
+      builder: (context) {
+        return Positioned(
+          left: startPosition.dx - objectSize.width / 2,
+          top: startPosition.dy - objectSize.height / 2,
+          width: objectSize.width,
+          height: objectSize.height,
+          child: SimpleGifPlayer(
+            gifPath: animInfo.animatedAssetPath,
+            fit: BoxFit.contain,
+            duration: const Duration(seconds: 2), // GIFアニメーションの推定時間
+            loop: false, // 1回だけ再生
+            onAnimationComplete: () {
+              // アニメーションが終了したら削除
+              _cleanupCurrentAnimation();
+            },
+          ),
+        );
+      },
+    );
+
+    // オーバーレイを画面に追加
+    Overlay.of(context).insert(_currentAnimationOverlay!);
+
+    // バックアップとして一定時間後に自動的に削除（アニメーションが終わらない場合に備えて）
+    _animationTimer = Timer(const Duration(seconds: 3), () {
+      _cleanupCurrentAnimation();
+    });
+  }
+
+  // アイテム（本またはオブジェクト）ウィジェット（編集モード対応）
+  Widget _buildItemWidget({
+    required ShelfItemReference itemRef,
+    required double width,
+    required double height,
+    required int itemIndex,
+    required int categoryIndex,
+    required int position,
+    required double itemsTop,
+    required double sideMargin,
+  }) {
+    // アイテムが本の場合
+    if (itemRef.type == ShelfItemType.book) {
+      return _buildBookItem(
+        itemRef: itemRef,
+        width: width,
+        height: height,
+        itemIndex: itemIndex,
+        categoryIndex: categoryIndex,
+        position: position,
+      );
+    } else {
+      // アイテムがオブジェクトの場合
+      return _buildObjectItem(
+        itemRef: itemRef,
+        width: width,
+        height: height,
+        itemIndex: itemIndex,
+        categoryIndex: categoryIndex,
+        position: position,
+        itemsTop: itemsTop,
+        sideMargin: sideMargin,
+      );
+    }
+  }
+
+  // アイテムリストを構築
+  Widget _buildItemsList({
+    required List<ShelfItemReference> items,
+    required int maxItems,
+    required double itemWidth,
+    required double itemHeight,
+    required int categoryIndex,
+    required double itemsTop,
+    required double sideMargin,
+  }) {
+    // 固定位置のグリッドを作成するための配列
+    List<Widget> gridSlots = List.generate(maxItems, (index) {
+      // 現在のインデックスにアイテムがあるかどうかチェック
+      ShelfItemReference? currentItemRef;
+      int? itemIndexInList;
+
+      for (int i = 0; i < items.length; i++) {
+        if (items[i].id.contains('_position_$index')) {
+          currentItemRef = items[i];
+          itemIndexInList = i;
+          break;
+        }
+      }
+
+      // 該当位置にアイテムがある場合はそのアイテムを、なければ空のスロットを表示
+      if (currentItemRef != null && itemIndexInList != null) {
+        return _buildItemWidget(
+          itemRef: currentItemRef,
+          width: itemWidth,
+          height: itemHeight,
+          itemIndex: itemIndexInList,
+          categoryIndex: categoryIndex,
+          position: index,
+          itemsTop: itemsTop,
+          sideMargin: sideMargin,
+        );
+      } else {
+        return _buildEmptySlot(
+          width: itemWidth,
+          height: itemHeight,
+          slotIndex: index,
+          categoryIndex: categoryIndex,
+        );
+      }
+    });
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: gridSlots,
+    );
+  }
+
   // 本棚ウィジェットの構築
   Widget _buildBookshelfScreen(BuildContext context) {
     // スクリーンのサイズを取得
@@ -1200,10 +1454,31 @@ class _MyPageScreenState extends State<MyPageScreen>
             Positioned(
               bottom: -5,
               right: -3,
-              child: Image.asset(
-                'assets/teacup.png',
-                width: _screenWidth * 0.31,
-                height: _screenHeight * 0.155,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context)
+                      .push(
+                        MaterialPageRoute(
+                          builder:
+                              (context) =>
+                                  const GachaSelectScreen(), // GachaScreen から GachaSelectScreen に変更
+                        ),
+                      )
+                      .then((result) {
+                        if (result != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('新しいアイテムを獲得しました: ${result.name}'),
+                            ),
+                          );
+                        }
+                      });
+                },
+                child: Image.asset(
+                  'assets/teacup.png',
+                  width: _screenWidth * 0.34,
+                  height: _screenHeight * 0.17,
+                ),
               ),
             ),
 
@@ -1335,12 +1610,7 @@ class _MyPageScreenState extends State<MyPageScreen>
                         side: const BorderSide(color: Colors.white, width: 1.5),
                       ),
                     ),
-                    onPressed: () {
-                      // SNSシェア機能を実装
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('SNSシェアが押されました')),
-                      );
-                    },
+                    onPressed: _showShareDialog, // SNSシェアダイアログを表示する
                   ),
                 ),
               ),
@@ -1424,89 +1694,11 @@ class _MyPageScreenState extends State<MyPageScreen>
           itemWidth: itemWidth,
           itemHeight: itemHeight,
           categoryIndex: categoryIndex,
+          itemsTop: itemsTop,
+          sideMargin: sideMargin,
         ),
       ),
     ];
-  }
-
-  // アイテムのリストを作成するヘルパーメソッド
-  Widget _buildItemsList({
-    required List<ShelfItemReference> items,
-    required int maxItems,
-    required double itemWidth,
-    required double itemHeight,
-    required int categoryIndex,
-  }) {
-    // 固定位置のグリッドを作成するための配列
-    List<Widget> gridSlots = List.generate(maxItems, (index) {
-      // 現在のインデックスにアイテムがあるかどうかチェック
-      ShelfItemReference? currentItemRef;
-      int? itemIndexInList;
-
-      for (int i = 0; i < items.length; i++) {
-        if (items[i].id.contains('_position_${index}')) {
-          currentItemRef = items[i];
-          itemIndexInList = i;
-          break;
-        }
-      }
-
-      // 該当位置にアイテムがある場合はそのアイテムを、なければ空のスロットを表示
-      if (currentItemRef != null && itemIndexInList != null) {
-        return _buildItemWidget(
-          itemRef: currentItemRef,
-          width: itemWidth,
-          height: itemHeight,
-          itemIndex: itemIndexInList,
-          categoryIndex: categoryIndex,
-          position: index,
-        );
-      } else {
-        return _buildEmptySlot(
-          width: itemWidth,
-          height: itemHeight,
-          slotIndex: index,
-          categoryIndex: categoryIndex,
-        );
-      }
-    });
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: gridSlots,
-    );
-  }
-
-  // アイテム（本またはオブジェクト）ウィジェット（編集モード対応）
-  Widget _buildItemWidget({
-    required ShelfItemReference itemRef,
-    required double width,
-    required double height,
-    required int itemIndex,
-    required int categoryIndex,
-    required int position,
-  }) {
-    // アイテムが本の場合
-    if (itemRef.type == ShelfItemType.book) {
-      return _buildBookItem(
-        itemRef: itemRef,
-        width: width,
-        height: height,
-        itemIndex: itemIndex,
-        categoryIndex: categoryIndex,
-        position: position,
-      );
-    } else {
-      // アイテムがオブジェクトの場合
-      return _buildObjectItem(
-        itemRef: itemRef,
-        width: width,
-        height: height,
-        itemIndex: itemIndex,
-        categoryIndex: categoryIndex,
-        position: position,
-      );
-    }
   }
 
   // 本アイテムウィジェット
@@ -1814,6 +2006,8 @@ class _MyPageScreenState extends State<MyPageScreen>
     required int itemIndex,
     required int categoryIndex,
     required int position,
+    required double itemsTop,
+    required double sideMargin,
   }) {
     // オブジェクトの詳細情報をキャッシュから取得
     final DecorationObject? object = _objectCache[itemRef.itemId];
@@ -1844,6 +2038,9 @@ class _MyPageScreenState extends State<MyPageScreen>
     print(
       'Building object item in shelf: ${object.name}, imagePath: ${object.imagePath}',
     );
+
+    // アニメーション対応をチェック
+    final bool hasAnimation = _animatedObjectRepository.hasAnimation(object.id);
 
     // 各オブジェクトごとに異なる初期オフセットを計算（オブジェクトのIDに基づいて）
     final offset =
@@ -2073,12 +2270,25 @@ class _MyPageScreenState extends State<MyPageScreen>
                   onTap:
                       !_isEditMode
                           ? () {
-                            // 将来的に詳細画面を表示する予定
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('「${object.name}」をタップしました'),
-                              ),
-                            );
+                            if (hasAnimation) {
+                              // アニメーション対応の場合、アニメーションを再生
+                              _playObjectAnimation(
+                                context: context,
+                                objectId: object.id,
+                                startPosition: Offset(
+                                  sideMargin + position * width + width / 2,
+                                  itemsTop + height / 2,
+                                ),
+                                objectSize: Size(width, height),
+                              );
+                            } else {
+                              // アニメーション非対応の場合、スナックバーを表示
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('「${object.name}」をタップしました'),
+                                ),
+                              );
+                            }
                           }
                           : null,
                   onLongPress: () async {
@@ -2125,9 +2335,7 @@ class _MyPageScreenState extends State<MyPageScreen>
                 ),
               );
             },
-          ),
-
-          // 削除ボタン（編集モード時のみ表示）
+          ), // 削除ボタン（編集モード時のみ表示）
           if (_isEditMode)
             Positioned(
               top: 0,
@@ -2146,6 +2354,25 @@ class _MyPageScreenState extends State<MyPageScreen>
                     color: Colors.white,
                     size: 18,
                   ),
+                ),
+              ),
+            ),
+
+          // アニメーション対応アイコン（アニメーション対応のオブジェクトのみ表示）
+          if (hasAnimation && !_isEditMode)
+            Positioned(
+              bottom: 2,
+              right: width * 0.05,
+              child: Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(
+                  Icons.animation,
+                  color: Colors.amber,
+                  size: 14,
                 ),
               ),
             ),
@@ -2261,7 +2488,13 @@ class _MyPageScreenState extends State<MyPageScreen>
     _screenWidth = MediaQuery.of(context).size.width;
     _screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(body: _buildBookshelfScreen(context));
+    // RepaintBoundaryでラップすることでキャプチャを可能にする
+    return Scaffold(
+      body: RepaintBoundary(
+        key: _bookshelfKey,
+        child: _buildBookshelfScreen(context),
+      ),
+    );
   }
 }
 
