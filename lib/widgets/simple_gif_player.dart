@@ -70,6 +70,19 @@ class _SimpleGifPlayerState extends State<SimpleGifPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    // Fix for the Infinity or NaN toInt error
+    // Ensure width and height are valid integers if used for caching
+    int? cacheWidth;
+    int? cacheHeight;
+
+    if (widget.width != double.infinity && widget.width > 0) {
+      cacheWidth = widget.width.toInt();
+    }
+
+    if (widget.height != double.infinity && widget.height > 0) {
+      cacheHeight = widget.height.toInt();
+    }
+
     return SizedBox(
       width: widget.width,
       height: widget.height,
@@ -81,8 +94,8 @@ class _SimpleGifPlayerState extends State<SimpleGifPlayer> {
                 width: widget.width,
                 height: widget.height,
                 gaplessPlayback: true,
-                cacheWidth: widget.width.toInt(),
-                cacheHeight: widget.height.toInt(),
+                cacheWidth: cacheWidth, // Use null if width is infinity
+                cacheHeight: cacheHeight, // Use null if height is infinity
               )
               : const SizedBox(),
     );

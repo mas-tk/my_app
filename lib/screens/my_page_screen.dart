@@ -1204,22 +1204,35 @@ class _MyPageScreenState extends State<MyPageScreen>
 
     // アニメーション情報の取得
     final animInfo = _animatedObjectRepository.getAnimationForObject(objectId);
-    if (animInfo == null) return;
+    if (animInfo == null) {
+      // アニメーション情報が見つからない場合はスナックバーを表示
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('アニメーション情報がありません: $objectId')));
+      return;
+    }
 
     // ハプティックフィードバック（触覚フィードバック）を再生
     HapticFeedback.mediumImpact();
+
+    // アニメーションのサイズを確保（無限大にならないように）
+    final double animWidth = objectSize.width.isFinite ? objectSize.width : 100;
+    final double animHeight =
+        objectSize.height.isFinite ? objectSize.height : 100;
 
     // GIFアニメーションのオーバーレイを作成
     _currentAnimationOverlay = OverlayEntry(
       builder: (context) {
         return Positioned(
-          left: startPosition.dx - objectSize.width / 2,
-          top: startPosition.dy - objectSize.height / 2,
-          width: objectSize.width,
-          height: objectSize.height,
+          left: startPosition.dx - animWidth / 2,
+          top: startPosition.dy - animHeight / 2,
+          width: animWidth,
+          height: animHeight,
           child: SimpleGifPlayer(
             gifPath: animInfo.animatedAssetPath,
             fit: BoxFit.contain,
+            width: animWidth,
+            height: animHeight,
             duration: const Duration(seconds: 2), // GIFアニメーションの推定時間
             loop: false, // 1回だけ再生
             onAnimationComplete: () {

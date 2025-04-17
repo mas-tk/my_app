@@ -1,1959 +1,2654 @@
 [
-    {
-      "id": "1",
-      "title": "裏路地の不思議なバー",
-      "coverAssetPath": "assets/bookcovers/cover1.png",
-      "summary": "迷える夜に現れる、小さな猫のバーテンダー。一杯のワインが、あなたの心の声をそっと照らす。",
-      "views": 118123,
-      "likes": 300,
-      "comments": 12,
-      "rating": 4.5,
-      "genres": ["ファンタジー", "思い出", "約束"],
-      "pages": [
-        {
-          "pageId": "001",
-          "baseImage": "assets/books/book1/001-1.png",
-          "textImage": "assets/books/book1/001-2.png"
-        },
-        {
-          "pageId": "002",
-          "baseImage": "assets/books/book1/002-1.png",
-          "textImage": "assets/books/book1/002-2.png"
-        },
-        {
-          "pageId": "003",
-          "baseImage": "assets/books/book1/003-1.png",
-          "textImage": "assets/books/book1/003-2.png"
-        },
-        {
-          "pageId": "004",
-          "baseImage": "assets/books/book1/004-1.png",
-          "textImage": "assets/books/book1/004-2.png"
-        },
-        {
-          "pageId": "005",
-          "baseImage": "assets/books/book1/005-1.png",
-          "textImage": "assets/books/book1/005-2.png"
-        },
-        {
-          "pageId": "006",
-          "baseImage": "assets/books/book1/006-1.png",
-          "textImage": "assets/books/book1/006-2.png"
-        },
-        {
-          "pageId": "007",
-          "baseImage": "assets/books/book1/007-1.png",
-          "textImage": "assets/books/book1/007-2.png"
-        },
-        {
-          "pageId": "008",
-          "baseImage": "assets/books/book1/008-1.png",
-          "textImage": "assets/books/book1/008-2.png"
-        },
-        {
-          "pageId": "009",
-          "baseImage": "assets/books/book1/009-1.png",
-          "textImage": "assets/books/book1/009-2.png"
-        },
-        {
-          "pageId": "010",
-          "baseImage": "assets/books/book1/010-1.png",
-          "textImage": "assets/books/book1/010-2.png"
-        },
-        {
-          "pageId": "011",
-          "baseImage": "assets/books/book1/011-1.png",
-          "textImage": "assets/books/book1/011-2.png"
-        },
-        {
-          "pageId": "012",
-          "baseImage": "assets/books/book1/012-1.png",
-          "textImage": "assets/books/book1/012-2.png"
-        },
-        {
-          "pageId": "013",
-          "baseImage": "assets/books/book1/013-1.png",
-          "textImage": "assets/books/book1/013-2.png"
-        },
-        {
-          "pageId": "014",
-          "baseImage": "assets/books/book1/014-1.png",
-          "textImage": "assets/books/book1/014-2.png"
-        },
-        {
-          "pageId": "015",
-          "baseImage": "assets/books/book1/015-1.png",
-          "textImage": "assets/books/book1/015-2.png"
-        },
-        {
-          "pageId": "016",
-          "baseImage": "assets/books/book1/016-1.png",
-          "textImage": "assets/books/book1/016-2.png"
-        },
-        {
-          "pageId": "017",
-          "baseImage": "assets/books/book1/017-1.png",
-          "textImage": "assets/books/book1/017-2.png"
-        },
-        {
-          "pageId": "018",
-          "baseImage": "assets/books/book1/018-1.png",
-          "textImage": "assets/books/book1/018-2.png"
-        },
-        {
-          "pageId": "019",
-          "baseImage": "assets/books/book1/019-1.png",
-          "textImage": "assets/books/book1/019-2.png"
-        },
-        {
-          "pageId": "020",
-          "baseImage": "assets/books/book1/020-1.png",
-          "textImage": "assets/books/book1/020-2.png"
-        },
-        {
-          "pageId": "021",
-          "baseImage": "assets/books/book1/021-1.png",
-          "textImage": "assets/books/book1/021-2.png"
-        },
-        {
-          "pageId": "022",
-          "baseImage": "assets/books/book1/022-1.png",
-          "textImage": "assets/books/book1/022-2.png"
-        },
-        {
-          "pageId": "023",
-          "baseImage": "assets/books/book1/023-1.png",
-          "textImage": "assets/books/book1/023-2.png"
-        },
-        {
-          "pageId": "024",
-          "baseImage": "assets/books/book1/024-1.png",
-          "textImage": "assets/books/book1/024-2.png"
-        },
-        {
-          "pageId": "025",
-          "baseImage": "assets/books/book1/025-1.png",
-          "textImage": "assets/books/book1/025-2.png"
-        },
-        {
-          "pageId": "026",
-          "baseImage": "assets/books/book1/026-1.png",
-          "textImage": "assets/books/book1/026-2.png"
-        },
-        {
-          "pageId": "027",
-          "baseImage": "assets/books/book1/027-1.png",
-          "textImage": "assets/books/book1/027-2.png"
-        },
-        {
-          "pageId": "028",
-          "baseImage": "assets/books/book1/028-1.png",
-          "textImage": "assets/books/book1/028-2.png"
-        },
-        {
-          "pageId": "029",
-          "baseImage": "assets/books/book1/029-1.png",
-          "textImage": "assets/books/book1/029-2.png"
-        },
-        {
-          "pageId": "030",
-          "baseImage": "assets/books/book1/030-1.png",
-          "textImage": "assets/books/book1/030-2.png"
-        },
-        {
-          "pageId": "031",
-          "baseImage": "assets/books/book1/031-1.png",
-          "textImage": "assets/books/book1/031-2.png"
-        },
-        {
-          "pageId": "032",
-          "baseImage": "assets/books/book1/032-1.png",
-          "textImage": "assets/books/book1/032-2.png"
-        },
-        {
-          "pageId": "033",
-          "baseImage": "assets/books/book1/033-1.png",
-          "textImage": "assets/books/book1/033-2.png"
-        },
-        {
-          "pageId": "034",
-          "baseImage": "assets/books/book1/034-1.png",
-          "textImage": "assets/books/book1/034-2.png"
-        },
-        {
-          "pageId": "035",
-          "baseImage": "assets/books/book1/035-1.png",
-          "textImage": "assets/books/book1/035-2.png"
-        },
-        {
-          "pageId": "036",
-          "baseImage": "assets/books/book1/036-1.png",
-          "textImage": "assets/books/book1/036-2.png"
-        }
-      ],
+  {
+    "id": "1",
+    "title": "ワイングラスをもつ不思議の猫",
+    "coverAssetPath": "assets/bookcovers/cover1.png",
+    "summary": "薄暗い路地裏にひっそりと佇む不思議なバー。そこでは猫のバーテンダーが注ぐ一杯のワインが、人々の“もうひとりの声”を呼び覚ます。少しの勇気と、まだ見ぬ自分に出会う物語。小さな変化が明日の希望を照らす。",
+    "views": 118123,
+    "likes": 300,
+    "comments": 12,
+    "rating": 4.5,
+    "genres": ["ファンタジー", "思い出", "約束"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book1/001-1.png",
+        "textImage": "assets/books/book1/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book1/002-1.png",
+        "textImage": "assets/books/book1/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book1/003-1.png",
+        "textImage": "assets/books/book1/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book1/004-1.png",
+        "textImage": "assets/books/book1/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book1/005-1.png",
+        "textImage": "assets/books/book1/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book1/006-1.png",
+        "textImage": "assets/books/book1/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book1/007-1.png",
+        "textImage": "assets/books/book1/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book1/008-1.png",
+        "textImage": "assets/books/book1/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book1/009-1.png",
+        "textImage": "assets/books/book1/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book1/010-1.png",
+        "textImage": "assets/books/book1/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book1/011-1.png",
+        "textImage": "assets/books/book1/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book1/012-1.png",
+        "textImage": "assets/books/book1/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book1/013-1.png",
+        "textImage": "assets/books/book1/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book1/014-1.png",
+        "textImage": "assets/books/book1/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book1/015-1.png",
+        "textImage": "assets/books/book1/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book1/016-1.png",
+        "textImage": "assets/books/book1/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book1/017-1.png",
+        "textImage": "assets/books/book1/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book1/018-1.png",
+        "textImage": "assets/books/book1/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book1/019-1.png",
+        "textImage": "assets/books/book1/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book1/020-1.png",
+        "textImage": "assets/books/book1/020-2.png"
+      },
+      {
+        "pageId": "021",
+        "baseImage": "assets/books/book1/021-1.png",
+        "textImage": "assets/books/book1/021-2.png"
+      },
+      {
+        "pageId": "022",
+        "baseImage": "assets/books/book1/022-1.png",
+        "textImage": "assets/books/book1/022-2.png"
+      },
+      {
+        "pageId": "023",
+        "baseImage": "assets/books/book1/023-1.png",
+        "textImage": "assets/books/book1/023-2.png"
+      },
+      {
+        "pageId": "024",
+        "baseImage": "assets/books/book1/024-1.png",
+        "textImage": "assets/books/book1/024-2.png"
+      },
+      {
+        "pageId": "025",
+        "baseImage": "assets/books/book1/025-1.png",
+        "textImage": "assets/books/book1/025-2.png"
+      },
+      {
+        "pageId": "026",
+        "baseImage": "assets/books/book1/026-1.png",
+        "textImage": "assets/books/book1/026-2.png"
+      },
+      {
+        "pageId": "027",
+        "baseImage": "assets/books/book1/027-1.png",
+        "textImage": "assets/books/book1/027-2.png"
+      },
+      {
+        "pageId": "028",
+        "baseImage": "assets/books/book1/028-1.png",
+        "textImage": "assets/books/book1/028-2.png"
+      },
+      {
+        "pageId": "029",
+        "baseImage": "assets/books/book1/029-1.png",
+        "textImage": "assets/books/book1/029-2.png"
+      },
+      {
+        "pageId": "030",
+        "baseImage": "assets/books/book1/030-1.png",
+        "textImage": "assets/books/book1/030-2.png"
+      },
+      {
+        "pageId": "031",
+        "baseImage": "assets/books/book1/031-1.png",
+        "textImage": "assets/books/book1/031-2.png"
+      },
+      {
+        "pageId": "032",
+        "baseImage": "assets/books/book1/032-1.png",
+        "textImage": "assets/books/book1/032-2.png"
+      },
+      {
+        "pageId": "033",
+        "baseImage": "assets/books/book1/033-1.png",
+        "textImage": "assets/books/book1/033-2.png"
+      },
+      {
+        "pageId": "034",
+        "baseImage": "assets/books/book1/034-1.png",
+        "textImage": "assets/books/book1/034-2.png"
+      },
+      {
+        "pageId": "035",
+        "baseImage": "assets/books/book1/035-1.png",
+        "textImage": "assets/books/book1/035-2.png"
+      },
+      {
+        "pageId": "036",
+        "baseImage": "assets/books/book1/036-1.png",
+        "textImage": "assets/books/book1/036-2.png"
+      }
+    ],
 
-      "audio": {
-        "bookId": "1",
-        "tracks": [
-          {
-            "assetPath": "assets/audio/book1_part1.mp3",
-            "startPage": 1,
-            "endPage": 9
-          },
-          {
-            "assetPath": "assets/audio/book1_part2.mp3",
-            "startPage": 10,
-            "endPage": 18
-          },
-          {
-            "assetPath": "assets/audio/book1_part3.mp3",
-            "startPage": 19,
-            "endPage": 27
-          },
-          {
-            "assetPath": "assets/audio/book1_part4.mp3",
-            "startPage": 28,
-            "endPage": 36
-          }
-        ]
-      }
-    },
-    {
-      "id": "2",
-      "title": "踊る影と、静かなわたし",
-      "coverAssetPath": "assets/bookcovers/cover2.png",
-      "summary": "ヨーロッパ全体を覆い始める。やがて苦難と弱さが、幼い少女の人生を大きく揺さぶった。挿絵イメージヨーロッパの地図，小さな足跡マークが複数国を示す。若い母と小さなオードリーがトランクを持って移動する姿のシルエット。",
-      "views": 111224253,
-      "likes": 530,
-      "comments": 53,
-      "rating": 4.3,
-      "genres": ["ためになる", "ファンタジー", "約束", "思い出"],
-      "pages": [
-          {
-            "pageId": "001",
-            "baseImage": "assets/books/book2/001-1.png",
-            "textImage": "assets/books/book2/001-2.png"
-          },
-          {
-            "pageId": "002",
-            "baseImage": "assets/books/book2/002-1.png",
-            "textImage": "assets/books/book2/002-2.png"
-          },
-          {
-            "pageId": "003",
-            "baseImage": "assets/books/book2/003-1.png",
-            "textImage": "assets/books/book2/003-2.png"
-          },
-          {
-            "pageId": "004",
-            "baseImage": "assets/books/book2/004-1.png",
-            "textImage": "assets/books/book2/004-2.png"
-          },
-          {
-            "pageId": "005",
-            "baseImage": "assets/books/book2/005-1.png",
-            "textImage": "assets/books/book2/005-2.png"
-          },
-          {
-            "pageId": "006",
-            "baseImage": "assets/books/book2/006-1.png",
-            "textImage": "assets/books/book2/006-2.png"
-          },
-          {
-            "pageId": "007",
-            "baseImage": "assets/books/book2/007-1.png",
-            "textImage": "assets/books/book2/007-2.png"
-          },
-          {
-            "pageId": "008",
-            "baseImage": "assets/books/book2/008-1.png",
-            "textImage": "assets/books/book2/008-2.png"
-          },
-          {
-            "pageId": "009",
-            "baseImage": "assets/books/book2/009-1.png",
-            "textImage": "assets/books/book2/009-2.png"
-          },
-          {
-            "pageId": "010",
-            "baseImage": "assets/books/book2/010-1.png",
-            "textImage": "assets/books/book2/010-2.png"
-          },
-          {
-            "pageId": "011",
-            "baseImage": "assets/books/book2/011-1.png",
-            "textImage": "assets/books/book2/011-2.png"
-          },
-          {
-            "pageId": "012",
-            "baseImage": "assets/books/book2/012-1.png",
-            "textImage": "assets/books/book2/012-2.png"
-          },
-          {
-            "pageId": "013",
-            "baseImage": "assets/books/book2/013-1.png",
-            "textImage": "assets/books/book2/013-2.png"
-          },
-          {
-            "pageId": "014",
-            "baseImage": "assets/books/book2/014-1.png",
-            "textImage": "assets/books/book2/014-2.png"
-          },
-          {
-            "pageId": "015",
-            "baseImage": "assets/books/book2/015-1.png",
-            "textImage": "assets/books/book2/015-2.png"
-          },
-          {
-            "pageId": "016",
-            "baseImage": "assets/books/book2/016-1.png",
-            "textImage": "assets/books/book2/016-2.png"
-          },
-          {
-            "pageId": "017",
-            "baseImage": "assets/books/book2/017-1.png",
-            "textImage": "assets/books/book2/017-2.png"
-          },
-          {
-            "pageId": "018",
-            "baseImage": "assets/books/book2/018-1.png",
-            "textImage": "assets/books/book2/018-2.png"
-          },
-          {
-            "pageId": "019",
-            "baseImage": "assets/books/book2/019-1.png",
-            "textImage": "assets/books/book2/019-2.png"
-          },
-          {
-            "pageId": "020",
-            "baseImage": "assets/books/book2/020-1.png",
-            "textImage": "assets/books/book2/020-2.png"
-          }
-        ],
-      "audio": {
-        "bookId": "2",
-        "tracks": [
-          {
-            "assetPath": "assets/audio/book2_part1.mp3",
-            "startPage": 1,
-            "endPage": 5
-          },
-          {
-            "assetPath": "assets/audio/book2_part2.mp3",
-            "startPage": 6,
-            "endPage": 10
-          },
-          {
-            "assetPath": "assets/audio/book2_part3.mp3",
-            "startPage": 11,
-            "endPage": 15
-          },
-          {
-            "assetPath": "assets/audio/book2_part4.mp3",
-            "startPage": 16,
-            "endPage": 20
-          }
-        ]
-      }
-    },
-    {
-      "id": "3",
-      "title": "夜行バスの窓から",
-      "coverAssetPath": "assets/bookcovers/cover3.png",
-      "summary": "心が少し疲れた夜に―― 夜行バスでめぐる夢と記憶の旅が、あなたの背中をそっと押してくれる。",
-      "views": 98765,
-      "likes": 420,
-      "comments": 32,
-      "rating": 4.7,
-      "genres": ["ファンタジー", "冒険", "成長"],
-      "pages": [
+    "audio": {
+      "bookId": "1",
+      "tracks": [
         {
-          "pageId": "001",
-          "baseImage": "assets/books/book3/001-1.png",
-          "textImage": "assets/books/book3/001-2.png"
+          "assetPath": "assets/audio/book1_part1.mp3",
+          "startPage": 1,
+          "endPage": 9
         },
         {
-          "pageId": "002",
-          "baseImage": "assets/books/book3/002-1.png",
-          "textImage": "assets/books/book3/002-2.png"
+          "assetPath": "assets/audio/book1_part2.mp3",
+          "startPage": 10,
+          "endPage": 18
         },
         {
-          "pageId": "003",
-          "baseImage": "assets/books/book3/003-1.png",
-          "textImage": "assets/books/book3/003-2.png"
+          "assetPath": "assets/audio/book1_part3.mp3",
+          "startPage": 19,
+          "endPage": 27
         },
         {
-          "pageId": "004",
-          "baseImage": "assets/books/book3/004-1.png",
-          "textImage": "assets/books/book3/004-2.png"
-        },
-        {
-          "pageId": "005",
-          "baseImage": "assets/books/book3/005-1.png",
-          "textImage": "assets/books/book3/005-2.png"
-        },
-        {
-          "pageId": "006",
-          "baseImage": "assets/books/book3/006-1.png",
-          "textImage": "assets/books/book3/006-2.png"
-        },
-        {
-          "pageId": "007",
-          "baseImage": "assets/books/book3/007-1.png",
-          "textImage": "assets/books/book3/007-2.png"
-        },
-        {
-          "pageId": "008",
-          "baseImage": "assets/books/book3/008-1.png",
-          "textImage": "assets/books/book3/008-2.png"
-        },
-        {
-          "pageId": "009",
-          "baseImage": "assets/books/book3/009-1.png",
-          "textImage": "assets/books/book3/009-2.png"
-        },
-        {
-          "pageId": "010",
-          "baseImage": "assets/books/book3/010-1.png",
-          "textImage": "assets/books/book3/010-2.png"
-        },
-        {
-          "pageId": "011",
-          "baseImage": "assets/books/book3/011-1.png",
-          "textImage": "assets/books/book3/011-2.png"
-        },
-        {
-          "pageId": "012",
-          "baseImage": "assets/books/book3/012-1.png",
-          "textImage": "assets/books/book3/012-2.png"
-        },
-        {
-          "pageId": "013",
-          "baseImage": "assets/books/book3/013-1.png",
-          "textImage": "assets/books/book3/013-2.png"
-        },
-        {
-          "pageId": "014",
-          "baseImage": "assets/books/book3/014-1.png",
-          "textImage": "assets/books/book3/014-2.png"
-        },
-        {
-          "pageId": "015",
-          "baseImage": "assets/books/book3/015-1.png",
-          "textImage": "assets/books/book3/015-2.png"
-        },
-        {
-          "pageId": "016",
-          "baseImage": "assets/books/book3/016-1.png",
-          "textImage": "assets/books/book3/016-2.png"
-        },
-        {
-          "pageId": "017",
-          "baseImage": "assets/books/book3/017-1.png",
-          "textImage": "assets/books/book3/017-2.png"
-        },
-        {
-          "pageId": "018",
-          "baseImage": "assets/books/book3/018-1.png",
-          "textImage": "assets/books/book3/018-2.png"
-        },
-        {
-          "pageId": "019",
-          "baseImage": "assets/books/book3/019-1.png",
-          "textImage": "assets/books/book3/019-2.png"
-        },
-        {
-          "pageId": "020",
-          "baseImage": "assets/books/book3/020-1.png",
-          "textImage": "assets/books/book3/020-2.png"
+          "assetPath": "assets/audio/book1_part4.mp3",
+          "startPage": 28,
+          "endPage": 36
         }
-      ],
-      "audio": {
-        "bookId": "3",
-        "tracks": [
-          {
-            "assetPath": "assets/audio/book3_part1.mp3",
-            "startPage": 1,
-            "endPage": 5
-          },
-          {
-            "assetPath": "assets/audio/book3_part2.mp3",
-            "startPage": 6,
-            "endPage": 10
-          },
-          {
-            "assetPath": "assets/audio/book3_part3.mp3",
-            "startPage": 11,
-            "endPage": 15
-          },
-          {
-            "assetPath": "assets/audio/book3_part4.mp3",
-            "startPage": 16,
-            "endPage": 20
-          }
-        ]
-      }
-    },
-    {
-      "id": "4",
-      "title": "夜の図書館",
-      "coverAssetPath": "assets/bookcovers/cover4.png",
-      "summary": "心が少し疲れた夜に―― 夜行バスでめぐる夢と記憶の旅が、あなたの背中をそっと押してくれる。",
-      "views": 98765,
-      "likes": 420,
-      "comments": 32,
-      "rating": 4.7,
-      "genres": ["ファンタジー", "冒険", "成長"],
-      "pages": [
-        {
-          "pageId": "001",
-          "baseImage": "assets/books/book4/001-1.png",
-          "textImage": "assets/books/book4/001-2.png"
-        },
-        {
-          "pageId": "002",
-          "baseImage": "assets/books/book4/002-1.png",
-          "textImage": "assets/books/book4/002-2.png"
-        },
-        {
-          "pageId": "003",
-          "baseImage": "assets/books/book4/003-1.png",
-          "textImage": "assets/books/book4/003-2.png"
-        },
-        {
-          "pageId": "004",
-          "baseImage": "assets/books/book4/004-1.png",
-          "textImage": "assets/books/book4/004-2.png"
-        },
-        {
-          "pageId": "005",
-          "baseImage": "assets/books/book4/005-1.png",
-          "textImage": "assets/books/book4/005-2.png"
-        },
-        {
-          "pageId": "006",
-          "baseImage": "assets/books/book4/006-1.png",
-          "textImage": "assets/books/book4/006-2.png"
-        },
-        {
-          "pageId": "007",
-          "baseImage": "assets/books/book4/007-1.png",
-          "textImage": "assets/books/book4/007-2.png"
-        },
-        {
-          "pageId": "008",
-          "baseImage": "assets/books/book4/008-1.png",
-          "textImage": "assets/books/book4/008-2.png"
-        },
-        {
-          "pageId": "009",
-          "baseImage": "assets/books/book4/009-1.png",
-          "textImage": "assets/books/book4/009-2.png"
-        },
-        {
-          "pageId": "010",
-          "baseImage": "assets/books/book4/010-1.png",
-          "textImage": "assets/books/book4/010-2.png"
-        },
-        {
-          "pageId": "011",
-          "baseImage": "assets/books/book4/011-1.png",
-          "textImage": "assets/books/book4/011-2.png"
-        },
-        {
-          "pageId": "012",
-          "baseImage": "assets/books/book4/012-1.png",
-          "textImage": "assets/books/book4/012-2.png"
-        },
-        {
-          "pageId": "013",
-          "baseImage": "assets/books/book4/013-1.png",
-          "textImage": "assets/books/book4/013-2.png"
-        },
-        {
-          "pageId": "014",
-          "baseImage": "assets/books/book4/014-1.png",
-          "textImage": "assets/books/book4/014-2.png"
-        },
-        {
-          "pageId": "015",
-          "baseImage": "assets/books/book4/015-1.png",
-          "textImage": "assets/books/book4/015-2.png"
-        },
-        {
-          "pageId": "016",
-          "baseImage": "assets/books/book4/016-1.png",
-          "textImage": "assets/books/book4/016-2.png"
-        },
-        {
-          "pageId": "017",
-          "baseImage": "assets/books/book4/017-1.png",
-          "textImage": "assets/books/book4/017-2.png"
-        },
-        {
-          "pageId": "018",
-          "baseImage": "assets/books/book4/018-1.png",
-          "textImage": "assets/books/book4/018-2.png"
-        },
-        {
-          "pageId": "019",
-          "baseImage": "assets/books/book4/019-1.png",
-          "textImage": "assets/books/book4/019-2.png"
-        },
-        {
-          "pageId": "020",
-          "baseImage": "assets/books/book4/020-1.png",
-          "textImage": "assets/books/book4/020-2.png"
-        }
-      ],
-      "audio": {
-        "bookId": "4",
-        "tracks": [
-          {
-            "assetPath": "assets/audio/book3_part1.mp3",
-            "startPage": 1,
-            "endPage": 5
-          },
-          {
-            "assetPath": "assets/audio/book3_part2.mp3",
-            "startPage": 6,
-            "endPage": 10
-          },
-          {
-            "assetPath": "assets/audio/book3_part3.mp3",
-            "startPage": 11,
-            "endPage": 15
-          },
-          {
-            "assetPath": "assets/audio/book3_part4.mp3",
-            "startPage": 16,
-            "endPage": 20
-          }
-        ]
-      }
-    },
-    {
-      "id": "5",
-      "title": "歯車を直す小さなウサギ",
-      "coverAssetPath": "assets/bookcovers/cover5.png",
-      "summary": "心が少し疲れた夜に―― 夜行バスでめぐる夢と記憶の旅が、あなたの背中をそっと押してくれる。",
-      "views": 98765,
-      "likes": 420,
-      "comments": 32,
-      "rating": 4.7,
-      "genres": ["ファンタジー", "冒険", "成長"],
-      "pages": [
-        {
-          "pageId": "001",
-          "baseImage": "assets/books/book5/001-1.png",
-          "textImage": "assets/books/book5/001-2.png"
-        },
-        {
-          "pageId": "002",
-          "baseImage": "assets/books/book5/002-1.png",
-          "textImage": "assets/books/book5/002-2.png"
-        },
-        {
-          "pageId": "003",
-          "baseImage": "assets/books/book5/003-1.png",
-          "textImage": "assets/books/book5/003-2.png"
-        },
-        {
-          "pageId": "004",
-          "baseImage": "assets/books/book5/004-1.png",
-          "textImage": "assets/books/book5/004-2.png"
-        },
-        {
-          "pageId": "005",
-          "baseImage": "assets/books/book5/005-1.png",
-          "textImage": "assets/books/book5/005-2.png"
-        },
-        {
-          "pageId": "006",
-          "baseImage": "assets/books/book5/006-1.png",
-          "textImage": "assets/books/book5/006-2.png"
-        },
-        {
-          "pageId": "007",
-          "baseImage": "assets/books/book5/007-1.png",
-          "textImage": "assets/books/book5/007-2.png"
-        },
-        {
-          "pageId": "008",
-          "baseImage": "assets/books/book5/008-1.png",
-          "textImage": "assets/books/book5/008-2.png"
-        },
-        {
-          "pageId": "009",
-          "baseImage": "assets/books/book5/009-1.png",
-          "textImage": "assets/books/book5/009-2.png"
-        },
-        {
-          "pageId": "010",
-          "baseImage": "assets/books/book5/010-1.png",
-          "textImage": "assets/books/book5/010-2.png"
-        },
-        {
-          "pageId": "011",
-          "baseImage": "assets/books/book5/011-1.png",
-          "textImage": "assets/books/book5/011-2.png"
-        },
-        {
-          "pageId": "012",
-          "baseImage": "assets/books/book5/012-1.png",
-          "textImage": "assets/books/book5/012-2.png"
-        },
-        {
-          "pageId": "013",
-          "baseImage": "assets/books/book5/013-1.png",
-          "textImage": "assets/books/book5/013-2.png"
-        },
-        {
-          "pageId": "014",
-          "baseImage": "assets/books/book5/014-1.png",
-          "textImage": "assets/books/book5/014-2.png"
-        },
-        {
-          "pageId": "015",
-          "baseImage": "assets/books/book5/015-1.png",
-          "textImage": "assets/books/book5/015-2.png"
-        },
-        {
-          "pageId": "016",
-          "baseImage": "assets/books/book5/016-1.png",
-          "textImage": "assets/books/book5/016-2.png"
-        },
-        {
-          "pageId": "017",
-          "baseImage": "assets/books/book5/017-1.png",
-          "textImage": "assets/books/book5/017-2.png"
-        },
-        {
-          "pageId": "018",
-          "baseImage": "assets/books/book5/018-1.png",
-          "textImage": "assets/books/book5/018-2.png"
-        },
-        {
-          "pageId": "019",
-          "baseImage": "assets/books/book5/019-1.png",
-          "textImage": "assets/books/book5/019-2.png"
-        },
-        {
-          "pageId": "020",
-          "baseImage": "assets/books/book5/020-1.png",
-          "textImage": "assets/books/book5/020-2.png"
-        }
-      ],
-      "audio": {
-        "bookId": "5",
-        "tracks": [
-          {
-            "assetPath": "assets/audio/book3_part1.mp3",
-            "startPage": 1,
-            "endPage": 5
-          },
-          {
-            "assetPath": "assets/audio/book3_part2.mp3",
-            "startPage": 6,
-            "endPage": 10
-          },
-          {
-            "assetPath": "assets/audio/book3_part3.mp3",
-            "startPage": 11,
-            "endPage": 15
-          },
-          {
-            "assetPath": "assets/audio/book3_part4.mp3",
-            "startPage": 16,
-            "endPage": 20
-          }
-        ]
-      }
-    },
-    {
-      "id": "6",
-      "title": "ラプンツェル",
-      "coverAssetPath": "assets/bookcovers/cover6.png",
-      "summary": "守られること”が幸せとは限らない。塔の外の世界を知ったラプンツェルの、静かな決意。",
-      "views": 98765,
-      "likes": 420,
-      "comments": 32,
-      "rating": 4.7,
-      "genres": ["ファンタジー", "冒険", "成長"],
-      "pages": [
-        {
-          "pageId": "001",
-          "baseImage": "assets/books/book6/001-1.png",
-          "textImage": "assets/books/book6/001-2.png"
-        },
-        {
-          "pageId": "002",
-          "baseImage": "assets/books/book6/002-1.png",
-          "textImage": "assets/books/book6/002-2.png"
-        },
-        {
-          "pageId": "003",
-          "baseImage": "assets/books/book6/003-1.png",
-          "textImage": "assets/books/book6/003-2.png"
-        },
-        {
-          "pageId": "004",
-          "baseImage": "assets/books/book6/004-1.png",
-          "textImage": "assets/books/book6/004-2.png"
-        },
-        {
-          "pageId": "005",
-          "baseImage": "assets/books/book6/005-1.png",
-          "textImage": "assets/books/book6/005-2.png"
-        },
-        {
-          "pageId": "006",
-          "baseImage": "assets/books/book6/006-1.png",
-          "textImage": "assets/books/book6/006-2.png"
-        },
-        {
-          "pageId": "007",
-          "baseImage": "assets/books/book6/007-1.png",
-          "textImage": "assets/books/book6/007-2.png"
-        },
-        {
-          "pageId": "008",
-          "baseImage": "assets/books/book6/008-1.png",
-          "textImage": "assets/books/book6/008-2.png"
-        },
-        {
-          "pageId": "009",
-          "baseImage": "assets/books/book6/009-1.png",
-          "textImage": "assets/books/book6/009-2.png"
-        },
-        {
-          "pageId": "010",
-          "baseImage": "assets/books/book6/010-1.png",
-          "textImage": "assets/books/book6/010-2.png"
-        },
-        {
-          "pageId": "011",
-          "baseImage": "assets/books/book6/011-1.png",
-          "textImage": "assets/books/book6/011-2.png"
-        },
-        {
-          "pageId": "012",
-          "baseImage": "assets/books/book6/012-1.png",
-          "textImage": "assets/books/book6/012-2.png"
-        },
-        {
-          "pageId": "013",
-          "baseImage": "assets/books/book6/013-1.png",
-          "textImage": "assets/books/book6/013-2.png"
-        },
-        {
-          "pageId": "014",
-          "baseImage": "assets/books/book6/014-1.png",
-          "textImage": "assets/books/book6/014-2.png"
-        },
-        {
-          "pageId": "015",
-          "baseImage": "assets/books/book6/015-1.png",
-          "textImage": "assets/books/book6/015-2.png"
-        },
-        {
-          "pageId": "016",
-          "baseImage": "assets/books/book6/016-1.png",
-          "textImage": "assets/books/book6/016-2.png"
-        },
-        {
-          "pageId": "017",
-          "baseImage": "assets/books/book6/017-1.png",
-          "textImage": "assets/books/book6/017-2.png"
-        },
-        {
-          "pageId": "018",
-          "baseImage": "assets/books/book6/018-1.png",
-          "textImage": "assets/books/book6/018-2.png"
-        },
-        {
-          "pageId": "019",
-          "baseImage": "assets/books/book6/019-1.png",
-          "textImage": "assets/books/book6/019-2.png"
-        },
-        {
-          "pageId": "020",
-          "baseImage": "assets/books/book6/020-1.png",
-          "textImage": "assets/books/book6/020-2.png"
-        }
-      ],
-      "audio": {
-        "bookId": "6",
-        "tracks": [
-          {
-            "assetPath": "assets/audio/book3_part1.mp3",
-            "startPage": 1,
-            "endPage": 5
-          },
-          {
-            "assetPath": "assets/audio/book3_part2.mp3",
-            "startPage": 6,
-            "endPage": 10
-          },
-          {
-            "assetPath": "assets/audio/book3_part3.mp3",
-            "startPage": 11,
-            "endPage": 15
-          },
-          {
-            "assetPath": "assets/audio/book3_part4.mp3",
-            "startPage": 16,
-            "endPage": 20
-          }
-        ]
-      }
-    },
-    {
-      "id": "7",
-      "title": "マリー・キュリー ― 科学に光を灯した女性研究者の物語",
-      "coverAssetPath": "assets/bookcovers/cover7.png",
-      "summary": "差別や困難を超えて、科学の扉を開いた女性―― 世界を変えたその情熱は、今も輝き続けている。",
-      "views": 98765,
-      "likes": 420,
-      "comments": 32,
-      "rating": 4.7,
-      "genres": ["ファンタジー", "冒険", "成長"],
-      "pages": [
-        {
-          "pageId": "001",
-          "baseImage": "assets/books/book7/001-1.png",
-          "textImage": "assets/books/book7/001-2.png"
-        },
-        {
-          "pageId": "002",
-          "baseImage": "assets/books/book7/002-1.png",
-          "textImage": "assets/books/book7/002-2.png"
-        },
-        {
-          "pageId": "003",
-          "baseImage": "assets/books/book7/003-1.png",
-          "textImage": "assets/books/book7/003-2.png"
-        },
-        {
-          "pageId": "004",
-          "baseImage": "assets/books/book7/004-1.png",
-          "textImage": "assets/books/book7/004-2.png"
-        },
-        {
-          "pageId": "005",
-          "baseImage": "assets/books/book7/005-1.png",
-          "textImage": "assets/books/book7/005-2.png"
-        },
-        {
-          "pageId": "006",
-          "baseImage": "assets/books/book7/006-1.png",
-          "textImage": "assets/books/book7/006-2.png"
-        },
-        {
-          "pageId": "007",
-          "baseImage": "assets/books/book7/007-1.png",
-          "textImage": "assets/books/book7/007-2.png"
-        },
-        {
-          "pageId": "008",
-          "baseImage": "assets/books/book7/008-1.png",
-          "textImage": "assets/books/book7/008-2.png"
-        },
-        {
-          "pageId": "009",
-          "baseImage": "assets/books/book7/009-1.png",
-          "textImage": "assets/books/book7/009-2.png"
-        },
-        {
-          "pageId": "010",
-          "baseImage": "assets/books/book7/010-1.png",
-          "textImage": "assets/books/book7/010-2.png"
-        },
-        {
-          "pageId": "011",
-          "baseImage": "assets/books/book7/011-1.png",
-          "textImage": "assets/books/book7/011-2.png"
-        },
-        {
-          "pageId": "012",
-          "baseImage": "assets/books/book7/012-1.png",
-          "textImage": "assets/books/book7/012-2.png"
-        },
-        {
-          "pageId": "013",
-          "baseImage": "assets/books/book7/013-1.png",
-          "textImage": "assets/books/book7/013-2.png"
-        },
-        {
-          "pageId": "014",
-          "baseImage": "assets/books/book7/014-1.png",
-          "textImage": "assets/books/book7/014-2.png"
-        },
-        {
-          "pageId": "015",
-          "baseImage": "assets/books/book7/015-1.png",
-          "textImage": "assets/books/book7/015-2.png"
-        },
-        {
-          "pageId": "016",
-          "baseImage": "assets/books/book7/016-1.png",
-          "textImage": "assets/books/book7/016-2.png"
-        },
-        {
-          "pageId": "017",
-          "baseImage": "assets/books/book7/017-1.png",
-          "textImage": "assets/books/book7/017-2.png"
-        },
-        {
-          "pageId": "018",
-          "baseImage": "assets/books/book7/018-1.png",
-          "textImage": "assets/books/book7/018-2.png"
-        },
-        {
-          "pageId": "019",
-          "baseImage": "assets/books/book7/019-1.png",
-          "textImage": "assets/books/book7/019-2.png"
-        },
-        {
-          "pageId": "020",
-          "baseImage": "assets/books/book7/020-1.png",
-          "textImage": "assets/books/book7/020-2.png"
-        }
-      ],
-      "audio": {
-        "bookId": "7",
-        "tracks": [
-          {
-            "assetPath": "assets/audio/book3_part1.mp3",
-            "startPage": 1,
-            "endPage": 5
-          },
-          {
-            "assetPath": "assets/audio/book3_part2.mp3",
-            "startPage": 6,
-            "endPage": 10
-          },
-          {
-            "assetPath": "assets/audio/book3_part3.mp3",
-            "startPage": 11,
-            "endPage": 15
-          },
-          {
-            "assetPath": "assets/audio/book3_part4.mp3",
-            "startPage": 16,
-            "endPage": 20
-          }
-        ]
-      }
-    },
-    {
-      "id": "8",
-      "title": "おなかがすいたら、人生を考える",
-      "coverAssetPath": "assets/bookcovers/cover8.png",
-      "summary": "悲しいときも、うれしいときも、おなかはすく。その瞬間にあふれ出す、私たちのほんとうの気持ち。",
-      "views": 98765,
-      "likes": 420,
-      "comments": 32,
-      "rating": 4.7,
-      "genres": ["ファンタジー", "冒険", "成長"],
-      "pages": [
-        {
-          "pageId": "001",
-          "baseImage": "assets/books/book8/001-1.png",
-          "textImage": "assets/books/book8/001-2.png"
-        },
-        {
-          "pageId": "002",
-          "baseImage": "assets/books/book8/002-1.png",
-          "textImage": "assets/books/book8/002-2.png"
-        },
-        {
-          "pageId": "003",
-          "baseImage": "assets/books/book8/003-1.png",
-          "textImage": "assets/books/book8/003-2.png"
-        },
-        {
-          "pageId": "004",
-          "baseImage": "assets/books/book8/004-1.png",
-          "textImage": "assets/books/book8/004-2.png"
-        },
-        {
-          "pageId": "005",
-          "baseImage": "assets/books/book8/005-1.png",
-          "textImage": "assets/books/book8/005-2.png"
-        },
-        {
-          "pageId": "006",
-          "baseImage": "assets/books/book8/006-1.png",
-          "textImage": "assets/books/book8/006-2.png"
-        },
-        {
-          "pageId": "007",
-          "baseImage": "assets/books/book8/007-1.png",
-          "textImage": "assets/books/book8/007-2.png"
-        },
-        {
-          "pageId": "008",
-          "baseImage": "assets/books/book8/008-1.png",
-          "textImage": "assets/books/book8/008-2.png"
-        },
-        {
-          "pageId": "009",
-          "baseImage": "assets/books/book8/009-1.png",
-          "textImage": "assets/books/book8/009-2.png"
-        },
-        {
-          "pageId": "010",
-          "baseImage": "assets/books/book8/010-1.png",
-          "textImage": "assets/books/book8/010-2.png"
-        },
-        {
-          "pageId": "011",
-          "baseImage": "assets/books/book8/011-1.png",
-          "textImage": "assets/books/book8/011-2.png"
-        },
-        {
-          "pageId": "012",
-          "baseImage": "assets/books/book8/012-1.png",
-          "textImage": "assets/books/book8/012-2.png"
-        },
-        {
-          "pageId": "013",
-          "baseImage": "assets/books/book8/013-1.png",
-          "textImage": "assets/books/book8/013-2.png"
-        },
-        {
-          "pageId": "014",
-          "baseImage": "assets/books/book8/014-1.png",
-          "textImage": "assets/books/book8/014-2.png"
-        },
-        {
-          "pageId": "015",
-          "baseImage": "assets/books/book8/015-1.png",
-          "textImage": "assets/books/book8/015-2.png"
-        },
-        {
-          "pageId": "016",
-          "baseImage": "assets/books/book8/016-1.png",
-          "textImage": "assets/books/book8/016-2.png"
-        },
-        {
-          "pageId": "017",
-          "baseImage": "assets/books/book8/017-1.png",
-          "textImage": "assets/books/book8/017-2.png"
-        },
-        {
-          "pageId": "018",
-          "baseImage": "assets/books/book8/018-1.png",
-          "textImage": "assets/books/book8/018-2.png"
-        },
-        {
-          "pageId": "019",
-          "baseImage": "assets/books/book8/019-1.png",
-          "textImage": "assets/books/book8/019-2.png"
-        },
-        {
-          "pageId": "020",
-          "baseImage": "assets/books/book8/020-1.png",
-          "textImage": "assets/books/book8/020-2.png"
-        }
-      ],
-      "audio": {
-        "bookId": "8",
-        "tracks": [
-          {
-            "assetPath": "assets/audio/book3_part1.mp3",
-            "startPage": 1,
-            "endPage": 5
-          },
-          {
-            "assetPath": "assets/audio/book3_part2.mp3",
-            "startPage": 6,
-            "endPage": 10
-          },
-          {
-            "assetPath": "assets/audio/book3_part3.mp3",
-            "startPage": 11,
-            "endPage": 15
-          },
-          {
-            "assetPath": "assets/audio/book3_part4.mp3",
-            "startPage": 16,
-            "endPage": 20
-          }
-        ]
-      }
-    },
-    {
-      "id": "9",
-      "title": "記憶の迷宮ホテル",
-      "coverAssetPath": "assets/bookcovers/cover9.png",
-      "summary": "悲しいときも、うれしいときも、おなかはすく。その瞬間にあふれ出す、私たちのほんとうの気持ち。",
-      "views": 98765,
-      "likes": 420,
-      "comments": 32,
-      "rating": 4.7,
-      "genres": ["ファンタジー", "冒険", "成長"],
-      "pages": [
-        {
-          "pageId": "001",
-          "baseImage": "assets/books/book9/001-1.png",
-          "textImage": "assets/books/book9/001-2.png"
-        },
-        {
-          "pageId": "002",
-          "baseImage": "assets/books/book9/002-1.png",
-          "textImage": "assets/books/book9/002-2.png"
-        },
-        {
-          "pageId": "003",
-          "baseImage": "assets/books/book9/003-1.png",
-          "textImage": "assets/books/book9/003-2.png"
-        },
-        {
-          "pageId": "004",
-          "baseImage": "assets/books/book9/004-1.png",
-          "textImage": "assets/books/book9/004-2.png"
-        },
-        {
-          "pageId": "005",
-          "baseImage": "assets/books/book9/005-1.png",
-          "textImage": "assets/books/book9/005-2.png"
-        },
-        {
-          "pageId": "006",
-          "baseImage": "assets/books/book9/006-1.png",
-          "textImage": "assets/books/book9/006-2.png"
-        },
-        {
-          "pageId": "007",
-          "baseImage": "assets/books/book9/007-1.png",
-          "textImage": "assets/books/book9/007-2.png"
-        },
-        {
-          "pageId": "008",
-          "baseImage": "assets/books/book9/008-1.png",
-          "textImage": "assets/books/book9/008-2.png"
-        },
-        {
-          "pageId": "009",
-          "baseImage": "assets/books/book9/009-1.png",
-          "textImage": "assets/books/book9/009-2.png"
-        },
-        {
-          "pageId": "010",
-          "baseImage": "assets/books/book9/010-1.png",
-          "textImage": "assets/books/book9/010-2.png"
-        },
-        {
-          "pageId": "011",
-          "baseImage": "assets/books/book9/011-1.png",
-          "textImage": "assets/books/book9/011-2.png"
-        },
-        {
-          "pageId": "012",
-          "baseImage": "assets/books/book9/012-1.png",
-          "textImage": "assets/books/book9/012-2.png"
-        },
-        {
-          "pageId": "013",
-          "baseImage": "assets/books/book9/013-1.png",
-          "textImage": "assets/books/book9/013-2.png"
-        },
-        {
-          "pageId": "014",
-          "baseImage": "assets/books/book9/014-1.png",
-          "textImage": "assets/books/book9/014-2.png"
-        },
-        {
-          "pageId": "015",
-          "baseImage": "assets/books/book9/015-1.png",
-          "textImage": "assets/books/book9/015-2.png"
-        },
-        {
-          "pageId": "016",
-          "baseImage": "assets/books/book9/016-1.png",
-          "textImage": "assets/books/book9/016-2.png"
-        },
-        {
-          "pageId": "017",
-          "baseImage": "assets/books/book9/017-1.png",
-          "textImage": "assets/books/book9/017-2.png"
-        },
-        {
-          "pageId": "018",
-          "baseImage": "assets/books/book9/018-1.png",
-          "textImage": "assets/books/book9/018-2.png"
-        },
-        {
-          "pageId": "019",
-          "baseImage": "assets/books/book9/019-1.png",
-          "textImage": "assets/books/book9/019-2.png"
-        },
-        {
-          "pageId": "020",
-          "baseImage": "assets/books/book9/020-1.png",
-          "textImage": "assets/books/book9/020-2.png"
-        },
-        {
-          "pageId": "021",
-          "baseImage": "assets/books/book9/021-1.png",
-          "textImage": "assets/books/book9/021-2.png"
-        },
-        {
-          "pageId": "022",
-          "baseImage": "assets/books/book9/022-1.png",
-          "textImage": "assets/books/book9/022-2.png"
-        },
-        {
-          "pageId": "023",
-          "baseImage": "assets/books/book9/023-1.png",
-          "textImage": "assets/books/book9/023-2.png"
-        },
-        {
-          "pageId": "024",
-          "baseImage": "assets/books/book9/024-1.png",
-          "textImage": "assets/books/book9/024-2.png"
-        },
-        {
-          "pageId": "025",
-          "baseImage": "assets/books/book9/025-1.png",
-          "textImage": "assets/books/book9/025-2.png"
-        },
-        {
-          "pageId": "026",
-          "baseImage": "assets/books/book9/026-1.png",
-          "textImage": "assets/books/book9/026-2.png"
-        },
-        {
-          "pageId": "027",
-          "baseImage": "assets/books/book9/027-1.png",
-          "textImage": "assets/books/book9/027-2.png"
-        },
-        {
-          "pageId": "028",
-          "baseImage": "assets/books/book9/028-1.png",
-          "textImage": "assets/books/book9/028-2.png"
-        }
-      ],
-      "audio": {
-        "bookId": "9",
-        "tracks": [
-          {
-            "assetPath": "assets/audio/book3_part1.mp3",
-            "startPage": 1,
-            "endPage": 7
-          },
-          {
-            "assetPath": "assets/audio/book3_part2.mp3",
-            "startPage": 8,
-            "endPage": 14
-          },
-          {
-            "assetPath": "assets/audio/book3_part3.mp3",
-            "startPage": 15,
-            "endPage": 21
-          },
-          {
-            "assetPath": "assets/audio/book3_part4.mp3",
-            "startPage": 22,
-            "endPage": 28
-          }
-        ]
-      }
-    },
-    {
-      "id": "10",
-      "title": "海岸線のガラスのかけら",
-      "coverAssetPath": "assets/bookcovers/cover10.png",
-      "summary": "悲しいときも、うれしいときも、おなかはすく。その瞬間にあふれ出す、私たちのほんとうの気持ち。",
-      "views": 98765,
-      "likes": 420,
-      "comments": 32,
-      "rating": 4.7,
-      "genres": ["ファンタジー", "冒険", "成長"],
-      "pages": [
-        {
-          "pageId": "001",
-          "baseImage": "assets/books/book10/001-1.png",
-          "textImage": "assets/books/book10/001-2.png"
-        },
-        {
-          "pageId": "002",
-          "baseImage": "assets/books/book10/002-1.png",
-          "textImage": "assets/books/book10/002-2.png"
-        },
-        {
-          "pageId": "003",
-          "baseImage": "assets/books/book10/003-1.png",
-          "textImage": "assets/books/book10/003-2.png"
-        },
-        {
-          "pageId": "004",
-          "baseImage": "assets/books/book10/004-1.png",
-          "textImage": "assets/books/book10/004-2.png"
-        },
-        {
-          "pageId": "005",
-          "baseImage": "assets/books/book10/005-1.png",
-          "textImage": "assets/books/book10/005-2.png"
-        },
-        {
-          "pageId": "006",
-          "baseImage": "assets/books/book10/006-1.png",
-          "textImage": "assets/books/book10/006-2.png"
-        },
-        {
-          "pageId": "007",
-          "baseImage": "assets/books/book10/007-1.png",
-          "textImage": "assets/books/book10/007-2.png"
-        },
-        {
-          "pageId": "008",
-          "baseImage": "assets/books/book10/008-1.png",
-          "textImage": "assets/books/book10/008-2.png"
-        },
-        {
-          "pageId": "009",
-          "baseImage": "assets/books/book10/009-1.png",
-          "textImage": "assets/books/book10/009-2.png"
-        },
-        {
-          "pageId": "010",
-          "baseImage": "assets/books/book10/010-1.png",
-          "textImage": "assets/books/book10/010-2.png"
-        },
-        {
-          "pageId": "011",
-          "baseImage": "assets/books/book10/011-1.png",
-          "textImage": "assets/books/book10/011-2.png"
-        },
-        {
-          "pageId": "012",
-          "baseImage": "assets/books/book10/012-1.png",
-          "textImage": "assets/books/book10/012-2.png"
-        },
-        {
-          "pageId": "013",
-          "baseImage": "assets/books/book10/013-1.png",
-          "textImage": "assets/books/book10/013-2.png"
-        },
-        {
-          "pageId": "014",
-          "baseImage": "assets/books/book10/014-1.png",
-          "textImage": "assets/books/book10/014-2.png"
-        },
-        {
-          "pageId": "015",
-          "baseImage": "assets/books/book10/015-1.png",
-          "textImage": "assets/books/book10/015-2.png"
-        },
-        {
-          "pageId": "016",
-          "baseImage": "assets/books/book10/016-1.png",
-          "textImage": "assets/books/book10/016-2.png"
-        },
-        {
-          "pageId": "017",
-          "baseImage": "assets/books/book10/017-1.png",
-          "textImage": "assets/books/book10/017-2.png"
-        },
-        {
-          "pageId": "018",
-          "baseImage": "assets/books/book10/018-1.png",
-          "textImage": "assets/books/book10/018-2.png"
-        },
-        {
-          "pageId": "019",
-          "baseImage": "assets/books/book10/019-1.png",
-          "textImage": "assets/books/book10/019-2.png"
-        },
-        {
-          "pageId": "020",
-          "baseImage": "assets/books/book10/020-1.png",
-          "textImage": "assets/books/book10/020-2.png"
-        }
-      ],
-      "audio": {
-        "bookId": "10",
-        "tracks": [
-          {
-            "assetPath": "assets/audio/book3_part1.mp3",
-            "startPage": 1,
-            "endPage": 5
-          },
-          {
-            "assetPath": "assets/audio/book3_part2.mp3",
-            "startPage": 6,
-            "endPage": 10
-          },
-          {
-            "assetPath": "assets/audio/book3_part3.mp3",
-            "startPage": 11,
-            "endPage": 15
-          },
-          {
-            "assetPath": "assets/audio/book3_part4.mp3",
-            "startPage": 16,
-            "endPage": 20
-          }
-        ]
-      }
-    },
-    {
-      "id": "11",
-      "title": "オードリー・ヘプバーンの物語",
-      "coverAssetPath": "assets/bookcovers/cover11.png",
-      "summary": "悲しいときも、うれしいときも、おなかはすく。その瞬間にあふれ出す、私たちのほんとうの気持ち。",
-      "views": 98765,
-      "likes": 420,
-      "comments": 32,
-      "rating": 4.7,
-      "genres": ["ファンタジー", "冒険", "成長"],
-      "pages": [
-        {
-          "pageId": "001",
-          "baseImage": "assets/books/book11/001-1.png",
-          "textImage": "assets/books/book11/001-2.png"
-        },
-        {
-          "pageId": "002",
-          "baseImage": "assets/books/book11/002-1.png",
-          "textImage": "assets/books/book11/002-2.png"
-        },
-        {
-          "pageId": "003",
-          "baseImage": "assets/books/book11/003-1.png",
-          "textImage": "assets/books/book11/003-2.png"
-        },
-        {
-          "pageId": "004",
-          "baseImage": "assets/books/book11/004-1.png",
-          "textImage": "assets/books/book11/004-2.png"
-        },
-        {
-          "pageId": "005",
-          "baseImage": "assets/books/book11/005-1.png",
-          "textImage": "assets/books/book11/005-2.png"
-        },
-        {
-          "pageId": "006",
-          "baseImage": "assets/books/book11/006-1.png",
-          "textImage": "assets/books/book11/006-2.png"
-        },
-        {
-          "pageId": "007",
-          "baseImage": "assets/books/book11/007-1.png",
-          "textImage": "assets/books/book11/007-2.png"
-        },
-        {
-          "pageId": "008",
-          "baseImage": "assets/books/book11/008-1.png",
-          "textImage": "assets/books/book11/008-2.png"
-        },
-        {
-          "pageId": "009",
-          "baseImage": "assets/books/book11/009-1.png",
-          "textImage": "assets/books/book11/009-2.png"
-        },
-        {
-          "pageId": "010",
-          "baseImage": "assets/books/book11/010-1.png",
-          "textImage": "assets/books/book11/010-2.png"
-        },
-        {
-          "pageId": "011",
-          "baseImage": "assets/books/book11/011-1.png",
-          "textImage": "assets/books/book11/011-2.png"
-        },
-        {
-          "pageId": "012",
-          "baseImage": "assets/books/book11/012-1.png",
-          "textImage": "assets/books/book11/012-2.png"
-        },
-        {
-          "pageId": "013",
-          "baseImage": "assets/books/book11/013-1.png",
-          "textImage": "assets/books/book11/013-2.png"
-        },
-        {
-          "pageId": "014",
-          "baseImage": "assets/books/book11/014-1.png",
-          "textImage": "assets/books/book11/014-2.png"
-        },
-        {
-          "pageId": "015",
-          "baseImage": "assets/books/book11/015-1.png",
-          "textImage": "assets/books/book11/015-2.png"
-        },
-        {
-          "pageId": "016",
-          "baseImage": "assets/books/book11/016-1.png",
-          "textImage": "assets/books/book11/016-2.png"
-        },
-        {
-          "pageId": "017",
-          "baseImage": "assets/books/book11/017-1.png",
-          "textImage": "assets/books/book11/017-2.png"
-        },
-        {
-          "pageId": "018",
-          "baseImage": "assets/books/book11/018-1.png",
-          "textImage": "assets/books/book11/018-2.png"
-        },
-        {
-          "pageId": "019",
-          "baseImage": "assets/books/book11/019-1.png",
-          "textImage": "assets/books/book11/019-2.png"
-        },
-        {
-          "pageId": "020",
-          "baseImage": "assets/books/book11/020-1.png",
-          "textImage": "assets/books/book11/020-2.png"
-        }
-      ],
-      "audio": {
-        "bookId": "11",
-        "tracks": [
-          {
-            "assetPath": "assets/audio/book3_part1.mp3",
-            "startPage": 1,
-            "endPage": 5
-          },
-          {
-            "assetPath": "assets/audio/book3_part2.mp3",
-            "startPage": 6,
-            "endPage": 10
-          },
-          {
-            "assetPath": "assets/audio/book3_part3.mp3",
-            "startPage": 11,
-            "endPage": 15
-          },
-          {
-            "assetPath": "assets/audio/book3_part4.mp3",
-            "startPage": 16,
-            "endPage": 20
-          }
-        ]
-      }
-    },
-    {
-      "id": "12",
-      "title": "大人のためのやさしい哲学入門",
-      "coverAssetPath": "assets/bookcovers/cover12.png",
-      "summary": "悲しいときも、うれしいときも、おなかはすく。その瞬間にあふれ出す、私たちのほんとうの気持ち。",
-      "views": 98765,
-      "likes": 420,
-      "comments": 32,
-      "rating": 4.7,
-      "genres": ["ファンタジー", "冒険", "成長"],
-      "pages": [
-        {
-          "pageId": "001",
-          "baseImage": "assets/books/book12/001-1.png",
-          "textImage": "assets/books/book12/001-2.png"
-        },
-        {
-          "pageId": "002",
-          "baseImage": "assets/books/book12/002-1.png",
-          "textImage": "assets/books/book12/002-2.png"
-        },
-        {
-          "pageId": "003",
-          "baseImage": "assets/books/book12/003-1.png",
-          "textImage": "assets/books/book12/003-2.png"
-        },
-        {
-          "pageId": "004",
-          "baseImage": "assets/books/book12/004-1.png",
-          "textImage": "assets/books/book12/004-2.png"
-        },
-        {
-          "pageId": "005",
-          "baseImage": "assets/books/book12/005-1.png",
-          "textImage": "assets/books/book12/005-2.png"
-        },
-        {
-          "pageId": "006",
-          "baseImage": "assets/books/book12/006-1.png",
-          "textImage": "assets/books/book12/006-2.png"
-        },
-        {
-          "pageId": "007",
-          "baseImage": "assets/books/book12/007-1.png",
-          "textImage": "assets/books/book12/007-2.png"
-        },
-        {
-          "pageId": "008",
-          "baseImage": "assets/books/book12/008-1.png",
-          "textImage": "assets/books/book12/008-2.png"
-        },
-        {
-          "pageId": "009",
-          "baseImage": "assets/books/book12/009-1.png",
-          "textImage": "assets/books/book12/009-2.png"
-        },
-        {
-          "pageId": "010",
-          "baseImage": "assets/books/book12/010-1.png",
-          "textImage": "assets/books/book12/010-2.png"
-        },
-        {
-          "pageId": "011",
-          "baseImage": "assets/books/book12/011-1.png",
-          "textImage": "assets/books/book12/011-2.png"
-        },
-        {
-          "pageId": "012",
-          "baseImage": "assets/books/book12/012-1.png",
-          "textImage": "assets/books/book12/012-2.png"
-        },
-        {
-          "pageId": "013",
-          "baseImage": "assets/books/book12/013-1.png",
-          "textImage": "assets/books/book12/013-2.png"
-        },
-        {
-          "pageId": "014",
-          "baseImage": "assets/books/book12/014-1.png",
-          "textImage": "assets/books/book12/014-2.png"
-        },
-        {
-          "pageId": "015",
-          "baseImage": "assets/books/book12/015-1.png",
-          "textImage": "assets/books/book12/015-2.png"
-        },
-        {
-          "pageId": "016",
-          "baseImage": "assets/books/book12/016-1.png",
-          "textImage": "assets/books/book12/016-2.png"
-        },
-        {
-          "pageId": "017",
-          "baseImage": "assets/books/book12/017-1.png",
-          "textImage": "assets/books/book12/017-2.png"
-        },
-        {
-          "pageId": "018",
-          "baseImage": "assets/books/book12/018-1.png",
-          "textImage": "assets/books/book12/018-2.png"
-        },
-        {
-          "pageId": "019",
-          "baseImage": "assets/books/book12/019-1.png",
-          "textImage": "assets/books/book12/019-2.png"
-        },
-        {
-          "pageId": "020",
-          "baseImage": "assets/books/book12/020-1.png",
-          "textImage": "assets/books/book12/020-2.png"
-        },
-        {
-          "pageId": "021",
-          "baseImage": "assets/books/book12/021-1.png",
-          "textImage": "assets/books/book12/021-2.png"
-        },
-        {
-          "pageId": "022",
-          "baseImage": "assets/books/book12/022-1.png",
-          "textImage": "assets/books/book12/022-2.png"
-        },
-        {
-          "pageId": "023",
-          "baseImage": "assets/books/book12/023-1.png",
-          "textImage": "assets/books/book12/023-2.png"
-        },
-        {
-          "pageId": "024",
-          "baseImage": "assets/books/book12/024-1.png",
-          "textImage": "assets/books/book12/024-2.png"
-        },
-        {
-          "pageId": "025",
-          "baseImage": "assets/books/book12/025-1.png",
-          "textImage": "assets/books/book12/025-2.png"
-        },
-        {
-          "pageId": "026",
-          "baseImage": "assets/books/book12/026-1.png",
-          "textImage": "assets/books/book12/026-2.png"
-        },
-        {
-          "pageId": "027",
-          "baseImage": "assets/books/book12/027-1.png",
-          "textImage": "assets/books/book12/027-2.png"
-        },
-        {
-          "pageId": "028",
-          "baseImage": "assets/books/book12/028-1.png",
-          "textImage": "assets/books/book12/028-2.png"
-        }
-      ],
-      "audio": {
-        "bookId": "12",
-        "tracks": [
-          {
-            "assetPath": "assets/audio/book3_part1.mp3",
-            "startPage": 1,
-            "endPage": 7
-          },
-          {
-            "assetPath": "assets/audio/book3_part2.mp3",
-            "startPage": 8,
-            "endPage": 14
-          },
-          {
-            "assetPath": "assets/audio/book3_part3.mp3",
-            "startPage": 15,
-            "endPage": 21
-          },
-          {
-            "assetPath": "assets/audio/book3_part4.mp3",
-            "startPage": 22,
-            "endPage": 28
-          }
-        ]
-      }
-    },
-    {
-      "id": "13",
-      "title": "夕凪のフィロソフィア",
-      "coverAssetPath": "assets/bookcovers/cover13.png",
-      "summary": "日没のひとときだけ開く、海辺の小さな哲学カフェ「フィロソフィア」。静かな対話が、悩める心にそっと灯をともす――。",
-      "views": 98765,
-      "likes": 420,
-      "comments": 32,
-      "rating": 4.7,
-      "genres": ["ファンタジー", "冒険", "成長"],
-      "pages": [
-        {
-          "pageId": "001",
-          "baseImage": "assets/books/book13/001-1.png",
-          "textImage": "assets/books/book13/001-2.png"
-        },
-        {
-          "pageId": "002",
-          "baseImage": "assets/books/book13/002-1.png",
-          "textImage": "assets/books/book13/002-2.png"
-        },
-        {
-          "pageId": "003",
-          "baseImage": "assets/books/book13/003-1.png",
-          "textImage": "assets/books/book13/003-2.png"
-        },
-        {
-          "pageId": "004",
-          "baseImage": "assets/books/book13/004-1.png",
-          "textImage": "assets/books/book13/004-2.png"
-        },
-        {
-          "pageId": "005",
-          "baseImage": "assets/books/book13/005-1.png",
-          "textImage": "assets/books/book13/005-2.png"
-        },
-        {
-          "pageId": "006",
-          "baseImage": "assets/books/book13/006-1.png",
-          "textImage": "assets/books/book13/006-2.png"
-        },
-        {
-          "pageId": "007",
-          "baseImage": "assets/books/book13/007-1.png",
-          "textImage": "assets/books/book13/007-2.png"
-        },
-        {
-          "pageId": "008",
-          "baseImage": "assets/books/book13/008-1.png",
-          "textImage": "assets/books/book13/008-2.png"
-        },
-        {
-          "pageId": "009",
-          "baseImage": "assets/books/book13/009-1.png",
-          "textImage": "assets/books/book13/009-2.png"
-        },
-        {
-          "pageId": "010",
-          "baseImage": "assets/books/book13/010-1.png",
-          "textImage": "assets/books/book13/010-2.png"
-        },
-        {
-          "pageId": "011",
-          "baseImage": "assets/books/book13/011-1.png",
-          "textImage": "assets/books/book13/011-2.png"
-        },
-        {
-          "pageId": "012",
-          "baseImage": "assets/books/book13/012-1.png",
-          "textImage": "assets/books/book13/012-2.png"
-        },
-        {
-          "pageId": "013",
-          "baseImage": "assets/books/book13/013-1.png",
-          "textImage": "assets/books/book13/013-2.png"
-        },
-        {
-          "pageId": "014",
-          "baseImage": "assets/books/book13/014-1.png",
-          "textImage": "assets/books/book13/014-2.png"
-        },
-        {
-          "pageId": "015",
-          "baseImage": "assets/books/book13/015-1.png",
-          "textImage": "assets/books/book13/015-2.png"
-        },
-        {
-          "pageId": "016",
-          "baseImage": "assets/books/book13/016-1.png",
-          "textImage": "assets/books/book13/016-2.png"
-        },
-        {
-          "pageId": "017",
-          "baseImage": "assets/books/book13/017-1.png",
-          "textImage": "assets/books/book13/017-2.png"
-        },
-        {
-          "pageId": "018",
-          "baseImage": "assets/books/book13/018-1.png",
-          "textImage": "assets/books/book13/018-2.png"
-        },
-        {
-          "pageId": "019",
-          "baseImage": "assets/books/book13/019-1.png",
-          "textImage": "assets/books/book13/019-2.png"
-        },
-        {
-          "pageId": "020",
-          "baseImage": "assets/books/book13/020-1.png",
-          "textImage": "assets/books/book13/020-2.png"
-        }
-      ],
-      "audio": {
-        "bookId": "13",
-        "tracks": [
-          {
-            "assetPath": "assets/audio/book3_part1.mp3",
-            "startPage": 1,
-            "endPage": 5
-          },
-          {
-            "assetPath": "assets/audio/book3_part2.mp3",
-            "startPage": 6,
-            "endPage": 10
-          },
-          {
-            "assetPath": "assets/audio/book3_part3.mp3",
-            "startPage": 11,
-            "endPage": 15
-          },
-          {
-            "assetPath": "assets/audio/book3_part4.mp3",
-            "startPage": 16,
-            "endPage": 20
-          }
-        ]
-      }
+      ]
     }
+  },
+  {
+    "id": "2",
+    "title": "踊る影と、静かなわたし",
+    "coverAssetPath": "assets/bookcovers/cover2.png",
+    "summary": "夜更け、暗闇の部屋に現れた“踊る影”が、言えずに溜めこんだ負の感情を静かにほぐす。ひとりの夜にこぼれ落ちた涙は、やがてやさしいダンスへ変わる。不思議な出会いが導く、心と体が解き放たれる優しい物語。",
+    "views": 111224253,
+    "likes": 530,
+    "comments": 53,
+    "rating": 4.3,
+    "genres": ["ためになる", "ファンタジー", "約束", "思い出"],
+    "pages": [
+        {
+          "pageId": "001",
+          "baseImage": "assets/books/book2/001-1.png",
+          "textImage": "assets/books/book2/001-2.png"
+        },
+        {
+          "pageId": "002",
+          "baseImage": "assets/books/book2/002-1.png",
+          "textImage": "assets/books/book2/002-2.png"
+        },
+        {
+          "pageId": "003",
+          "baseImage": "assets/books/book2/003-1.png",
+          "textImage": "assets/books/book2/003-2.png"
+        },
+        {
+          "pageId": "004",
+          "baseImage": "assets/books/book2/004-1.png",
+          "textImage": "assets/books/book2/004-2.png"
+        },
+        {
+          "pageId": "005",
+          "baseImage": "assets/books/book2/005-1.png",
+          "textImage": "assets/books/book2/005-2.png"
+        },
+        {
+          "pageId": "006",
+          "baseImage": "assets/books/book2/006-1.png",
+          "textImage": "assets/books/book2/006-2.png"
+        },
+        {
+          "pageId": "007",
+          "baseImage": "assets/books/book2/007-1.png",
+          "textImage": "assets/books/book2/007-2.png"
+        },
+        {
+          "pageId": "008",
+          "baseImage": "assets/books/book2/008-1.png",
+          "textImage": "assets/books/book2/008-2.png"
+        },
+        {
+          "pageId": "009",
+          "baseImage": "assets/books/book2/009-1.png",
+          "textImage": "assets/books/book2/009-2.png"
+        },
+        {
+          "pageId": "010",
+          "baseImage": "assets/books/book2/010-1.png",
+          "textImage": "assets/books/book2/010-2.png"
+        },
+        {
+          "pageId": "011",
+          "baseImage": "assets/books/book2/011-1.png",
+          "textImage": "assets/books/book2/011-2.png"
+        },
+        {
+          "pageId": "012",
+          "baseImage": "assets/books/book2/012-1.png",
+          "textImage": "assets/books/book2/012-2.png"
+        },
+        {
+          "pageId": "013",
+          "baseImage": "assets/books/book2/013-1.png",
+          "textImage": "assets/books/book2/013-2.png"
+        },
+        {
+          "pageId": "014",
+          "baseImage": "assets/books/book2/014-1.png",
+          "textImage": "assets/books/book2/014-2.png"
+        },
+        {
+          "pageId": "015",
+          "baseImage": "assets/books/book2/015-1.png",
+          "textImage": "assets/books/book2/015-2.png"
+        },
+        {
+          "pageId": "016",
+          "baseImage": "assets/books/book2/016-1.png",
+          "textImage": "assets/books/book2/016-2.png"
+        },
+        {
+          "pageId": "017",
+          "baseImage": "assets/books/book2/017-1.png",
+          "textImage": "assets/books/book2/017-2.png"
+        },
+        {
+          "pageId": "018",
+          "baseImage": "assets/books/book2/018-1.png",
+          "textImage": "assets/books/book2/018-2.png"
+        },
+        {
+          "pageId": "019",
+          "baseImage": "assets/books/book2/019-1.png",
+          "textImage": "assets/books/book2/019-2.png"
+        },
+        {
+          "pageId": "020",
+          "baseImage": "assets/books/book2/020-1.png",
+          "textImage": "assets/books/book2/020-2.png"
+        }
+      ],
+    "audio": {
+      "bookId": "2",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book2_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book2_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book2_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book2_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "3",
+    "title": "夜行バスの窓から",
+    "coverAssetPath": "assets/bookcovers/cover3.png",
+    "summary": "知らない町へ向かう夜行バスで、夢と現実を揺れ動く一夜の旅。仕事や人間関係に疲れた私が、過去の記憶や想いと静かに向き合いつつ、深い闇夜から朝焼けへ移ろう車窓に小さな希望を見出す、ささやかな心の再生譚。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book3/001-1.png",
+        "textImage": "assets/books/book3/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book3/002-1.png",
+        "textImage": "assets/books/book3/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book3/003-1.png",
+        "textImage": "assets/books/book3/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book3/004-1.png",
+        "textImage": "assets/books/book3/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book3/005-1.png",
+        "textImage": "assets/books/book3/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book3/006-1.png",
+        "textImage": "assets/books/book3/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book3/007-1.png",
+        "textImage": "assets/books/book3/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book3/008-1.png",
+        "textImage": "assets/books/book3/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book3/009-1.png",
+        "textImage": "assets/books/book3/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book3/010-1.png",
+        "textImage": "assets/books/book3/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book3/011-1.png",
+        "textImage": "assets/books/book3/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book3/012-1.png",
+        "textImage": "assets/books/book3/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book3/013-1.png",
+        "textImage": "assets/books/book3/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book3/014-1.png",
+        "textImage": "assets/books/book3/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book3/015-1.png",
+        "textImage": "assets/books/book3/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book3/016-1.png",
+        "textImage": "assets/books/book3/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book3/017-1.png",
+        "textImage": "assets/books/book3/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book3/018-1.png",
+        "textImage": "assets/books/book3/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book3/019-1.png",
+        "textImage": "assets/books/book3/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book3/020-1.png",
+        "textImage": "assets/books/book3/020-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "3",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "4",
+    "title": "夜の図書館で出会うもの",
+    "coverAssetPath": "assets/bookcovers/cover4.png",
+    "summary": "仕事に疲れ切ったカホは深夜まで開く古めかしい図書館へ足を運び、そこで出会った不思議な“本の住人”たちとの対話を通じて、幼い頃に父から読み聞かせてもらった物語への憧れや読書の喜びを再発見していく。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book4/001-1.png",
+        "textImage": "assets/books/book4/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book4/002-1.png",
+        "textImage": "assets/books/book4/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book4/003-1.png",
+        "textImage": "assets/books/book4/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book4/004-1.png",
+        "textImage": "assets/books/book4/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book4/005-1.png",
+        "textImage": "assets/books/book4/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book4/006-1.png",
+        "textImage": "assets/books/book4/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book4/007-1.png",
+        "textImage": "assets/books/book4/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book4/008-1.png",
+        "textImage": "assets/books/book4/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book4/009-1.png",
+        "textImage": "assets/books/book4/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book4/010-1.png",
+        "textImage": "assets/books/book4/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book4/011-1.png",
+        "textImage": "assets/books/book4/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book4/012-1.png",
+        "textImage": "assets/books/book4/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book4/013-1.png",
+        "textImage": "assets/books/book4/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book4/014-1.png",
+        "textImage": "assets/books/book4/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book4/015-1.png",
+        "textImage": "assets/books/book4/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book4/016-1.png",
+        "textImage": "assets/books/book4/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book4/017-1.png",
+        "textImage": "assets/books/book4/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book4/018-1.png",
+        "textImage": "assets/books/book4/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book4/019-1.png",
+        "textImage": "assets/books/book4/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book4/020-1.png",
+        "textImage": "assets/books/book4/020-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "4",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "5",
+    "title": "歯車を直す小さなウサギ",
+    "coverAssetPath": "assets/bookcovers/cover5.png",
+    "summary": "止まった町の時計台を夜ごと直すのは、小さなウサギの時計職人。誰にも気づかれぬまま故障した歯車を修復し、人々の止まりかけた心まで動かしていく。見えない小さな存在が奏でる、不思議であたたかな物語。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book5/001-1.png",
+        "textImage": "assets/books/book5/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book5/002-1.png",
+        "textImage": "assets/books/book5/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book5/003-1.png",
+        "textImage": "assets/books/book5/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book5/004-1.png",
+        "textImage": "assets/books/book5/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book5/005-1.png",
+        "textImage": "assets/books/book5/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book5/006-1.png",
+        "textImage": "assets/books/book5/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book5/007-1.png",
+        "textImage": "assets/books/book5/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book5/008-1.png",
+        "textImage": "assets/books/book5/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book5/009-1.png",
+        "textImage": "assets/books/book5/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book5/010-1.png",
+        "textImage": "assets/books/book5/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book5/011-1.png",
+        "textImage": "assets/books/book5/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book5/012-1.png",
+        "textImage": "assets/books/book5/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book5/013-1.png",
+        "textImage": "assets/books/book5/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book5/014-1.png",
+        "textImage": "assets/books/book5/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book5/015-1.png",
+        "textImage": "assets/books/book5/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book5/016-1.png",
+        "textImage": "assets/books/book5/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book5/017-1.png",
+        "textImage": "assets/books/book5/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book5/018-1.png",
+        "textImage": "assets/books/book5/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book5/019-1.png",
+        "textImage": "assets/books/book5/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book5/020-1.png",
+        "textImage": "assets/books/book5/020-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "5",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "6",
+    "title": "大人のための“もしも”童話再解釈 ラプンツェル",
+    "coverAssetPath": "assets/bookcovers/cover6.png",
+    "summary": "塔で育つラプンツェルは、母の愛と束縛に苦しむ。青年との出会いで外の世界を知り、髪を失っても自力で塔を降りる決断をする。束縛からの自立と“本当の私”を求める姿を描く、大人のラプンツェル再解釈物語。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book6/001-1.png",
+        "textImage": "assets/books/book6/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book6/002-1.png",
+        "textImage": "assets/books/book6/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book6/003-1.png",
+        "textImage": "assets/books/book6/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book6/004-1.png",
+        "textImage": "assets/books/book6/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book6/005-1.png",
+        "textImage": "assets/books/book6/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book6/006-1.png",
+        "textImage": "assets/books/book6/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book6/007-1.png",
+        "textImage": "assets/books/book6/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book6/008-1.png",
+        "textImage": "assets/books/book6/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book6/009-1.png",
+        "textImage": "assets/books/book6/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book6/010-1.png",
+        "textImage": "assets/books/book6/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book6/011-1.png",
+        "textImage": "assets/books/book6/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book6/012-1.png",
+        "textImage": "assets/books/book6/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book6/013-1.png",
+        "textImage": "assets/books/book6/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book6/014-1.png",
+        "textImage": "assets/books/book6/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book6/015-1.png",
+        "textImage": "assets/books/book6/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book6/016-1.png",
+        "textImage": "assets/books/book6/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book6/017-1.png",
+        "textImage": "assets/books/book6/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book6/018-1.png",
+        "textImage": "assets/books/book6/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book6/019-1.png",
+        "textImage": "assets/books/book6/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book6/020-1.png",
+        "textImage": "assets/books/book6/020-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "6",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "7",
+    "title": "マリー・キュリー ― 科学に光を灯した女性研究者の物語",
+    "coverAssetPath": "assets/bookcovers/cover7.png",
+    "summary": "ポーランド生まれのマリー・キュリーは、放射線研究で二度ノーベル賞を受賞。女性差別や貧困を越え、医学や物理に新たな道を切り拓く。その情熱は娘や研究者たちへ受け継がれ、今も未来を照らし続ける。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book7/001-1.png",
+        "textImage": "assets/books/book7/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book7/002-1.png",
+        "textImage": "assets/books/book7/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book7/003-1.png",
+        "textImage": "assets/books/book7/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book7/004-1.png",
+        "textImage": "assets/books/book7/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book7/005-1.png",
+        "textImage": "assets/books/book7/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book7/006-1.png",
+        "textImage": "assets/books/book7/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book7/007-1.png",
+        "textImage": "assets/books/book7/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book7/008-1.png",
+        "textImage": "assets/books/book7/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book7/009-1.png",
+        "textImage": "assets/books/book7/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book7/010-1.png",
+        "textImage": "assets/books/book7/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book7/011-1.png",
+        "textImage": "assets/books/book7/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book7/012-1.png",
+        "textImage": "assets/books/book7/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book7/013-1.png",
+        "textImage": "assets/books/book7/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book7/014-1.png",
+        "textImage": "assets/books/book7/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book7/015-1.png",
+        "textImage": "assets/books/book7/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book7/016-1.png",
+        "textImage": "assets/books/book7/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book7/017-1.png",
+        "textImage": "assets/books/book7/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book7/018-1.png",
+        "textImage": "assets/books/book7/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book7/019-1.png",
+        "textImage": "assets/books/book7/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book7/020-1.png",
+        "textImage": "assets/books/book7/020-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "7",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "8",
+    "title": "おなかがすいたら、人生を考える",
+    "coverAssetPath": "assets/bookcovers/cover8.png",
+    "summary": "空腹になると、ふと夢や不安、喜びや孤独がこぼれ出す。食べるたびに人生が見えてくるのはなぜ？　何を食べたいか、いつ食べられないか、なぜ食べ過ぎるのか――空腹を通して自分を知る、小さな発見に満ちた物語。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book8/001-1.png",
+        "textImage": "assets/books/book8/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book8/002-1.png",
+        "textImage": "assets/books/book8/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book8/003-1.png",
+        "textImage": "assets/books/book8/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book8/004-1.png",
+        "textImage": "assets/books/book8/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book8/005-1.png",
+        "textImage": "assets/books/book8/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book8/006-1.png",
+        "textImage": "assets/books/book8/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book8/007-1.png",
+        "textImage": "assets/books/book8/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book8/008-1.png",
+        "textImage": "assets/books/book8/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book8/009-1.png",
+        "textImage": "assets/books/book8/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book8/010-1.png",
+        "textImage": "assets/books/book8/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book8/011-1.png",
+        "textImage": "assets/books/book8/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book8/012-1.png",
+        "textImage": "assets/books/book8/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book8/013-1.png",
+        "textImage": "assets/books/book8/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book8/014-1.png",
+        "textImage": "assets/books/book8/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book8/015-1.png",
+        "textImage": "assets/books/book8/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book8/016-1.png",
+        "textImage": "assets/books/book8/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book8/017-1.png",
+        "textImage": "assets/books/book8/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book8/018-1.png",
+        "textImage": "assets/books/book8/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book8/019-1.png",
+        "textImage": "assets/books/book8/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book8/020-1.png",
+        "textImage": "assets/books/book8/020-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "8",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "9",
+    "title": "記憶の迷宮ホテル",
+    "coverAssetPath": "assets/bookcovers/cover9.png",
+    "summary": "夜の街外れにある古びたホテル。その廊下には、忘れかけた涙や温かな記憶が扉ごとに宿り、迷宮へ誘う。傷や喜びも、きっと再び歩き出す力に変わる。過去を受けとめた先にある希望を描く、不思議でやさしい物語。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book9/001-1.png",
+        "textImage": "assets/books/book9/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book9/002-1.png",
+        "textImage": "assets/books/book9/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book9/003-1.png",
+        "textImage": "assets/books/book9/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book9/004-1.png",
+        "textImage": "assets/books/book9/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book9/005-1.png",
+        "textImage": "assets/books/book9/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book9/006-1.png",
+        "textImage": "assets/books/book9/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book9/007-1.png",
+        "textImage": "assets/books/book9/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book9/008-1.png",
+        "textImage": "assets/books/book9/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book9/009-1.png",
+        "textImage": "assets/books/book9/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book9/010-1.png",
+        "textImage": "assets/books/book9/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book9/011-1.png",
+        "textImage": "assets/books/book9/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book9/012-1.png",
+        "textImage": "assets/books/book9/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book9/013-1.png",
+        "textImage": "assets/books/book9/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book9/014-1.png",
+        "textImage": "assets/books/book9/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book9/015-1.png",
+        "textImage": "assets/books/book9/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book9/016-1.png",
+        "textImage": "assets/books/book9/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book9/017-1.png",
+        "textImage": "assets/books/book9/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book9/018-1.png",
+        "textImage": "assets/books/book9/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book9/019-1.png",
+        "textImage": "assets/books/book9/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book9/020-1.png",
+        "textImage": "assets/books/book9/020-2.png"
+      },
+      {
+        "pageId": "021",
+        "baseImage": "assets/books/book9/021-1.png",
+        "textImage": "assets/books/book9/021-2.png"
+      },
+      {
+        "pageId": "022",
+        "baseImage": "assets/books/book9/022-1.png",
+        "textImage": "assets/books/book9/022-2.png"
+      },
+      {
+        "pageId": "023",
+        "baseImage": "assets/books/book9/023-1.png",
+        "textImage": "assets/books/book9/023-2.png"
+      },
+      {
+        "pageId": "024",
+        "baseImage": "assets/books/book9/024-1.png",
+        "textImage": "assets/books/book9/024-2.png"
+      },
+      {
+        "pageId": "025",
+        "baseImage": "assets/books/book9/025-1.png",
+        "textImage": "assets/books/book9/025-2.png"
+      },
+      {
+        "pageId": "026",
+        "baseImage": "assets/books/book9/026-1.png",
+        "textImage": "assets/books/book9/026-2.png"
+      },
+      {
+        "pageId": "027",
+        "baseImage": "assets/books/book9/027-1.png",
+        "textImage": "assets/books/book9/027-2.png"
+      },
+      {
+        "pageId": "028",
+        "baseImage": "assets/books/book9/028-1.png",
+        "textImage": "assets/books/book9/028-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "9",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 7
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 8,
+          "endPage": 14
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 15,
+          "endPage": 21
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 22,
+          "endPage": 28
+        }
+      ]
+    }
+  },
+  {
+    "id": "10",
+    "title": "海岸線のガラスのかけら",
+    "coverAssetPath": "assets/bookcovers/cover10.png",
+    "summary": "疲れた日常から逃れ、海辺で集めたシーグラスに耳を傾けるたび、過去の痛みや思い出が角を取って輝き出す。寄せては返す波音に包まれながら、傷も記憶も抱えた欠片が教えてくれた、人生を見つめ直す潮騒の物語。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book10/001-1.png",
+        "textImage": "assets/books/book10/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book10/002-1.png",
+        "textImage": "assets/books/book10/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book10/003-1.png",
+        "textImage": "assets/books/book10/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book10/004-1.png",
+        "textImage": "assets/books/book10/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book10/005-1.png",
+        "textImage": "assets/books/book10/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book10/006-1.png",
+        "textImage": "assets/books/book10/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book10/007-1.png",
+        "textImage": "assets/books/book10/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book10/008-1.png",
+        "textImage": "assets/books/book10/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book10/009-1.png",
+        "textImage": "assets/books/book10/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book10/010-1.png",
+        "textImage": "assets/books/book10/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book10/011-1.png",
+        "textImage": "assets/books/book10/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book10/012-1.png",
+        "textImage": "assets/books/book10/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book10/013-1.png",
+        "textImage": "assets/books/book10/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book10/014-1.png",
+        "textImage": "assets/books/book10/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book10/015-1.png",
+        "textImage": "assets/books/book10/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book10/016-1.png",
+        "textImage": "assets/books/book10/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book10/017-1.png",
+        "textImage": "assets/books/book10/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book10/018-1.png",
+        "textImage": "assets/books/book10/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book10/019-1.png",
+        "textImage": "assets/books/book10/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book10/020-1.png",
+        "textImage": "assets/books/book10/020-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "10",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "11",
+    "title": "オードリー・ヘプバーンの物語",
+    "coverAssetPath": "assets/bookcovers/cover11.png",
+    "summary": "飢えを経験した少女が『ローマの休日』で世界を魅了し、親善大使としても尽力。スクリーンの外でも変わらぬ優しさを注ぎ、いまなお人々の心を温かく照らす、オードリー・ヘプバーンの真実の物語。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book11/001-1.png",
+        "textImage": "assets/books/book11/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book11/002-1.png",
+        "textImage": "assets/books/book11/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book11/003-1.png",
+        "textImage": "assets/books/book11/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book11/004-1.png",
+        "textImage": "assets/books/book11/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book11/005-1.png",
+        "textImage": "assets/books/book11/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book11/006-1.png",
+        "textImage": "assets/books/book11/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book11/007-1.png",
+        "textImage": "assets/books/book11/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book11/008-1.png",
+        "textImage": "assets/books/book11/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book11/009-1.png",
+        "textImage": "assets/books/book11/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book11/010-1.png",
+        "textImage": "assets/books/book11/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book11/011-1.png",
+        "textImage": "assets/books/book11/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book11/012-1.png",
+        "textImage": "assets/books/book11/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book11/013-1.png",
+        "textImage": "assets/books/book11/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book11/014-1.png",
+        "textImage": "assets/books/book11/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book11/015-1.png",
+        "textImage": "assets/books/book11/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book11/016-1.png",
+        "textImage": "assets/books/book11/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book11/017-1.png",
+        "textImage": "assets/books/book11/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book11/018-1.png",
+        "textImage": "assets/books/book11/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book11/019-1.png",
+        "textImage": "assets/books/book11/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book11/020-1.png",
+        "textImage": "assets/books/book11/020-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "11",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "12",
+    "title": "大人のためのやさしい哲学入門",
+    "coverAssetPath": "assets/bookcovers/cover12.png",
+    "summary": "森のウサギ・ソフィーと仲間たちが、「なぜ？」を抱きながら自己や時間、愛や死などの問いに触れ合う。大人になっても忘れかけた好奇心を呼び覚まし、日常を少しだけ深く味わうための、やさしく不思議な哲学の旅。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book12/001-1.png",
+        "textImage": "assets/books/book12/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book12/002-1.png",
+        "textImage": "assets/books/book12/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book12/003-1.png",
+        "textImage": "assets/books/book12/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book12/004-1.png",
+        "textImage": "assets/books/book12/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book12/005-1.png",
+        "textImage": "assets/books/book12/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book12/006-1.png",
+        "textImage": "assets/books/book12/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book12/007-1.png",
+        "textImage": "assets/books/book12/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book12/008-1.png",
+        "textImage": "assets/books/book12/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book12/009-1.png",
+        "textImage": "assets/books/book12/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book12/010-1.png",
+        "textImage": "assets/books/book12/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book12/011-1.png",
+        "textImage": "assets/books/book12/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book12/012-1.png",
+        "textImage": "assets/books/book12/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book12/013-1.png",
+        "textImage": "assets/books/book12/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book12/014-1.png",
+        "textImage": "assets/books/book12/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book12/015-1.png",
+        "textImage": "assets/books/book12/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book12/016-1.png",
+        "textImage": "assets/books/book12/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book12/017-1.png",
+        "textImage": "assets/books/book12/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book12/018-1.png",
+        "textImage": "assets/books/book12/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book12/019-1.png",
+        "textImage": "assets/books/book12/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book12/020-1.png",
+        "textImage": "assets/books/book12/020-2.png"
+      },
+      {
+        "pageId": "021",
+        "baseImage": "assets/books/book12/021-1.png",
+        "textImage": "assets/books/book12/021-2.png"
+      },
+      {
+        "pageId": "022",
+        "baseImage": "assets/books/book12/022-1.png",
+        "textImage": "assets/books/book12/022-2.png"
+      },
+      {
+        "pageId": "023",
+        "baseImage": "assets/books/book12/023-1.png",
+        "textImage": "assets/books/book12/023-2.png"
+      },
+      {
+        "pageId": "024",
+        "baseImage": "assets/books/book12/024-1.png",
+        "textImage": "assets/books/book12/024-2.png"
+      },
+      {
+        "pageId": "025",
+        "baseImage": "assets/books/book12/025-1.png",
+        "textImage": "assets/books/book12/025-2.png"
+      },
+      {
+        "pageId": "026",
+        "baseImage": "assets/books/book12/026-1.png",
+        "textImage": "assets/books/book12/026-2.png"
+      },
+      {
+        "pageId": "027",
+        "baseImage": "assets/books/book12/027-1.png",
+        "textImage": "assets/books/book12/027-2.png"
+      },
+      {
+        "pageId": "028",
+        "baseImage": "assets/books/book12/028-1.png",
+        "textImage": "assets/books/book12/028-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "12",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 7
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 8,
+          "endPage": 14
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 15,
+          "endPage": 21
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 22,
+          "endPage": 28
+        }
+      ]
+    }
+  },
+  {
+    "id": "13",
+    "title": "夕凪のフィロソフィア",
+    "coverAssetPath": "assets/bookcovers/cover13.png",
+    "summary": "夕暮れどきだけ開く海辺のカフェ「フィロソフィア」。悩む人々がマスターとの対話を通じ、自らの思いを見つめ直し、わずかな夕凪の時間に深い気づきを得る――そんなひとときが紡ぐ、静かであたたかな物語。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book13/001-1.png",
+        "textImage": "assets/books/book13/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book13/002-1.png",
+        "textImage": "assets/books/book13/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book13/003-1.png",
+        "textImage": "assets/books/book13/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book13/004-1.png",
+        "textImage": "assets/books/book13/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book13/005-1.png",
+        "textImage": "assets/books/book13/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book13/006-1.png",
+        "textImage": "assets/books/book13/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book13/007-1.png",
+        "textImage": "assets/books/book13/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book13/008-1.png",
+        "textImage": "assets/books/book13/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book13/009-1.png",
+        "textImage": "assets/books/book13/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book13/010-1.png",
+        "textImage": "assets/books/book13/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book13/011-1.png",
+        "textImage": "assets/books/book13/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book13/012-1.png",
+        "textImage": "assets/books/book13/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book13/013-1.png",
+        "textImage": "assets/books/book13/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book13/014-1.png",
+        "textImage": "assets/books/book13/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book13/015-1.png",
+        "textImage": "assets/books/book13/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book13/016-1.png",
+        "textImage": "assets/books/book13/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book13/017-1.png",
+        "textImage": "assets/books/book13/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book13/018-1.png",
+        "textImage": "assets/books/book13/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book13/019-1.png",
+        "textImage": "assets/books/book13/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book13/020-1.png",
+        "textImage": "assets/books/book13/020-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "13",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "14",
+    "title": "ダイアナ妃の物語",
+    "coverAssetPath": "assets/bookcovers/cover14.png",
+    "summary": "「王室のバラ」と呼ばれたダイアナ妃は、華やかな結婚と王室生活の裏に孤独を抱えつつも慈善活動に奔走し、民衆の愛とメディアの過剰な注目に翻弄されながら、36歳の若さでその生涯を閉じた。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book14/001-1.png",
+        "textImage": "assets/books/book14/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book14/002-1.png",
+        "textImage": "assets/books/book14/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book14/003-1.png",
+        "textImage": "assets/books/book14/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book14/004-1.png",
+        "textImage": "assets/books/book14/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book14/005-1.png",
+        "textImage": "assets/books/book14/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book14/006-1.png",
+        "textImage": "assets/books/book14/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book14/007-1.png",
+        "textImage": "assets/books/book14/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book14/008-1.png",
+        "textImage": "assets/books/book14/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book14/009-1.png",
+        "textImage": "assets/books/book14/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book14/010-1.png",
+        "textImage": "assets/books/book14/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book14/011-1.png",
+        "textImage": "assets/books/book14/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book14/012-1.png",
+        "textImage": "assets/books/book14/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book14/013-1.png",
+        "textImage": "assets/books/book14/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book14/014-1.png",
+        "textImage": "assets/books/book14/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book14/015-1.png",
+        "textImage": "assets/books/book14/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book14/016-1.png",
+        "textImage": "assets/books/book14/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book14/017-1.png",
+        "textImage": "assets/books/book14/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book14/018-1.png",
+        "textImage": "assets/books/book14/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book14/019-1.png",
+        "textImage": "assets/books/book14/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book14/020-1.png",
+        "textImage": "assets/books/book14/020-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "14",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "15",
+    "title": "大人のための“もしも”童話再解釈 ヘンゼルとグレーテル",
+    "coverAssetPath": "assets/bookcovers/cover15.png",
+    "summary": "貧しさの果てに森へ追いやられたヘンゼルとグレーテル。お菓子の家で出会う老女の笑顔は、果たして救いか罠か。か弱い兄妹が見つける残酷な真実は、弱き者同士が傷つけ合うこの世界にも通じるのかもしれない。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book15/001-1.png",
+        "textImage": "assets/books/book15/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book15/002-1.png",
+        "textImage": "assets/books/book15/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book15/003-1.png",
+        "textImage": "assets/books/book15/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book15/004-1.png",
+        "textImage": "assets/books/book15/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book15/005-1.png",
+        "textImage": "assets/books/book15/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book15/006-1.png",
+        "textImage": "assets/books/book15/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book15/007-1.png",
+        "textImage": "assets/books/book15/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book15/008-1.png",
+        "textImage": "assets/books/book15/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book15/009-1.png",
+        "textImage": "assets/books/book15/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book15/010-1.png",
+        "textImage": "assets/books/book15/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book15/011-1.png",
+        "textImage": "assets/books/book15/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book15/012-1.png",
+        "textImage": "assets/books/book15/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book15/013-1.png",
+        "textImage": "assets/books/book15/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book15/014-1.png",
+        "textImage": "assets/books/book15/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book15/015-1.png",
+        "textImage": "assets/books/book15/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book15/016-1.png",
+        "textImage": "assets/books/book15/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book15/017-1.png",
+        "textImage": "assets/books/book15/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book15/018-1.png",
+        "textImage": "assets/books/book15/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book15/019-1.png",
+        "textImage": "assets/books/book15/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book15/020-1.png",
+        "textImage": "assets/books/book15/020-2.png"
+      },
+      {
+        "pageId": "021",
+        "baseImage": "assets/books/book15/021-1.png",
+        "textImage": "assets/books/book15/021-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "15",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/ヘンゼル2.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/ヘンゼル森.mp3",
+          "startPage": 6,
+          "endPage": 14
+        },
+        {
+          "assetPath": "assets/audio/ヘンゼル不穏.mp3",
+          "startPage": 15,
+          "endPage": 18
+        },
+        {
+          "assetPath": "assets/audio/ヘンゼルエンディング.mp3",
+          "startPage": 19,
+          "endPage": 21
+        }
+      ]
+    }
+  },
+  {
+    "id": "16",
+    "title": "月を食べたドラゴン",
+    "coverAssetPath": "assets/bookcovers/cover16.png",
+    "summary": "夜空に現れるドラゴンが月をかじり、溜め込んだ怒りや悲しみを不思議に浄化する。誰もが抱える苦しみに疲れたソラが、その光景に導かれ、閉ざされた心の鎖を解き放つ、不思議な夜。夢か現か―新しい朝へ向かう物語。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book16/001-1.png",
+        "textImage": "assets/books/book16/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book16/002-1.png",
+        "textImage": "assets/books/book16/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book16/003-1.png",
+        "textImage": "assets/books/book16/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book16/004-1.png",
+        "textImage": "assets/books/book16/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book16/005-1.png",
+        "textImage": "assets/books/book16/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book16/006-1.png",
+        "textImage": "assets/books/book16/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book16/007-1.png",
+        "textImage": "assets/books/book16/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book16/008-1.png",
+        "textImage": "assets/books/book16/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book16/009-1.png",
+        "textImage": "assets/books/book16/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book16/010-1.png",
+        "textImage": "assets/books/book16/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book16/011-1.png",
+        "textImage": "assets/books/book16/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book16/012-1.png",
+        "textImage": "assets/books/book16/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book16/013-1.png",
+        "textImage": "assets/books/book16/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book16/014-1.png",
+        "textImage": "assets/books/book16/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book16/015-1.png",
+        "textImage": "assets/books/book16/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book16/016-1.png",
+        "textImage": "assets/books/book16/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book16/017-1.png",
+        "textImage": "assets/books/book16/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book16/018-1.png",
+        "textImage": "assets/books/book16/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book16/019-1.png",
+        "textImage": "assets/books/book16/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book16/020-1.png",
+        "textImage": "assets/books/book16/020-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "16",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "17",
+    "title": "仕事を辞めた魔女の物語",
+    "coverAssetPath": "assets/bookcovers/cover17.png",
+    "summary": "夜空を飛び星と語り合っていた魔女アレッタは、効率重視の仕事に追われ魔法を忘れる。とうとう限界を迎え会社を辞め、ホウキにまたがり再び夜空へ舞い立つことで、もう一度あの日の自由と輝きを見事に取り戻す物語。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book17/001-1.png",
+        "textImage": "assets/books/book17/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book17/002-1.png",
+        "textImage": "assets/books/book17/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book17/003-1.png",
+        "textImage": "assets/books/book17/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book17/004-1.png",
+        "textImage": "assets/books/book17/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book17/005-1.png",
+        "textImage": "assets/books/book17/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book17/006-1.png",
+        "textImage": "assets/books/book17/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book17/007-1.png",
+        "textImage": "assets/books/book17/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book17/008-1.png",
+        "textImage": "assets/books/book17/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book17/009-1.png",
+        "textImage": "assets/books/book17/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book17/010-1.png",
+        "textImage": "assets/books/book17/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book17/011-1.png",
+        "textImage": "assets/books/book17/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book17/012-1.png",
+        "textImage": "assets/books/book17/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book17/013-1.png",
+        "textImage": "assets/books/book17/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book17/014-1.png",
+        "textImage": "assets/books/book17/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book17/015-1.png",
+        "textImage": "assets/books/book17/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book17/016-1.png",
+        "textImage": "assets/books/book17/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book17/017-1.png",
+        "textImage": "assets/books/book17/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book17/018-1.png",
+        "textImage": "assets/books/book17/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book17/019-1.png",
+        "textImage": "assets/books/book17/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book17/020-1.png",
+        "textImage": "assets/books/book17/020-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "17",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "18",
+    "title": "ダイアナ妃の物語",
+    "coverAssetPath": "assets/bookcovers/cover18.png",
+    "summary": "「王室のバラ」と呼ばれたダイアナ妃は、華やかな結婚と王室生活の裏に孤独を抱えつつも慈善活動に奔走し、民衆の愛とメディアの過剰な注目に翻弄されながら、36歳の若さでその生涯を閉じた。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book18/001-1.png",
+        "textImage": "assets/books/book18/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book18/002-1.png",
+        "textImage": "assets/books/book18/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book18/003-1.png",
+        "textImage": "assets/books/book18/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book18/004-1.png",
+        "textImage": "assets/books/book18/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book18/005-1.png",
+        "textImage": "assets/books/book18/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book18/006-1.png",
+        "textImage": "assets/books/book18/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book18/007-1.png",
+        "textImage": "assets/books/book18/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book18/008-1.png",
+        "textImage": "assets/books/book18/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book18/009-1.png",
+        "textImage": "assets/books/book18/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book18/010-1.png",
+        "textImage": "assets/books/book18/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book18/011-1.png",
+        "textImage": "assets/books/book18/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book18/012-1.png",
+        "textImage": "assets/books/book18/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book18/013-1.png",
+        "textImage": "assets/books/book18/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book18/014-1.png",
+        "textImage": "assets/books/book18/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book18/015-1.png",
+        "textImage": "assets/books/book18/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book18/016-1.png",
+        "textImage": "assets/books/book18/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book18/017-1.png",
+        "textImage": "assets/books/book18/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book18/018-1.png",
+        "textImage": "assets/books/book18/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book18/019-1.png",
+        "textImage": "assets/books/book18/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book18/020-1.png",
+        "textImage": "assets/books/book18/020-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "18",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  }
 
 
-  ]
+]
