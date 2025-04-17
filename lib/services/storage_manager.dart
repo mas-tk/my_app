@@ -47,9 +47,9 @@ class StorageManager {
       // カテゴリを保存
       await saveCategories(categories);
 
-      // プリインストール対象の本IDリスト（最初の15冊）
+      // プリインストール対象の本IDリスト（最初の40冊）
       final List<String> preinstalledIds = [];
-      for (var i = 0; i < books.length && i < 15; i++) {
+      for (var i = 0; i < books.length && i < 40; i++) {
         preinstalledIds.add(books[i].id);
       }
 
