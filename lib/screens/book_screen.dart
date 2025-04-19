@@ -52,6 +52,9 @@ class _BookScreenState extends State<BookScreen>
   // 音楽プレーヤー
   final AudioPlayer _audioPlayer = AudioPlayer();
 
+  // ページめくり音用のプレーヤー
+  final AudioPlayer _soundPlayer = AudioPlayer();
+
   // 状態管理
   bool _showMenu = false;
   double _volume = 0.5;
@@ -115,6 +118,9 @@ class _BookScreenState extends State<BookScreen>
 
     // 初期化を非同期で安全に行う
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // サウンドプレーヤーを先に初期化
+      await _setupPlayer();
+
       // 自動表示設定を読み込む
       await _loadAutoTextSettings();
 
@@ -127,9 +133,6 @@ class _BookScreenState extends State<BookScreen>
       // 画面表示後、バックグラウンドでリソース初期化を続行
       if (mounted) {
         Future.microtask(() async {
-          // BGMプレーヤーを初期設定
-          await _setupPlayer();
-
           // ユーザーのお気に入り状態を取得
           await _loadUserPreferences();
 
@@ -177,6 +180,7 @@ class _BookScreenState extends State<BookScreen>
     }
 
     _audioPlayer.dispose();
+    _soundPlayer.dispose(); // ページめくり音プレーヤーの解放
     _autoTextTimer?.cancel();
 
     // コールバックが設定されていれば、次のフレームで呼び出す
@@ -188,6 +192,19 @@ class _BookScreenState extends State<BookScreen>
     }
 
     super.dispose();
+  }
+
+  // ページめくり音を再生するメソッド（修正版）
+  Future<void> _playPageFlipSound() async {
+    if (!_soundEnabled) return;
+
+    try {
+      await _soundPlayer.stop();
+      await _soundPlayer.setSourceAsset('audio/page_flip.mp3');
+      await _soundPlayer.resume();
+    } catch (e) {
+      debugPrint('ページめくり音の再生再試行エラー: $e');
+    }
   }
 
   // 自動表示設定の保存
@@ -459,18 +476,68 @@ class _BookScreenState extends State<BookScreen>
             stayAwake: true,
             contentType: AndroidContentType.music,
             usageType: AndroidUsageType.media,
+            // gainは通常の取得、他のプレーヤーは停止しない
             audioFocus: AndroidAudioFocus.gain,
           ),
           iOS: AudioContextIOS(
+            // playbackはiOSで複数音源の同時再生をサポート
             category: AVAudioSessionCategory.playback,
             options: {AVAudioSessionOptions.mixWithOthers},
           ),
         ),
       );
 
+      // サウンドエフェクト用プレーヤーの設定
+      await _soundPlayer.setPlayerMode(PlayerMode.lowLatency); // 低遅延モード
+      await _soundPlayer.setReleaseMode(ReleaseMode.stop);
+
+      // サウンドエフェクト用に別のオーディオコンテキストを設定
+      await _soundPlayer.setAudioContext(
+        AudioContext(
+          android: const AudioContextAndroid(
+            isSpeakerphoneOn: false,
+            contentType: AndroidContentType.sonification, // 通知音用
+            usageType: AndroidUsageType.game, // ゲーム効果音
+            audioFocus: AndroidAudioFocus.none, // オーディオフォーカスを要求しない
+          ),
+          iOS: AudioContextIOS(
+            // playbackカテゴリはiOSでの複数音源を許可
+            category: AVAudioSessionCategory.playback,
+            options: {AVAudioSessionOptions.mixWithOthers},
+          ),
+        ),
+      );
+
+      // 効果音を先にプリロード（重要）
+      await _soundPlayer.setSourceAsset('audio/page_flip.mp3');
+      debugPrint('効果音をプリロードしました: audio/page_flip.mp3');
+
       debugPrint('初期化: オーディオプレーヤーのセットアップ完了');
     } catch (e) {
       debugPrint('エラー: オーディオプレーヤーのセットアップ失敗: $e');
+      // エラー発生時、最小限の設定だけを試行
+      try {
+        await _audioPlayer.setPlayerMode(PlayerMode.mediaPlayer);
+        await _soundPlayer.setPlayerMode(PlayerMode.lowLatency);
+        // iOS環境でのフォールバック設定
+        if (Platform.isIOS) {
+          await _audioPlayer.setAudioContext(
+            AudioContext(
+              iOS: AudioContextIOS(category: AVAudioSessionCategory.playback),
+            ),
+          );
+          await _soundPlayer.setAudioContext(
+            AudioContext(
+              iOS: AudioContextIOS(category: AVAudioSessionCategory.playback),
+            ),
+          );
+        }
+        // ここでも効果音のプリロードを実行
+        await _soundPlayer.setSourceAsset('audio/page_flip.mp3');
+        debugPrint('フォールバック設定で効果音をプリロードしました');
+      } catch (fallbackError) {
+        debugPrint('フォールバック設定も失敗: $fallbackError');
+      }
     }
   }
 
@@ -513,7 +580,7 @@ class _BookScreenState extends State<BookScreen>
           throw Exception('Unsupported audio source type');
         }
 
-        // 自動再生
+        // 自動再生（フェードインで開始）
         if (_soundEnabled) {
           await Future.delayed(const Duration(milliseconds: 300));
           await _playBackgroundMusic();
@@ -670,19 +737,25 @@ class _BookScreenState extends State<BookScreen>
         _bgmPlaying = true;
       });
 
-      // フェードイン
-      await _fadeInAudio(const Duration(milliseconds: 1000));
+      // フェードイン（より短く）
+      for (int i = 1; i <= 10; i++) {
+        if (!mounted) break;
+        final step = i / 10;
+        await _audioPlayer.setVolume(savedVolume * step);
+        await Future.delayed(const Duration(milliseconds: 50)); // より短いステップ
+      }
 
+      // 最終音量を設定
+      await _audioPlayer.setVolume(savedVolume);
       debugPrint('BGM再生開始');
     } catch (e) {
       debugPrint('BGM再生エラー: $e');
 
-      // 再試行
+      // より単純なフォールバック
       try {
-        await Future.delayed(const Duration(milliseconds: 500));
-        debugPrint('BGM再生再試行');
+        await Future.delayed(const Duration(milliseconds: 200));
         await _audioPlayer.resume();
-        await _audioPlayer.setVolume(_volume); // エラー時は直接設定
+        await _audioPlayer.setVolume(_volume);
         setState(() {
           _bgmPlaying = true;
         });
@@ -811,15 +884,21 @@ class _BookScreenState extends State<BookScreen>
         _turnDirection = TurnDirection.leftToRight;
       });
 
+      // 非同期で効果音を再生（awaitなし）
+      _playPageFlipSound(); // awaitなし
+      _generateHapticFeedback(); // バイブレーションもawaitなし
+
       // アニメーションを開始
       _animationController.reset();
       _animationController.forward().then((_) {
-        setState(() {
-          _currentPage = _targetPage;
-          _isPageTurning = false;
-          _pageController = PageController(initialPage: _currentPage);
-        });
-        _handlePageChanged(_currentPage);
+        if (mounted) {
+          setState(() {
+            _currentPage = _targetPage;
+            _isPageTurning = false;
+            _pageController = PageController(initialPage: _currentPage);
+          });
+          _handlePageChanged(_currentPage);
+        }
       });
     }
   }
@@ -832,21 +911,27 @@ class _BookScreenState extends State<BookScreen>
       // ページめくり時のバイブレーション
       await _generateHapticFeedback();
 
+      // ※※※ 重要：同期をなくし、先に状態更新 ※※※
       setState(() {
         _isPageTurning = true;
         _targetPage = _currentPage + 1;
         _turnDirection = TurnDirection.rightToLeft;
       });
 
+      // ページめくり音を非同期で再生（awaitしない）
+      _playPageFlipSound(); // awaitなし
+
       // アニメーションを開始
       _animationController.reset();
       _animationController.forward().then((_) {
-        setState(() {
-          _currentPage = _targetPage;
-          _isPageTurning = false;
-          _pageController = PageController(initialPage: _currentPage);
-        });
-        _handlePageChanged(_currentPage);
+        if (mounted) {
+          setState(() {
+            _currentPage = _targetPage;
+            _isPageTurning = false;
+            _pageController = PageController(initialPage: _currentPage);
+          });
+          _handlePageChanged(_currentPage);
+        }
       });
     }
   }
@@ -860,15 +945,20 @@ class _BookScreenState extends State<BookScreen>
         _turnDirection = TurnDirection.leftToRight;
       });
 
+      // 非同期で効果音を再生（awaitなし）
+      _playPageFlipSound(); // awaitなし
+
       // アニメーションを開始
       _animationController.reset();
       _animationController.forward().then((_) {
-        setState(() {
-          _currentPage = 0;
-          _isPageTurning = false;
-          _pageController = PageController(initialPage: 0);
-        });
-        _handlePageChanged(0);
+        if (mounted) {
+          setState(() {
+            _currentPage = 0;
+            _isPageTurning = false;
+            _pageController = PageController(initialPage: 0);
+          });
+          _handlePageChanged(0);
+        }
       });
     }
   }
