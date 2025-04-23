@@ -1502,7 +1502,7 @@
   },
   {
     "id": "11",
-    "title": "オードリー・ヘプバーンの物語",
+    "title": "オードリー・ヘプバーンの物語_※通常版_11",
     "coverAssetPath": "assets/bookcovers/cover11.png",
     "summary": "飢えを経験した少女が『ローマの休日』で世界を魅了し、親善大使としても尽力。スクリーンの外でも変わらぬ優しさを注ぎ、いまなお人々の心を温かく照らす、オードリー・ヘプバーンの真実の物語。",
     "views": 98765,
@@ -2625,6 +2625,558 @@
     ],
     "audio": {
       "bookId": "18",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "19",
+    "title": "眠れぬ夜のふうせん船",
+    "coverAssetPath": "assets/bookcovers/cover19.png",
+    "summary": "眠れぬ夜、空に浮かぶ風船の船が街の窓辺を巡り、不安や悩みで眠れない心をそっと包む。小さな勇気を抱きしめながら、自分へのいたわりを見つけ、やさしい眠りへ導いてくれる、不思議でやさしい一夜の物語。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book19/001-1.png",
+        "textImage": "assets/books/book19/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book19/002-1.png",
+        "textImage": "assets/books/book19/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book19/003-1.png",
+        "textImage": "assets/books/book19/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book19/004-1.png",
+        "textImage": "assets/books/book19/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book19/005-1.png",
+        "textImage": "assets/books/book19/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book19/006-1.png",
+        "textImage": "assets/books/book19/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book19/007-1.png",
+        "textImage": "assets/books/book19/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book19/008-1.png",
+        "textImage": "assets/books/book19/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book19/009-1.png",
+        "textImage": "assets/books/book19/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book19/010-1.png",
+        "textImage": "assets/books/book19/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book19/011-1.png",
+        "textImage": "assets/books/book19/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book19/012-1.png",
+        "textImage": "assets/books/book19/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book19/013-1.png",
+        "textImage": "assets/books/book19/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book19/014-1.png",
+        "textImage": "assets/books/book19/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book19/015-1.png",
+        "textImage": "assets/books/book19/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book19/016-1.png",
+        "textImage": "assets/books/book19/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book19/017-1.png",
+        "textImage": "assets/books/book19/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book19/018-1.png",
+        "textImage": "assets/books/book19/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book19/019-1.png",
+        "textImage": "assets/books/book19/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book19/020-1.png",
+        "textImage": "assets/books/book19/020-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "19",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "20",
+    "title": "オードリー・ヘプバーンの物語_※圧縮版_20",
+    "coverAssetPath": "assets/bookcovers/cover20.png",
+    "summary": "飢えを経験した少女が『ローマの休日』で世界を魅了し、親善大使としても尽力。スクリーンの外でも変わらぬ優しさを注ぎ、いまなお人々の心を温かく照らす、オードリー・ヘプバーンの真実の物語。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book20/001-1.png",
+        "textImage": "assets/books/book20/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book20/002-1.png",
+        "textImage": "assets/books/book20/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book20/003-1.png",
+        "textImage": "assets/books/book20/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book20/004-1.png",
+        "textImage": "assets/books/book20/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book20/005-1.png",
+        "textImage": "assets/books/book20/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book20/006-1.png",
+        "textImage": "assets/books/book20/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book20/007-1.png",
+        "textImage": "assets/books/book20/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book20/008-1.png",
+        "textImage": "assets/books/book20/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book20/009-1.png",
+        "textImage": "assets/books/book20/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book20/010-1.png",
+        "textImage": "assets/books/book20/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book20/011-1.png",
+        "textImage": "assets/books/book20/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book20/012-1.png",
+        "textImage": "assets/books/book20/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book20/013-1.png",
+        "textImage": "assets/books/book20/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book20/014-1.png",
+        "textImage": "assets/books/book20/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book20/015-1.png",
+        "textImage": "assets/books/book20/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book20/016-1.png",
+        "textImage": "assets/books/book20/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book20/017-1.png",
+        "textImage": "assets/books/book20/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book20/018-1.png",
+        "textImage": "assets/books/book20/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book20/019-1.png",
+        "textImage": "assets/books/book20/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book20/020-1.png",
+        "textImage": "assets/books/book20/020-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "20",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "21",
+    "title": "オードリー・ヘプバーンの物語_※webp圧縮版_21",
+    "coverAssetPath": "assets/bookcovers/cover21.webp",
+    "summary": "飢えを経験した少女が『ローマの休日』で世界を魅了し、親善大使としても尽力。スクリーンの外でも変わらぬ優しさを注ぎ、いまなお人々の心を温かく照らす、オードリー・ヘプバーンの真実の物語。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book21/001-1.webp",
+        "textImage": "assets/books/book21/001-2.webp"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book21/002-1.webp",
+        "textImage": "assets/books/book21/002-2.webp"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book21/003-1.webp",
+        "textImage": "assets/books/book21/003-2.webp"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book21/004-1.webp",
+        "textImage": "assets/books/book21/004-2.webp"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book21/005-1.webp",
+        "textImage": "assets/books/book21/005-2.webp"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book21/006-1.webp",
+        "textImage": "assets/books/book21/006-2.webp"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book21/007-1.webp",
+        "textImage": "assets/books/book21/007-2.webp"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book21/008-1.webp",
+        "textImage": "assets/books/book21/008-2.webp"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book21/009-1.webp",
+        "textImage": "assets/books/book21/009-2.webp"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book21/010-1.webp",
+        "textImage": "assets/books/book21/010-2.webp"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book21/011-1.webp",
+        "textImage": "assets/books/book21/011-2.webp"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book21/012-1.webp",
+        "textImage": "assets/books/book21/012-2.webp"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book21/013-1.webp",
+        "textImage": "assets/books/book21/013-2.webp"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book21/014-1.webp",
+        "textImage": "assets/books/book21/014-2.webp"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book21/015-1.webp",
+        "textImage": "assets/books/book21/015-2.webp"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book21/016-1.webp",
+        "textImage": "assets/books/book21/016-2.webp"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book21/017-1.webp",
+        "textImage": "assets/books/book21/017-2.webp"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book21/018-1.webp",
+        "textImage": "assets/books/book21/018-2.webp"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book21/019-1.webp",
+        "textImage": "assets/books/book21/019-2.webp"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book21/020-1.webp",
+        "textImage": "assets/books/book21/020-2.webp"
+      }
+    ],
+    "audio": {
+      "bookId": "21",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "22",
+    "title": "オードリー・ヘプバーンの物語_※webpリサイズ50％圧縮版_22",
+    "coverAssetPath": "assets/bookcovers/cover22.webp",
+    "summary": "飢えを経験した少女が『ローマの休日』で世界を魅了し、親善大使としても尽力。スクリーンの外でも変わらぬ優しさを注ぎ、いまなお人々の心を温かく照らす、オードリー・ヘプバーンの真実の物語。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book22/001-1.webp",
+        "textImage": "assets/books/book22/001-2.webp"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book22/002-1.webp",
+        "textImage": "assets/books/book22/002-2.webp"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book22/003-1.webp",
+        "textImage": "assets/books/book22/003-2.webp"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book22/004-1.webp",
+        "textImage": "assets/books/book22/004-2.webp"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book22/005-1.webp",
+        "textImage": "assets/books/book22/005-2.webp"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book22/006-1.webp",
+        "textImage": "assets/books/book22/006-2.webp"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book22/007-1.webp",
+        "textImage": "assets/books/book22/007-2.webp"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book22/008-1.webp",
+        "textImage": "assets/books/book22/008-2.webp"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book22/009-1.webp",
+        "textImage": "assets/books/book22/009-2.webp"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book22/010-1.webp",
+        "textImage": "assets/books/book22/010-2.webp"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book22/011-1.webp",
+        "textImage": "assets/books/book22/011-2.webp"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book22/012-1.webp",
+        "textImage": "assets/books/book22/012-2.webp"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book22/013-1.webp",
+        "textImage": "assets/books/book22/013-2.webp"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book22/014-1.webp",
+        "textImage": "assets/books/book22/014-2.webp"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book22/015-1.webp",
+        "textImage": "assets/books/book22/015-2.webp"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book22/016-1.webp",
+        "textImage": "assets/books/book22/016-2.webp"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book22/017-1.webp",
+        "textImage": "assets/books/book22/017-2.webp"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book22/018-1.webp",
+        "textImage": "assets/books/book22/018-2.webp"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book22/019-1.webp",
+        "textImage": "assets/books/book22/019-2.webp"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book22/020-1.webp",
+        "textImage": "assets/books/book22/020-2.webp"
+      }
+    ],
+    "audio": {
+      "bookId": "22",
       "tracks": [
         {
           "assetPath": "assets/audio/book3_part1.mp3",

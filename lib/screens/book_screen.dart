@@ -1421,10 +1421,10 @@ class _BookScreenState extends State<BookScreen>
                       );
                     },
                   ),
-                  // 文字表示速度調整ボタン
+                  // 自動表示速度調整ボタン
                   _buildControlButton(
                     icon: Icons.text_fields,
-                    label: '文字表示速度',
+                    label: '自動表示速度',
                     onPressed: () {
                       showModalBottomSheet(
                         context: context,
@@ -1453,7 +1453,7 @@ class _BookScreenState extends State<BookScreen>
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         const Text(
-                                          '文字表示速度',
+                                          '自動表示速度',
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 18,
@@ -1500,7 +1500,7 @@ class _BookScreenState extends State<BookScreen>
                                           horizontal: 16.0,
                                         ),
                                         child: Text(
-                                          '表示までの時間',
+                                          '自動表示までの時間',
                                           style: TextStyle(
                                             color: Colors.white70,
                                           ),
