@@ -26,7 +26,12 @@ class GachaType {
     Map<String, int> probMap = {};
     if (json['probabilities'] != null) {
       json['probabilities'].forEach((key, value) {
-        probMap[key] = value as int;
+        // doubleの場合はintに変換
+        if (value is double) {
+          probMap[key] = value.toInt();
+        } else {
+          probMap[key] = value as int;
+        }
       });
     }
 
@@ -34,7 +39,11 @@ class GachaType {
       id: json['id'] ?? '',
       name: json['name'] ?? '',
       description: json['description'] ?? '',
-      cost: json['cost'] ?? 0,
+      // costがdoubleの場合はintに変換
+      cost:
+          json['cost'] is double
+              ? (json['cost'] as double).toInt()
+              : (json['cost'] ?? 0),
       imagePath: json['imagePath'] ?? '',
       availableObjects:
           (json['availableObjects'] as List?)
