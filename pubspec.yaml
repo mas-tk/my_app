@@ -24,6 +24,11 @@ dependencies:
   lottie: ^2.6.0  # For Lottie animations
   cached_network_image: ^3.3.0  # For better image loading and caching
 
+  # amplify 
+  amplify_flutter: ^2.0.0
+  amplify_auth_cognito: ^2.0.0
+  amplify_authenticator: ^2.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
