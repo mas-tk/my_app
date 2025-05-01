@@ -2,7 +2,7 @@ name: my_app
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.0.0+19
+version: 1.0.0+20
 
 environment:
   sdk: ^3.7.2
@@ -105,6 +105,8 @@ flutter:
     - assets/books/book20/
     - assets/books/book21/
     - assets/books/book22/
+    - assets/books/book23/
+    - assets/books/book24/
 
     # 音声ファイル
     - assets/audio/
