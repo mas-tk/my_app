@@ -3200,6 +3200,149 @@
         }
       ]
     }
+  },
+  {
+    "id": "23",
+    "title": "フローレンス・ナイチンゲール",
+    "coverAssetPath": "assets/bookcovers/cover23.png",
+    "summary": "裕福な家庭に生まれながら看護の道を選び、戦地で衛生改革と統計分析を駆使し、近代看護を確立したナイチンゲール。『ランプの貴婦人』と呼ばれ、名誉よりも患者の救済を貫いた姿が医療の未来を照らす。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book23/001-1.png",
+        "textImage": "assets/books/book23/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book23/002-1.png",
+        "textImage": "assets/books/book23/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book23/003-1.png",
+        "textImage": "assets/books/book23/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book23/004-1.png",
+        "textImage": "assets/books/book23/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book23/005-1.png",
+        "textImage": "assets/books/book23/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book23/006-1.png",
+        "textImage": "assets/books/book23/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book23/007-1.png",
+        "textImage": "assets/books/book23/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book23/008-1.png",
+        "textImage": "assets/books/book23/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book23/009-1.png",
+        "textImage": "assets/books/book23/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book23/010-1.png",
+        "textImage": "assets/books/book23/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book23/011-1.png",
+        "textImage": "assets/books/book23/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book23/012-1.png",
+        "textImage": "assets/books/book23/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book23/013-1.png",
+        "textImage": "assets/books/book23/013-2.png"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book23/014-1.png",
+        "textImage": "assets/books/book23/014-2.png"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book23/015-1.png",
+        "textImage": "assets/books/book23/015-2.png"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book23/016-1.png",
+        "textImage": "assets/books/book23/016-2.png"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book23/017-1.png",
+        "textImage": "assets/books/book23/017-2.png"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book23/018-1.png",
+        "textImage": "assets/books/book23/018-2.png"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book23/019-1.png",
+        "textImage": "assets/books/book23/019-2.png"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book23/020-1.png",
+        "textImage": "assets/books/book23/020-2.png"
+      },
+      {
+        "pageId": "021",
+        "baseImage": "assets/books/book23/021-1.png",
+        "textImage": "assets/books/book23/021-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "23",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 5
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 6,
+          "endPage": 10
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 11,
+          "endPage": 15
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 16,
+          "endPage": 20
+        }
+      ]
+    }
   }
 
 
