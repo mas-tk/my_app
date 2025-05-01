@@ -3343,6 +3343,109 @@
         }
       ]
     }
+  },
+  {
+    "id": "24",
+    "title": "21g",
+    "coverAssetPath": "assets/bookcovers/cover24.png",
+    "summary": "裕福な家庭に生まれながら看護の道を選び、戦地で衛生改革と統計分析を駆使し、近代看護を確立したナイチンゲール。『ランプの貴婦人』と呼ばれ、名誉よりも患者の救済を貫いた姿が医療の未来を照らす。",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book24/001-1.png",
+        "textImage": "assets/books/book24/001-2.png"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book24/002-1.png",
+        "textImage": "assets/books/book24/002-2.png"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book24/003-1.png",
+        "textImage": "assets/books/book24/003-2.png"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book24/004-1.png",
+        "textImage": "assets/books/book24/004-2.png"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book24/005-1.png",
+        "textImage": "assets/books/book24/005-2.png"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book24/006-1.png",
+        "textImage": "assets/books/book24/006-2.png"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book24/007-1.png",
+        "textImage": "assets/books/book24/007-2.png"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book24/008-1.png",
+        "textImage": "assets/books/book24/008-2.png"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book24/009-1.png",
+        "textImage": "assets/books/book24/009-2.png"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book24/010-1.png",
+        "textImage": "assets/books/book24/010-2.png"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book24/011-1.png",
+        "textImage": "assets/books/book24/011-2.png"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book24/012-1.png",
+        "textImage": "assets/books/book24/012-2.png"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book24/013-1.png",
+        "textImage": "assets/books/book24/013-2.png"
+      }
+    ],
+    "audio": {
+      "bookId": "23",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/book3_part1.mp3",
+          "startPage": 1,
+          "endPage": 3
+        },
+        {
+          "assetPath": "assets/audio/book3_part2.mp3",
+          "startPage": 4,
+          "endPage": 6
+        },
+        {
+          "assetPath": "assets/audio/book3_part3.mp3",
+          "startPage": 7,
+          "endPage": 9
+        },
+        {
+          "assetPath": "assets/audio/book3_part4.mp3",
+          "startPage": 10,
+          "endPage": 13
+        }
+      ]
+    }
   }
 
 
