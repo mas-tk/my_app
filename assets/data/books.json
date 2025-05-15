@@ -8,6 +8,7 @@
     "likes": 300,
     "comments": 12,
     "rating": 4.5,
+    "ratingsCount": 324,
     "genres": ["ファンタジー", "思い出", "約束"],
     "pages": [
       {
@@ -334,23 +335,23 @@
       "bookId": "2",
       "tracks": [
         {
-          "assetPath": "assets/audio/book2_part1.mp3",
+          "assetPath": "assets/audio/踊る影と静かな私_Page1–4.mp3",
           "startPage": 1,
-          "endPage": 5
+          "endPage": 4
         },
         {
-          "assetPath": "assets/audio/book2_part2.mp3",
-          "startPage": 6,
-          "endPage": 10
+          "assetPath": "assets/audio/踊る影と静かな私_Page5–9.mp3",
+          "startPage": 5,
+          "endPage": 9
         },
         {
-          "assetPath": "assets/audio/book2_part3.mp3",
-          "startPage": 11,
-          "endPage": 15
+          "assetPath": "assets/audio/踊る影と静かな私Page10–14.mp3",
+          "startPage": 10,
+          "endPage": 14
         },
         {
-          "assetPath": "assets/audio/book2_part4.mp3",
-          "startPage": 16,
+          "assetPath": "assets/audio/踊る影と静かな私_Page15–20.mp3",
+          "startPage": 15,
           "endPage": 20
         }
       ]
@@ -472,22 +473,22 @@
       "bookId": "3",
       "tracks": [
         {
-          "assetPath": "assets/audio/book3_part1.mp3",
+          "assetPath": "assets/audio/夜行バスPage1–3.mp3",
           "startPage": 1,
-          "endPage": 5
+          "endPage": 3
         },
         {
-          "assetPath": "assets/audio/book3_part2.mp3",
-          "startPage": 6,
-          "endPage": 10
+          "assetPath": "assets/audio/夜行バスPage4–7.mp3",
+          "startPage": 4,
+          "endPage": 7
         },
         {
-          "assetPath": "assets/audio/book3_part3.mp3",
-          "startPage": 11,
+          "assetPath": "assets/audio/夜行バスPage8–15.mp3",
+          "startPage": 8,
           "endPage": 15
         },
         {
-          "assetPath": "assets/audio/book3_part4.mp3",
+          "assetPath": "assets/audio/夜行バスPage16–20.mp3",
           "startPage": 16,
           "endPage": 20
         }
@@ -610,23 +611,23 @@
       "bookId": "4",
       "tracks": [
         {
-          "assetPath": "assets/audio/book3_part1.mp3",
+          "assetPath": "assets/audio/図書館Page1–4.mp3",
           "startPage": 1,
-          "endPage": 5
+          "endPage": 4
         },
         {
-          "assetPath": "assets/audio/book3_part2.mp3",
-          "startPage": 6,
-          "endPage": 10
+          "assetPath": "assets/audio/図書館Page5–8.mp3",
+          "startPage": 5,
+          "endPage": 8
         },
         {
-          "assetPath": "assets/audio/book3_part3.mp3",
-          "startPage": 11,
-          "endPage": 15
+          "assetPath": "assets/audio/図書館Page9–14.mp3",
+          "startPage": 9,
+          "endPage": 14
         },
         {
-          "assetPath": "assets/audio/book3_part4.mp3",
-          "startPage": 16,
+          "assetPath": "assets/audio/図書館Page15–20.mp3",
+          "startPage": 15,
           "endPage": 20
         }
       ]
@@ -1162,23 +1163,23 @@
       "bookId": "8",
       "tracks": [
         {
-          "assetPath": "assets/audio/book3_part1.mp3",
+          "assetPath": "assets/audio/お腹が空いたらPage1–4.mp3",
           "startPage": 1,
-          "endPage": 5
+          "endPage": 4
         },
         {
-          "assetPath": "assets/audio/book3_part2.mp3",
-          "startPage": 6,
-          "endPage": 10
+          "assetPath": "assets/audio/お腹が空いたらPage5–9.mp3",
+          "startPage": 5,
+          "endPage": 9
         },
         {
-          "assetPath": "assets/audio/book3_part3.mp3",
-          "startPage": 11,
-          "endPage": 15
+          "assetPath": "assets/audio/お腹が空いたらPage10–14.mp3",
+          "startPage": 10,
+          "endPage": 14
         },
         {
-          "assetPath": "assets/audio/book3_part4.mp3",
-          "startPage": 16,
+          "assetPath": "assets/audio/お腹が空いたらPage15–20.mp3",
+          "startPage": 15,
           "endPage": 20
         }
       ]
@@ -1616,22 +1617,22 @@
       "bookId": "11",
       "tracks": [
         {
-          "assetPath": "assets/audio/book3_part1.mp3",
+          "assetPath": "assets/audio/オードリーPage1–4.mp3",
           "startPage": 1,
-          "endPage": 5
+          "endPage": 4
         },
         {
-          "assetPath": "assets/audio/book3_part2.mp3",
-          "startPage": 6,
-          "endPage": 10
+          "assetPath": "assets/audio/オードリーPage5–8.mp3",
+          "startPage": 5,
+          "endPage": 8
         },
         {
-          "assetPath": "assets/audio/book3_part3.mp3",
-          "startPage": 11,
+          "assetPath": "assets/audio/オードリーPage9–15.mp3",
+          "startPage": 9,
           "endPage": 15
         },
         {
-          "assetPath": "assets/audio/book3_part4.mp3",
+          "assetPath": "assets/audio/オードリーPage16–20.mp3",
           "startPage": 16,
           "endPage": 20
         }
@@ -2213,23 +2214,23 @@
       "bookId": "15",
       "tracks": [
         {
-          "assetPath": "assets/audio/ヘンゼル2.mp3",
+          "assetPath": "assets/audio/ヘンゼルPage1–4.mp3",
           "startPage": 1,
-          "endPage": 5
+          "endPage": 4
         },
         {
-          "assetPath": "assets/audio/ヘンゼル森.mp3",
-          "startPage": 6,
-          "endPage": 14
+          "assetPath": "assets/audio/ヘンゼルPage5–12.mp3",
+          "startPage": 5,
+          "endPage": 12
         },
         {
-          "assetPath": "assets/audio/ヘンゼル不穏.mp3",
-          "startPage": 15,
-          "endPage": 18
+          "assetPath": "assets/audio/ヘンゼルPage13–16.mp3",
+          "startPage": 13,
+          "endPage": 16
         },
         {
-          "assetPath": "assets/audio/ヘンゼルエンディング.mp3",
-          "startPage": 19,
+          "assetPath": "assets/audio/ヘンゼルPage17–20.mp3",
+          "startPage": 17,
           "endPage": 21
         }
       ]
@@ -2489,22 +2490,22 @@
       "bookId": "17",
       "tracks": [
         {
-          "assetPath": "assets/audio/book3_part1.mp3",
+          "assetPath": "assets/audio/仕事をやめた魔女Page1–3.mp3",
           "startPage": 1,
           "endPage": 5
         },
         {
-          "assetPath": "assets/audio/book3_part2.mp3",
+          "assetPath": "assets/audio/仕事をやめた魔女Page4–8.mp3",
           "startPage": 6,
           "endPage": 10
         },
         {
-          "assetPath": "assets/audio/book3_part3.mp3",
+          "assetPath": "assets/audio/仕事をやめた魔女Page9–14.mp3",
           "startPage": 11,
           "endPage": 15
         },
         {
-          "assetPath": "assets/audio/book3_part4.mp3",
+          "assetPath": "assets/audio/仕事をやめた魔女Page15–20.mp3",
           "startPage": 16,
           "endPage": 20
         }
@@ -3454,10 +3455,103 @@
         "pageId": "020",
         "baseImage": "assets/books/book24/020-1.png",
         "textImage": "assets/books/book24/020-2.png"
+      },
+      {
+        "pageId": "021",
+        "baseImage": "assets/books/book24/021-1.png",
+        "textImage": "assets/books/book24/021-2.png"
       }
     ],
     "audio": {
       "bookId": "24",
+      "tracks": [
+        {
+          "assetPath": "assets/audio/Blue.mp3",
+          "startPage": 1,
+          "endPage": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "25",
+    "title": "桜道",
+    "coverAssetPath": "assets/bookcovers/cover25.webp",
+    "summary": "桜道（仮）",
+    "views": 98765,
+    "likes": 420,
+    "comments": 32,
+    "rating": 4.7,
+    "genres": ["ファンタジー", "冒険", "成長"],
+    "pages": [
+      {
+        "pageId": "001",
+        "baseImage": "assets/books/book25/001-1.webp",
+        "textImage": "assets/books/book25/001-1.webp"
+      },
+      {
+        "pageId": "002",
+        "baseImage": "assets/books/book25/002-1.webp",
+        "textImage": "assets/books/book25/002-1.webp"
+      },
+      {
+        "pageId": "003",
+        "baseImage": "assets/books/book25/003-1.webp",
+        "textImage": "assets/books/book25/003-1.webp"
+      },
+      {
+        "pageId": "004",
+        "baseImage": "assets/books/book25/004-1.webp",
+        "textImage": "assets/books/book25/004-1.webp"
+      },
+      {
+        "pageId": "005",
+        "baseImage": "assets/books/book25/005-1.webp",
+        "textImage": "assets/books/book25/005-1.webp"
+      },
+      {
+        "pageId": "006",
+        "baseImage": "assets/books/book25/006-1.webp",
+        "textImage": "assets/books/book25/006-1.webp"
+      },
+      {
+        "pageId": "007",
+        "baseImage": "assets/books/book25/007-1.webp",
+        "textImage": "assets/books/book25/007-1.webp"
+      },
+      {
+        "pageId": "008",
+        "baseImage": "assets/books/book25/008-1.webp",
+        "textImage": "assets/books/book25/008-1.webp"
+      },
+      {
+        "pageId": "009",
+        "baseImage": "assets/books/book25/009-1.webp",
+        "textImage": "assets/books/book25/009-1.webp"
+      },
+      {
+        "pageId": "010",
+        "baseImage": "assets/books/book25/010-1.webp",
+        "textImage": "assets/books/book25/010-1.webp"
+      },
+      {
+        "pageId": "011",
+        "baseImage": "assets/books/book25/011-1.webp",
+        "textImage": "assets/books/book25/011-1.webp"
+      },
+      {
+        "pageId": "012",
+        "baseImage": "assets/books/book25/012-1.webp",
+        "textImage": "assets/books/book25/012-1.webp"
+      },
+      {
+        "pageId": "013",
+        "baseImage": "assets/books/book25/013-1.webp",
+        "textImage": "assets/books/book25/013-1.webp"
+      }
+    ],
+    "audio": {
+      "bookId": "25",
       "tracks": [
         {
           "assetPath": "assets/audio/book3_part1.mp3",
@@ -3483,9 +3577,9 @@
     }
   },
   {
-    "id": "25",
-    "title": "【webp】21g",
-    "coverAssetPath": "assets/bookcovers/cover25.webp",
+    "id": "26",
+    "title": "アンネ・フランクの物語",
+    "coverAssetPath": "assets/bookcovers/cover26.webp",
     "summary": "裕福な家庭に生まれながら看護の道を選び、戦地で衛生改革と統計分析を駆使し、近代看護を確立したナイチンゲール。『ランプの貴婦人』と呼ばれ、名誉よりも患者の救済を貫いた姿が医療の未来を照らす。",
     "views": 98765,
     "likes": 420,
@@ -3495,92 +3589,132 @@
     "pages": [
       {
         "pageId": "001",
-        "baseImage": "assets/books/book25/001-1.webp",
-        "textImage": "assets/books/book25/001-2.webp"
+        "baseImage": "assets/books/book24/001-1.webp",
+        "textImage": "assets/books/book24/001-2.webp"
       },
       {
         "pageId": "002",
-        "baseImage": "assets/books/book25/002-1.webp",
-        "textImage": "assets/books/book25/002-2.webp"
+        "baseImage": "assets/books/book24/002-1.webp",
+        "textImage": "assets/books/book24/002-2.webp"
       },
       {
         "pageId": "003",
-        "baseImage": "assets/books/book25/003-1.webp",
-        "textImage": "assets/books/book25/003-2.webp"
+        "baseImage": "assets/books/book24/003-1.webp",
+        "textImage": "assets/books/book24/003-2.webp"
       },
       {
         "pageId": "004",
-        "baseImage": "assets/books/book25/004-1.webp",
-        "textImage": "assets/books/book25/004-2.webp"
+        "baseImage": "assets/books/book24/004-1.webp",
+        "textImage": "assets/books/book24/004-2.webp"
       },
       {
         "pageId": "005",
-        "baseImage": "assets/books/book25/005-1.webp",
-        "textImage": "assets/books/book25/005-2.webp"
+        "baseImage": "assets/books/book24/005-1.webp",
+        "textImage": "assets/books/book24/005-2.webp"
       },
       {
         "pageId": "006",
-        "baseImage": "assets/books/book25/006-1.webp",
-        "textImage": "assets/books/book25/006-2.webp"
+        "baseImage": "assets/books/book24/006-1.webp",
+        "textImage": "assets/books/book24/006-2.webp"
       },
       {
         "pageId": "007",
-        "baseImage": "assets/books/book25/007-1.webp",
-        "textImage": "assets/books/book25/007-2.webp"
+        "baseImage": "assets/books/book24/007-1.webp",
+        "textImage": "assets/books/book24/007-2.webp"
       },
       {
         "pageId": "008",
-        "baseImage": "assets/books/book25/008-1.webp",
-        "textImage": "assets/books/book25/008-2.webp"
+        "baseImage": "assets/books/book24/008-1.webp",
+        "textImage": "assets/books/book24/008-2.webp"
       },
       {
         "pageId": "009",
-        "baseImage": "assets/books/book25/009-1.webp",
-        "textImage": "assets/books/book25/009-2.webp"
+        "baseImage": "assets/books/book24/009-1.webp",
+        "textImage": "assets/books/book24/009-2.webp"
       },
       {
         "pageId": "010",
-        "baseImage": "assets/books/book25/010-1.webp",
-        "textImage": "assets/books/book25/010-2.webp"
+        "baseImage": "assets/books/book24/010-1.webp",
+        "textImage": "assets/books/book24/010-2.webp"
       },
       {
         "pageId": "011",
-        "baseImage": "assets/books/book25/011-1.webp",
-        "textImage": "assets/books/book25/011-2.webp"
+        "baseImage": "assets/books/book24/011-1.webp",
+        "textImage": "assets/books/book24/011-2.webp"
       },
       {
         "pageId": "012",
-        "baseImage": "assets/books/book25/012-1.webp",
-        "textImage": "assets/books/book25/012-2.webp"
+        "baseImage": "assets/books/book24/012-1.webp",
+        "textImage": "assets/books/book24/012-2.webp"
       },
       {
         "pageId": "013",
-        "baseImage": "assets/books/book25/013-1.webp",
-        "textImage": "assets/books/book25/013-2.webp"
+        "baseImage": "assets/books/book24/013-1.webp",
+        "textImage": "assets/books/book24/013-2.webp"
+      },
+      {
+        "pageId": "014",
+        "baseImage": "assets/books/book24/014-1.webp",
+        "textImage": "assets/books/book24/014-2.webp"
+      },
+      {
+        "pageId": "015",
+        "baseImage": "assets/books/book24/015-1.webp",
+        "textImage": "assets/books/book24/015-2.webp"
+      },
+      {
+        "pageId": "016",
+        "baseImage": "assets/books/book24/016-1.webp",
+        "textImage": "assets/books/book24/016-2.webp"
+      },
+      {
+        "pageId": "017",
+        "baseImage": "assets/books/book24/017-1.webp",
+        "textImage": "assets/books/book24/017-2.webp"
+      },
+      {
+        "pageId": "018",
+        "baseImage": "assets/books/book24/018-1.webp",
+        "textImage": "assets/books/book24/018-2.webp"
+      },
+      {
+        "pageId": "019",
+        "baseImage": "assets/books/book24/019-1.webp",
+        "textImage": "assets/books/book24/019-2.webp"
+      },
+      {
+        "pageId": "020",
+        "baseImage": "assets/books/book24/020-1.webp",
+        "textImage": "assets/books/book24/020-2.webp"
+      },
+      {
+        "pageId": "021",
+        "baseImage": "assets/books/book24/021-1.webp",
+        "textImage": "assets/books/book24/021-2.webp"
       }
     ],
     "audio": {
-      "bookId": "23",
+      "bookId": "26",
       "tracks": [
         {
           "assetPath": "assets/audio/book3_part1.mp3",
           "startPage": 1,
-          "endPage": 3
+          "endPage": 5
         },
         {
           "assetPath": "assets/audio/book3_part2.mp3",
-          "startPage": 4,
-          "endPage": 6
+          "startPage": 6,
+          "endPage": 10
         },
         {
           "assetPath": "assets/audio/book3_part3.mp3",
-          "startPage": 7,
-          "endPage": 9
+          "startPage": 11,
+          "endPage": 15
         },
         {
           "assetPath": "assets/audio/book3_part4.mp3",
-          "startPage": 10,
-          "endPage": 13
+          "startPage": 16,
+          "endPage": 20
         }
       ]
     }
