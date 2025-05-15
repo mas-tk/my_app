@@ -108,6 +108,7 @@ flutter:
     - assets/books/book23/
     - assets/books/book24/
     - assets/books/book25/
+    - assets/books/book26/
 
     # 音声ファイル
     - assets/audio/
