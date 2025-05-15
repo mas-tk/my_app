@@ -1,7 +1,7 @@
 // lib/services/storage_manager.dart
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -205,18 +205,60 @@ class StorageManager {
     }
   }
 
-  // プリインストールされたアセットのパスを取得
+  // プリインストールされたアセットのパスを取得 - 改良版
   Future<String?> getLocalAssetPath(String remotePath) async {
     try {
-      // まずプリインストールされたアセットとして存在するか確認
-      if (await _isAssetExists('assets/$remotePath')) {
-        return 'assets/$remotePath';
+      // デバッグ情報
+      print('StorageManager.getLocalAssetPath - 要求パス: $remotePath');
+      
+      // 日本語ファイル名の特別処理
+      bool hasJapaneseChars = remotePath.contains('仕事をやめた魔女') || 
+                           remotePath.contains('お腹が空いたら') ||
+                           remotePath.contains('オードリー') ||
+                           remotePath.contains('ヘンゼル') ||
+                           remotePath.contains('図書館') ||
+                           remotePath.contains('夜行バス') ||
+                           remotePath.contains('踊る影と静かな私');
+      
+      if (hasJapaneseChars) {
+        print('StorageManager.getLocalAssetPath - 日本語ファイル名を検出しました');
       }
 
-      // 既にassets/で始まるパスの場合はそのまま返す
-      if (remotePath.startsWith('assets/') &&
-          await _isAssetExists(remotePath)) {
-        return remotePath;
+      // 既にassets/で始まるパスの場合はそのまま確認
+      if (remotePath.startsWith('assets/')) {
+        if (await _isAssetExists(remotePath)) {
+          print('StorageManager.getLocalAssetPath - アセットとして見つかりました: $remotePath');
+          return remotePath;
+        }
+      } 
+      // assets/プレフィックスがない場合
+      else {
+        // プリインストールされたアセットとして存在するか確認
+        String assetPath = 'assets/$remotePath';
+        if (await _isAssetExists(assetPath)) {
+          print('StorageManager.getLocalAssetPath - プリインストールアセットとして見つかりました: $assetPath');
+          return assetPath;
+        }
+      }
+      
+      // 日本語ファイル名の特別処理
+      if (hasJapaneseChars && remotePath.contains('audio/')) {
+        // ファイル名だけを抽出
+        final String fileName = remotePath.split('/').last;
+        
+        // パターン1: audio/ファイル名 として存在するか試す
+        final simpleAudioPath = 'audio/$fileName';
+        if (await _isAssetExists(simpleAudioPath)) {
+          print('StorageManager.getLocalAssetPath - 日本語ファイルをシンプルパスで見つかりました: $simpleAudioPath');
+          return 'assets/$simpleAudioPath';
+        }
+        
+        // パターン2: assets/audio/ファイル名 として存在するか試す
+        final fullAudioPath = 'assets/audio/$fileName';
+        if (await _isAssetExists(fullAudioPath)) {
+          print('StorageManager.getLocalAssetPath - 日本語ファイルをフルパスで見つかりました: $fullAudioPath');
+          return fullAudioPath;
+        }
       }
 
       // ファイル名を抽出
@@ -228,23 +270,83 @@ class StorageManager {
 
       final File localFile = File(localPath);
       if (await localFile.exists()) {
+        print('StorageManager.getLocalAssetPath - ローカルファイルとして見つかりました: $localPath');
         return localPath;
       }
 
       // 見つからない場合
+      print('StorageManager.getLocalAssetPath - ファイルが見つかりませんでした: $remotePath');
+      
+      // 日本語ファイル名の場合は代替パスを返す
+      if (hasJapaneseChars) {
+        print('StorageManager.getLocalAssetPath - 日本語ファイル名なので代替パスを返します: assets/audio/$fileName');
+        return 'assets/audio/$fileName';
+      }
+      
       return null;
     } catch (e) {
-      print('Error getting local asset path: $e');
+      print('StorageManager.getLocalAssetPath - エラー: $e');
       return null;
     }
   }
 
-  // アセットが存在するかチェック
+  // アセットが存在するかチェック - 修正版
   Future<bool> _isAssetExists(String assetPath) async {
+    print('StorageManager._isAssetExists - アセット存在チェック: $assetPath');
+    
+    // assets/assets/ のような重複を修正
+    if (assetPath.startsWith('assets/assets/')) {
+      assetPath = assetPath.substring(7); // 冗長な最初の "assets/" を削除
+      print('StorageManager._isAssetExists - 重複したパスプレフィックスを修正: $assetPath');
+    }
+    
     try {
       await rootBundle.load(assetPath);
+      print('StorageManager._isAssetExists - アセットが存在します: $assetPath');
       return true;
-    } catch (_) {
+    } catch (error) {
+      // 詳細なエラーログ（デバッグ用）
+      print('StorageManager._isAssetExists - アセットが存在しません: $assetPath, エラー: $error');
+      
+      // 日本語ファイル名の場合、特別な処理を試みる
+      if (assetPath.contains('仕事をやめた魔女') || 
+          assetPath.contains('お腹が空いたら') ||
+          assetPath.contains('オードリー') ||
+          assetPath.contains('ヘンゼル') ||
+          assetPath.contains('図書館') ||
+          assetPath.contains('夜行バス') ||
+          assetPath.contains('踊る影と静かな私')) {
+        
+        // 別の形式のパスを試す（音声ファイルの場合）
+        if (assetPath.contains('audio/') || assetPath.endsWith('.mp3')) {
+          String fileName = assetPath.split('/').last;
+          
+          // パターン1: audio/ファイル名
+          String audioPath = 'audio/$fileName';
+          print('StorageManager._isAssetExists - 日本語ファイル名の代替パス1を試みます: $audioPath');
+          try {
+            await rootBundle.load(audioPath);
+            print('StorageManager._isAssetExists - 代替パス1でアセットが見つかりました: $audioPath');
+            return true;
+          } catch (e) {
+            print('StorageManager._isAssetExists - 代替パス1ではアセットが見つかりませんでした: $audioPath');
+          }
+          
+          // パターン2: assets/audio/ファイル名
+          String assetAudioPath = 'assets/audio/$fileName';
+          if (assetPath != assetAudioPath) {
+            print('StorageManager._isAssetExists - 日本語ファイル名の代替パス2を試みます: $assetAudioPath');
+            try {
+              await rootBundle.load(assetAudioPath);
+              print('StorageManager._isAssetExists - 代替パス2でアセットが見つかりました: $assetAudioPath');
+              return true;
+            } catch (e) {
+              print('StorageManager._isAssetExists - 代替パス2でもアセットが見つかりませんでした: $assetAudioPath');
+            }
+          }
+        }
+      }
+      
       return false;
     }
   }

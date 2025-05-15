@@ -2,7 +2,7 @@ name: my_app
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.0.0+23
+version: 1.0.0+24
 
 environment:
   sdk: ^3.7.2
@@ -110,27 +110,9 @@ flutter:
     - assets/books/book25/
     - assets/books/book26/
 
-    # 音声ファイル
+    # 音声ファイル - ディレクトリ全体をインクルード
     - assets/audio/
-    - assets/audio/sample.mp3
-    - assets/audio/page_flip.mp3  # ハイフンをアンダースコアに変更
-    - assets/page_flip.mp3        # ルートディレクトリのファイルも指定
 
-    # Book 1
-    - assets/audio/book1_part1.mp3
-    - assets/audio/book1_part2.mp3
-    - assets/audio/book1_part3.mp3
-    - assets/audio/book1_part4.mp3
-    # Book 2
-    - assets/audio/book2_part1.mp3
-    - assets/audio/book2_part2.mp3
-    - assets/audio/book2_part3.mp3
-    - assets/audio/book2_part4.mp3
-    # Book 3
-    - assets/audio/book3_part1.mp3
-    - assets/audio/book3_part2.mp3
-    - assets/audio/book3_part3.mp3
-    - assets/audio/book3_part4.mp3
 
     # tags
     - assets/data/tags.json

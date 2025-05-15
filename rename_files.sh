@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# ファイルのディレクトリへ移動
+cd /mnt/c/Users/teato/Desktop/kk_app/my_app/assets/audio/
+
+# ファイル名変換
+mv "お腹が空いたらPage10–14.mp3" "onaka_ga_suitara_page10-14.mp3"
+mv "お腹が空いたらPage15–20.mp3" "onaka_ga_suitara_page15-20.mp3"
+mv "お腹が空いたらPage1–4.mp3" "onaka_ga_suitara_page1-4.mp3"
+mv "お腹が空いたらPage5–9.mp3" "onaka_ga_suitara_page5-9.mp3"
+mv "オードリーPage16–20.mp3" "audrey_page16-20.mp3"
+mv "オードリーPage1–4.mp3" "audrey_page1-4.mp3"
+mv "オードリーPage5–8.mp3" "audrey_page5-8.mp3"
+mv "オードリーPage9–15.mp3" "audrey_page9-15.mp3"
+mv "ヘンゼル2.mp3" "henzel2.mp3"
+mv "ヘンゼルエンディング.mp3" "henzel_ending.mp3"
+mv "ヘンゼルエンディング歌.mp3" "henzel_ending_uta.mp3"
+mv "ヘンゼル不穏.mp3" "henzel_fuon.mp3"
+mv "ヘンゼル不穏2.mp3" "henzel_fuon2.mp3"
+mv "ヘンゼル森.mp3" "henzel_mori.mp3"
+mv "ヘンゼル森2.mp3" "henzel_mori2.mp3"
+mv "ヘンゼルPage13–16.mp3" "henzel_page13-16.mp3"
+mv "ヘンゼルPage17–20.mp3" "henzel_page17-20.mp3"
+mv "ヘンゼルPage1–4.mp3" "henzel_page1-4.mp3"
+mv "ヘンゼルPage5–12.mp3" "henzel_page5-12.mp3"
+mv "仕事をやめた魔女Page15–20.mp3" "shigoto_wo_yameta_majo_page15-20.mp3"
+mv "仕事をやめた魔女Page1–3.mp3" "shigoto_wo_yameta_majo_page1-3.mp3"
+mv "仕事をやめた魔女Page4–8.mp3" "shigoto_wo_yameta_majo_page4-8.mp3"
+mv "仕事をやめた魔女Page9–14.mp3" "shigoto_wo_yameta_majo_page9-14.mp3"
+mv "図書館Page15–20.mp3" "toshokan_page15-20.mp3"
+mv "図書館Page1–4.mp3" "toshokan_page1-4.mp3"
+mv "図書館Page5–8.mp3" "toshokan_page5-8.mp3"
+mv "図書館Page9–14.mp3" "toshokan_page9-14.mp3"
+mv "夜行バスPage16–20.mp3" "yakou_bus_page16-20.mp3"
+mv "夜行バスPage1–3.mp3" "yakou_bus_page1-3.mp3"
+mv "夜行バスPage4–7.mp3" "yakou_bus_page4-7.mp3"
+mv "夜行バスPage8–15.mp3" "yakou_bus_page8-15.mp3"
+mv "踊る影と静かな私Page10–14.mp3" "odoru_kage_to_shizukana_watashi_page10-14.mp3"
+mv "踊る影と静かな私_Page15–20.mp3" "odoru_kage_to_shizukana_watashi_page15-20.mp3"
+mv "踊る影と静かな私_Page1–4.mp3" "odoru_kage_to_shizukana_watashi_page1-4.mp3"
+mv "踊る影と静かな私_Page5–9.mp3" "odoru_kage_to_shizukana_watashi_page5-9.mp3"
+
+echo "ファイル名の変換が完了しました。"

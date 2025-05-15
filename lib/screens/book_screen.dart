@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turn_page_transition/turn_page_transition.dart';
+import 'package:flutter/services.dart' show HapticFeedback, rootBundle;
 import '../models/book_models.dart';
 import '../repositories/book_repository.dart';
 import 'review_screen.dart';
-import 'package:flutter/services.dart' show HapticFeedback;
 
 // BookScreenに渡すパラメータ
 class BookScreenArguments {
@@ -541,7 +541,7 @@ class _BookScreenState extends State<BookScreen>
     }
   }
 
-  // 音楽の初期設定 - よりシンプルに
+  // 音楽の初期設定 - デバッグ強化版
   Future<void> _setupAudio() async {
     if (_book?.audio == null) {
       debugPrint('注意: この本にはオーディオデータがありません');
@@ -549,30 +549,66 @@ class _BookScreenState extends State<BookScreen>
     }
 
     try {
+      // 本の情報を出力
+      debugPrint('本 ID: ${_book!.id}, タイトル: ${_book!.title}');
+      if (_book!.audio != null) {
+        debugPrint('オーディオ Book ID: ${_book!.audio!.bookId}');
+        debugPrint('トラック数: ${_book!.audio!.tracks.length}');
+        
+        // 各トラックの情報を出力
+        for (var i = 0; i < _book!.audio!.tracks.length; i++) {
+          final track = _book!.audio!.tracks[i];
+          debugPrint('トラック[$i]: ${track.assetPath}, ページ範囲: ${track.startPage}-${track.endPage}');
+        }
+      }
+
       // 初期ページに対応するトラックを取得
-      _currentTrack = _book!.audio!.getTrackForPage(_currentPage + 1);
+      final pageNumber = _currentPage + 1; // 0-indexed → 1-indexed
+      debugPrint('現在のページ番号 (1-indexed): $pageNumber');
+      
+      _currentTrack = _book!.audio!.getTrackForPage(pageNumber);
       if (_currentTrack == null) {
         debugPrint('注意: 現在のページに対応するトラックが見つかりません');
         return;
       }
+      
+      debugPrint('選択されたトラック: ${_currentTrack!.assetPath}, ページ範囲: ${_currentTrack!.startPage}-${_currentTrack!.endPage}');
 
       // ローカルパスを取得
       final localPath = await _bookRepository.getAssetPath(
         _currentTrack!.assetPath,
       );
       _currentAudioPath = localPath;
-      debugPrint('オーディオトラックパス: $localPath');
+      debugPrint('解決されたオーディオパス: $localPath');
 
       // ソースタイプに基づいて適切な方法でオーディオをセット
       try {
         if (localPath.startsWith('assets/')) {
           // アセットパスを適切に処理
-          final normalizedPath = localPath.substring(7); // 'assets/'の部分を削除
+          final normalizedPath = localPath.startsWith('assets/') 
+              ? localPath.substring(7) // 'assets/'の部分を削除
+              : localPath;
           debugPrint('アセットからオーディオをセット: $normalizedPath');
+          
+          // 実際のファイルが存在するか確認（開発時のみ）
+          bool fileExists = false;
+          try {
+            await rootBundle.load(localPath);
+            fileExists = true;
+            debugPrint('アセットファイルが存在します: $localPath');
+          } catch (e) {
+            debugPrint('アセットファイルが見つかりません: $localPath, エラー: $e');
+          }
+          
           await _audioPlayer.setSourceAsset(normalizedPath);
+          debugPrint('オーディオソースをセットしました: $normalizedPath');
         } else if (!localPath.startsWith('http')) {
           // ローカルファイルパス
           debugPrint('ローカルファイルからオーディオをセット: $localPath');
+          final file = File(localPath);
+          final exists = await file.exists();
+          debugPrint('ファイル存在チェック: ${exists ? "存在します" : "存在しません"}');
+          
           await _audioPlayer.setSourceDeviceFile(localPath);
         } else {
           // URL（実装していない）
@@ -588,9 +624,38 @@ class _BookScreenState extends State<BookScreen>
       } catch (e) {
         debugPrint('オーディオソース設定エラー: $e');
 
+        // エラー発生時、日本語ファイル名の場合はURLエンコードを試みる
+        if (_currentTrack!.assetPath.contains('仕事をやめた魔女') || 
+            _currentTrack!.assetPath.contains('お腹が空いたら') ||
+            _currentTrack!.assetPath.contains('オードリー') ||
+            _currentTrack!.assetPath.contains('ヘンゼル') ||
+            _currentTrack!.assetPath.contains('図書館') ||
+            _currentTrack!.assetPath.contains('夜行バス') ||
+            _currentTrack!.assetPath.contains('踊る影と静かな私')) {
+          
+          debugPrint('日本語ファイル名を検出しました。代替アプローチを試みます。');
+          
+          // フォールバック試行 - 日本語名から該当する実際のファイルを探す試み
+          try {
+            // 例：「仕事をやめた魔女Page1–3.mp3」→「audio/仕事をやめた魔女Page1–3.mp3」を試す
+            final simpleNormalizedPath = _currentTrack!.assetPath.split('/').last;
+            debugPrint('日本語ファイル名の直接指定を試みます: $simpleNormalizedPath');
+            await _audioPlayer.setSourceAsset('audio/$simpleNormalizedPath');
+            _currentAudioPath = 'assets/audio/$simpleNormalizedPath';
+            
+            if (_soundEnabled) {
+              await Future.delayed(const Duration(milliseconds: 300));
+              await _playBackgroundMusic();
+              return; // 成功したらここで終了
+            }
+          } catch (fallbackError) {
+            debugPrint('日本語ファイル直接指定でのエラー: $fallbackError');
+          }
+        }
+
         // フォールバック - サンプルオーディオファイル
         try {
-          debugPrint('フォールバックオーディオを試みます');
+          debugPrint('最終フォールバック: サンプルオーディオを試みます');
           await _audioPlayer.setSourceAsset('audio/sample.mp3');
           _currentAudioPath = 'audio/sample.mp3';
 
@@ -657,28 +722,47 @@ class _BookScreenState extends State<BookScreen>
     }
   }
 
-  // ページに応じてBGMを確認・切り替える関数（フェード効果追加）
+  // ページに応じてBGMを確認・切り替える関数（改良版）
   Future<void> _checkAndUpdateBGM(int pageNumber) async {
     if (_isChangingTrack || _book?.audio == null) return;
 
     // ページ番号は0-indexedなので1を加える
     final int actualPageNumber = pageNumber + 1;
+    debugPrint('BGMチェック - ページ番号: $actualPageNumber');
 
     // 現在のページに対応するトラックを取得
     final newTrack = _book!.audio!.getTrackForPage(actualPageNumber);
 
     // トラックが見つからない場合や、BGMが無効の場合は何もしない
-    if (newTrack == null || !_soundEnabled) return;
+    if (newTrack == null) {
+      debugPrint('BGMチェック - このページに対応するトラックはありません');
+      return;
+    }
+    
+    if (!_soundEnabled) {
+      debugPrint('BGMチェック - サウンドは無効になっています');
+      return;
+    }
+
+    // 現在のトラックと新しいトラックを比較（デバッグ用）
+    if (_currentTrack != null) {
+      debugPrint('BGMチェック - 現在のトラック: ${_currentTrack!.assetPath}');
+    } else {
+      debugPrint('BGMチェック - 現在のトラックはまだ設定されていません');
+    }
+    debugPrint('BGMチェック - 新しいトラック: ${newTrack.assetPath}');
 
     // 現在と異なるトラックの場合、BGMを切り替える
     if (_currentTrack == null ||
         _currentTrack!.assetPath != newTrack.assetPath) {
+      debugPrint('BGMチェック - トラック切り替えが必要です');
       _isChangingTrack = true;
 
       try {
         // BGMを一旦停止（フェードアウト）
         final wasPlaying = _bgmPlaying;
         if (wasPlaying) {
+          debugPrint('BGMチェック - 再生中のBGMをフェードアウトします');
           // フェードアウト（500ms）
           await _fadeOutAudio(const Duration(milliseconds: 500));
           await _audioPlayer.pause();
@@ -689,24 +773,73 @@ class _BookScreenState extends State<BookScreen>
           newTrack.assetPath,
         );
         _currentAudioPath = localPath;
+        debugPrint('BGMチェック - 解決されたパス: $localPath');
 
         // 新しいトラックをセット
+        bool setSuccessful = false;
+        
         if (localPath.startsWith('assets/')) {
-          // アセットパスを適切に処理
-          final normalizedPath = localPath.substring(7); // 'assets/'の部分を削除
-          debugPrint('次のアセットに変更: $normalizedPath');
-          await _audioPlayer.setSourceAsset(normalizedPath);
+          try {
+            // アセットパスを適切に処理
+            final normalizedPath = localPath.startsWith('assets/') 
+                ? localPath.substring(7) // 'assets/'の部分を削除
+                : localPath;
+            debugPrint('BGMチェック - アセットから新しいトラックをセット: $normalizedPath');
+            await _audioPlayer.setSourceAsset(normalizedPath);
+            setSuccessful = true;
+          } catch (assetError) {
+            debugPrint('BGMチェック - アセットセットエラー: $assetError');
+            
+            // 日本語ファイル名の場合、特別な処理を試みる
+            if (newTrack.assetPath.contains('仕事をやめた魔女') || 
+                newTrack.assetPath.contains('お腹が空いたら') ||
+                newTrack.assetPath.contains('オードリー') ||
+                newTrack.assetPath.contains('ヘンゼル') ||
+                newTrack.assetPath.contains('図書館') ||
+                newTrack.assetPath.contains('夜行バス') ||
+                newTrack.assetPath.contains('踊る影と静かな私')) {
+              
+              try {
+                // ファイル名だけを使用して直接アクセスを試みる
+                final simpleNormalizedPath = newTrack.assetPath.split('/').last;
+                debugPrint('BGMチェック - 日本語ファイル名直接アクセス: audio/$simpleNormalizedPath');
+                await _audioPlayer.setSourceAsset('audio/$simpleNormalizedPath');
+                _currentAudioPath = 'assets/audio/$simpleNormalizedPath';
+                setSuccessful = true;
+              } catch (fallbackError) {
+                debugPrint('BGMチェック - 日本語ファイル直接アクセスエラー: $fallbackError');
+              }
+            }
+          }
         } else if (!localPath.startsWith('http')) {
-          // ローカルファイルパス
-          debugPrint('次のローカルファイルに変更: $localPath');
-          await _audioPlayer.setSourceDeviceFile(localPath);
+          try {
+            // ローカルファイルパス
+            debugPrint('BGMチェック - ローカルファイルから新しいトラックをセット: $localPath');
+            final file = File(localPath);
+            final exists = await file.exists();
+            debugPrint('BGMチェック - ファイル存在チェック: ${exists ? "存在します" : "存在しません"}');
+            
+            await _audioPlayer.setSourceDeviceFile(localPath);
+            setSuccessful = true;
+          } catch (fileError) {
+            debugPrint('BGMチェック - ローカルファイルセットエラー: $fileError');
+          }
         }
-
-        _currentTrack = newTrack;
-        debugPrint('トラック変更: ${newTrack.assetPath} (ページ: $actualPageNumber)');
+        
+        // 設定に失敗した場合はフォールバック
+        if (!setSuccessful) {
+          debugPrint('BGMチェック - フォールバック: サンプルオーディオを使用');
+          await _audioPlayer.setSourceAsset('audio/sample.mp3');
+          _currentAudioPath = 'audio/sample.mp3';
+        } else {
+          // 成功した場合のみトラック情報を更新
+          _currentTrack = newTrack;
+          debugPrint('BGMチェック - トラック変更成功: ${newTrack.assetPath} (ページ: $actualPageNumber)');
+        }
 
         // 再生中だった場合は再開（フェードイン）
         if (wasPlaying) {
+          debugPrint('BGMチェック - オーディオを再開します');
           await _audioPlayer.resume();
           // フェードイン（1000ms）
           await _fadeInAudio(const Duration(milliseconds: 1000));
@@ -715,10 +848,25 @@ class _BookScreenState extends State<BookScreen>
           });
         }
       } catch (e) {
-        debugPrint('トラック変更エラー: $e');
+        debugPrint('BGMチェック - トラック変更エラー: $e');
+        
+        // エラー時のフォールバック
+        try {
+          debugPrint('BGMチェック - エラー時のフォールバック処理');
+          await _audioPlayer.setSourceAsset('audio/sample.mp3');
+          _currentAudioPath = 'audio/sample.mp3';
+          
+          if (_bgmPlaying) {
+            await _audioPlayer.resume();
+          }
+        } catch (fallbackError) {
+          debugPrint('BGMチェック - フォールバックエラー: $fallbackError');
+        }
       } finally {
         _isChangingTrack = false;
       }
+    } else {
+      debugPrint('BGMチェック - 現在のトラックと同じなので変更なし');
     }
   }
 

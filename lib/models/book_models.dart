@@ -156,13 +156,29 @@ class BookAudio {
     };
   }
 
-  // 指定したページ番号に対応するトラックを返す
+  // 指定したページ番号に対応するトラックを返す - 改良版
   AudioTrack? getTrackForPage(int pageNumber) {
-    for (var track in tracks) {
+    // デバッグ情報の出力
+    print('BookAudio.getTrackForPage - 検索ページ番号: $pageNumber, bookId: $bookId');
+    print('BookAudio.getTrackForPage - 利用可能トラック数: ${tracks.length}');
+    
+    for (var i = 0; i < tracks.length; i++) {
+      final track = tracks[i];
+      print('BookAudio.getTrackForPage - トラック[$i]確認: ${track.assetPath}, 範囲: ${track.startPage}-${track.endPage}');
+      
       if (pageNumber >= track.startPage && pageNumber <= track.endPage) {
+        print('BookAudio.getTrackForPage - トラック[$i]が一致しました: ${track.assetPath}');
         return track;
       }
     }
+    
+    // 一致するトラックが見つからない場合は最初のトラックをフォールバックとして返す
+    if (tracks.isNotEmpty) {
+      print('BookAudio.getTrackForPage - 一致するトラックがないため最初のトラックを返します: ${tracks[0].assetPath}');
+      return tracks[0];
+    }
+    
+    print('BookAudio.getTrackForPage - トラックが見つかりませんでした');
     return null;
   }
 }
